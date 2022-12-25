@@ -45,7 +45,6 @@ PyYAML==6.0
 pyyaml_env_tag==0.1
 regex==2021.4.4
 requests==2.27.1
-scipy==1.6.3
 six==1.16.0
 sqlparse==0.4.2
 toml==0.10.2

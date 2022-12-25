@@ -58,9 +58,7 @@ class DropboxProvider(StorageProvider):
         Upload the file identified to the dropbox
         """
         # Create an instance of a Dropbox class, which can make requests to the API.
-        with dropbox.Dropbox(
-            oauth2_refresh_token=self.refresh_token, app_key=self.app_key
-        ) as dbx:
+        with dropbox.Dropbox(self.app_key) as dbx:
             # Check that the access token is valid
             dbx.users_get_current_account()
             dbx.files_upload(
@@ -72,9 +70,7 @@ class DropboxProvider(StorageProvider):
         Get the file content from the dropbox
         """
         # Create an instance of a Dropbox class, which can make requests to the API.
-        with dropbox.Dropbox(
-            oauth2_refresh_token=self.refresh_token, app_key=self.app_key
-        ) as dbx:
+        with dropbox.Dropbox(self.app_key) as dbx:
             # Check that the access token is valid
             try:
                 dbx.users_get_current_account()
@@ -96,9 +92,7 @@ class DropboxProvider(StorageProvider):
         """
 
         # Create an instance of a Dropbox class, which can make requests to the API.
-        with dropbox.Dropbox(
-            oauth2_refresh_token=self.refresh_token, app_key=self.app_key
-        ) as dbx:
+        with dropbox.Dropbox(self.app_key) as dbx:
             # Check that the access token is valid
             try:
                 dbx.users_get_current_account()
@@ -123,9 +117,7 @@ class DropboxProvider(StorageProvider):
         """
 
         # Create an instance of a Dropbox class, which can make requests to the API.
-        with dropbox.Dropbox(
-            oauth2_refresh_token=self.refresh_token, app_key=self.app_key
-        ) as dbx:
+        with dropbox.Dropbox(self.app_key) as dbx:
             # Check that the access token is valid
             try:
                 dbx.users_get_current_account()
@@ -142,9 +134,7 @@ class DropboxProvider(StorageProvider):
         Remove the file from the dropbox
         """
         # Create an instance of a Dropbox class, which can make requests to the API.
-        with dropbox.Dropbox(
-            oauth2_refresh_token=self.refresh_token, app_key=self.app_key
-        ) as dbx:
+        with dropbox.Dropbox(self.app_key) as dbx:
             # Check that the access token is valid
             try:
                 dbx.users_get_current_account()
