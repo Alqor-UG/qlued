@@ -16,7 +16,6 @@ pathspec==0.8.1
 pyrsistent==0.17.3
 pytz==2021.1
 regex==2021.4.4
-scipy==1.6.3
 six==1.16.0
 sqlparse==0.4.2
 toml==0.10.2
