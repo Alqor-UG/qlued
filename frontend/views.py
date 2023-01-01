@@ -22,7 +22,7 @@ def index(request):
     # pylint: disable=E1101
     template = loader.get_template("frontend/index.html")
     backend_list = Backend.objects.all()
-    base_url = config("BASE_URL", default = "http://www.example.com")
+    base_url = config("BASE_URL", default="http://www.example.com")
     context = {"backend_list": backend_list.values(), "base_url": base_url}
     return HttpResponse(template.render(context, request))
 
