@@ -19,8 +19,17 @@ The jobs for qlue are stored on a dropbox. If you would like to set it up you ha
 - Add the `REFRESH_TOKEN` to the `.env`.
 
 ## Setting up a github environment  
+(help to improve this description is welcome)
 - Set the `SECRET_KEY` of the django environment.
 - Set the `SECRET_KEY`, `USERNAME_TEST` and `PASSWORD_TEST` of the django environment.
+- Same for the Dropbox keys.
+
+## setting up heroku
+- Create an account.
+- Create an app which connects to the github repo you are working with.
+- Costs are in the most basic config roughly 12$ a month.
+- Open the console to create the django superuser `python manage.py createsuperuser`.
+- Add all the back-ends.
 
 ## Documentation:
 * Click [here](https://alqor-ug.github.io/qlued/) for the latest formatted release of the document.
