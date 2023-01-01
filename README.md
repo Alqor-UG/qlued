@@ -8,6 +8,12 @@ An API to make quantum circuits accessible for cold atom backends.
 - Set the `APP_KEY` for the Dropbox backend (if you set it up follow the steps below). 
 - Run `python manage.py test --settings main.local_settings` to see if everything works out.
 
+### Getting the server started locally
+
+- Create a simple local database for the back-end with `python manage.py migrate --settings main.local_settings`.
+- To fill up the database with some standard back-ends etc you can simply run `python manage.py loaddata backends/fixtures/backend.json --settings main.local_settings`.
+- You should now be able to run `python manage.py runserver --settings main.local_settings`.
+
 ## Setting up a new dropbox storage
 The jobs for qlue are stored on a dropbox. If you would like to set it up you have to follow these steps (help to improve this description is welcome):
 

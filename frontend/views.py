@@ -10,6 +10,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
+from decouple import config
+
 from backends.models import Backend
 
 from .forms import SignUpForm
@@ -20,7 +22,8 @@ def index(request):
     # pylint: disable=E1101
     template = loader.get_template("frontend/index.html")
     backend_list = Backend.objects.all()
-    context = {"backend_list": backend_list.values()}
+    base_url = config("BASE_URL")
+    context = {"backend_list": backend_list.values(), "base_url": base_url}
     return HttpResponse(template.render(context, request))
 
 
