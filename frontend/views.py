@@ -15,6 +15,7 @@ from decouple import config
 from backends.models import Backend
 
 from .forms import SignUpForm
+from .models import Impressum
 
 
 def index(request):
@@ -24,6 +25,17 @@ def index(request):
     backend_list = Backend.objects.all()
     base_url = config("BASE_URL", default="http://www.example.com")
     context = {"backend_list": backend_list.values(), "base_url": base_url}
+    return HttpResponse(template.render(context, request))
+
+
+def about(request):
+    """The about view that is called for the about page."""
+    # pylint: disable=E1101
+    template = loader.get_template("frontend/about.html")
+
+    impressums_text = Impressum.objects.first()
+    context = {"impressums_text": impressums_text.impressum}
+    print(context)
     return HttpResponse(template.render(context, request))
 
 
