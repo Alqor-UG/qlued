@@ -314,6 +314,7 @@ class JobSubmissionTest(TestCase):
         user = User.objects.create(username=self.username)
         user.set_password(self.password)
         user.save()
+        self.storage_provider = getattr(ac, "storage")
 
     def test_post_job(self):
         """
@@ -346,6 +347,12 @@ class JobSubmissionTest(TestCase):
         data = json.loads(req.content)
         self.assertEqual(data["status"], "INITIALIZING")
         self.assertEqual(req.status_code, 200)
+        
+        #clean up the file
+        file_path = "/Backend_files/Queued_Jobs/fermions/job-{}.json".format(data['job_id'])
+        self.storage_provider.delete_file(file_path)
+        file_path = "/Backend_files/Status/fermions/{}/status-{}.json".format(self.username , data['job_id'])
+        self.storage_provider.delete_file(file_path)
 
     def test_get_job_status(self):
         """
@@ -393,6 +400,10 @@ class JobSubmissionTest(TestCase):
         self.assertEqual(req.status_code, 200)
         data = json.loads(req.content)
         self.assertEqual(data["job_id"], req_id)
+
+        #clean up the file
+        file_path = "/Backend_files/Queued_Jobs/fermions/job-{}.json".format(data['job_id'])
+        file_path = "/Backend_files/Status/fermions/{}/status-{}.json".format(self.username , data['job_id'])
 
     def test_get_next_job_in_queue(self):
         """
