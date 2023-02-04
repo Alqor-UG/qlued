@@ -5,6 +5,7 @@ import datetime
 import json
 import uuid
 from typing import Tuple
+from decouple import config
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -125,6 +126,47 @@ def get_config(request, backend_name: str) -> JsonResponse:
     # it would be really good to remove the first part and replace it by the domain
     config_dict["url"] = "https://coquma-sim.herokuapp.com/api/" + backend_name + "/"
     return JsonResponse(config_dict, status=200)
+
+
+# Create your views here.
+@csrf_exempt
+def get_config_v2(request, backend_name: str) -> JsonResponse:
+    """
+    A view that returns the user the configuration dictionary of the backend.
+
+    Args:
+        request: The request coming in
+        backend_name (str): The name of the backend for the configuration should
+            be obtained
+
+    Returns:
+        JsonResponse : send back a response with the dict if successful
+    """
+    job_response_dict, html_status = check_request(request, backend_name)
+
+    if job_response_dict["status"] == "ERROR":
+        return JsonResponse(job_response_dict, status=html_status)
+
+    storage_provider = getattr(ac, "storage")
+    backend_json_path = "/Backend_files/Config/" + backend_name + "/config.json"
+    backend_config_dict = json.loads(
+        storage_provider.get_file_content(storage_path=backend_json_path)
+    )
+
+    # for comaptibility with qiskit
+    backend_config_dict["basis_gates"] = []
+    for gate in backend_config_dict["gates"]:
+        backend_config_dict["basis_gates"].append(gate["name"])
+
+    backend_config_dict["backend_name"] = backend_config_dict["name"]
+    backend_config_dict["display_name"] = backend_name
+    backend_config_dict["n_qubits"] = backend_config_dict["num_wires"]
+
+    # and the url
+    base_url = config("BASE_URL")
+    backend_config_dict["url"] = base_url + "/api/" + backend_name + "/"
+
+    return JsonResponse(backend_config_dict, status=200)
 
 
 @csrf_exempt
