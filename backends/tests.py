@@ -403,13 +403,6 @@ class JobSubmissionTest(TestCase):
         data = json.loads(req.content)
         self.assertEqual(data["job_id"], req_id)
 
-        # clean up the file
-
-        file_path = f"/Backend_files/Queued_Jobs/fermions/job-{data['job_id']}.json"
-        self.storage_provider.delete_file(file_path)
-        file_path = f"/Backend_files/Status/fermions/{self.username}/status-{data['job_id']}.json"
-        self.storage_provider.delete_file(file_path)
-
     def test_get_next_job_in_queue(self):
         """
         Test the API that gets the next job in the queue.
@@ -463,3 +456,17 @@ class DropboxProvideTest(TestCase):
 
         # clean up our mess
         self.storage_provider.delete_file(f"/test_folder/copied_world-{file_id}.txt")
+
+    def test_configs(self):
+        """
+        Test that we are able to obtain a list of backends.
+        """
+
+        # create a dummy config
+        dump_str = "Hello world"
+        dummy_f_name = "/Backend_files/Config/dummy/config.json"
+        self.storage_provider.upload(dump_str, dummy_f_name)
+
+        backends = self.storage_provider.get_backends()
+        self.assertTrue("dummy" in backends)
+        self.storage_provider.delete_file("/Backend_files/Config/dummy")

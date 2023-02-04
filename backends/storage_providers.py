@@ -37,6 +37,11 @@ class StorageProvider(ABC):
         Move the file from start_path to `final_path`
         """
 
+    def get_backends(self) -> List[str]:
+        """
+        Get a list of all the backends that the provider offers.
+        """
+
 
 class DropboxProvider(StorageProvider):
     """
@@ -168,3 +173,31 @@ class DropboxProvider(StorageProvider):
                 _ = dbx.files_delete(path=storage_path)
             except Exception as err:
                 sys.exit(err)
+
+    def get_backends(self) -> List[str]:
+        """
+        Get a list of all the backends that the provider offers.
+        """
+        backend_config_path = "/Backend_files/Config/"
+        with dropbox.Dropbox(
+            app_key=self.app_key,
+            app_secret=self.app_secret,
+            oauth2_refresh_token=self.refresh_token,
+        ) as dbx:
+            # Check that the access token is valid
+            try:
+                dbx.users_get_current_account()
+            except AuthError:
+                sys.exit("ERROR: Invalid access token.")
+            # We should really handle these exceptions cleaner, but this seems a bit
+            # complicated right now
+            # pylint: disable=W0703
+            try:
+                folders_results = dbx.files_list_folder(path=backend_config_path)
+                entries = folders_results.entries
+                backend_names = []
+                for entry in entries:
+                    backend_names.append(entry.name)
+            except Exception as err:
+                sys.exit(err)
+        return backend_names
