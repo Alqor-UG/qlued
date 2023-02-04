@@ -13,7 +13,6 @@ from django.contrib.auth import authenticate
 
 from dropbox.exceptions import ApiError, AuthError
 
-from .models import Backend
 from .apps import BackendsConfig as ac
 
 # pylint: disable=E1101
@@ -60,72 +59,15 @@ def check_request(
         job_response_dict["error_message"] = "Invalid credentials!"
         job_response_dict["detail"] = "Invalid credentials!"
         return job_response_dict, 401
+    storage_provider = getattr(ac, "storage")
 
-    try:
-        _ = Backend.objects.get(name=backend_name)
-    except Backend.DoesNotExist:
+    backend_names = storage_provider.get_backends()
+    if not backend_name in backend_names:
         job_response_dict["status"] = "ERROR"
         job_response_dict["detail"] = "Unknown back-end!"
         job_response_dict["error_message"] = "Unknown back-end!"
         return job_response_dict, 404
     return job_response_dict, 200
-
-
-# Create your views here.
-@csrf_exempt
-def get_config(request, backend_name: str) -> JsonResponse:
-    """
-    A view that returns the user the configuration dictionary of the backend.
-
-    Args:
-        request: The request coming in
-        backend_name (str): The name of the backend for the configuration should
-            be obtained
-
-    Returns:
-        JsonResponse : send back a response with the dict if successful
-    """
-    job_response_dict, html_status = check_request(request, backend_name)
-
-    if job_response_dict["status"] == "ERROR":
-        return JsonResponse(job_response_dict, status=html_status)
-
-    backend = Backend.objects.get(name=backend_name)
-
-    config_dict = {
-        "conditional": False,
-        "coupling_map": "linear",
-        "dynamic_reprate_enabled": False,
-        "local": False,
-        "memory": True,
-        "open_pulse": False,
-    }
-
-    # add information that is derived from the core information of the system
-    config_dict["display_name"] = backend_name
-    config_dict["description"] = backend.description
-    config_dict["backend_version"] = backend.version
-    config_dict["cold_atom_type"] = backend.cold_atom_type
-    config_dict["simulator"] = backend.simulator
-    config_dict["num_species"] = backend.num_species
-    config_dict["max_shots"] = backend.max_shots
-    config_dict["max_experiments"] = backend.max_experiments
-    config_dict["n_qubits"] = backend.num_wires
-    config_dict["supported_instructions"] = backend.supported_instructions
-    config_dict["wire_order"] = backend.wire_order
-    if backend.simulator:
-        config_dict["backend_name"] = "synqs_" + backend_name + "_simulator"
-    else:
-        config_dict["backend_name"] = "synqs_" + backend_name + "_machine"
-    config_dict["gates"] = backend.gates
-
-    config_dict["basis_gates"] = []
-    for gate in config_dict["gates"]:
-        config_dict["basis_gates"].append(gate["name"])
-
-    # it would be really good to remove the first part and replace it by the domain
-    config_dict["url"] = "https://coquma-sim.herokuapp.com/api/" + backend_name + "/"
-    return JsonResponse(config_dict, status=200)
 
 
 # Create your views here.
