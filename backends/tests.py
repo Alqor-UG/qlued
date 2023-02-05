@@ -463,10 +463,11 @@ class DropboxProvideTest(TestCase):
         """
 
         # create a dummy config
+        dummy_id = uuid.uuid4().hex[:5]
         dump_str = "Hello world"
-        dummy_f_name = "/Backend_files/Config/dummy/config.json"
+        dummy_f_name = f"/Backend_files/Config/dummy_{dummy_id}/config.json"
         self.storage_provider.upload(dump_str, dummy_f_name)
 
         backends = self.storage_provider.get_backends()
-        self.assertTrue("dummy" in backends)
-        self.storage_provider.delete_file("/Backend_files/Config/dummy")
+        self.assertTrue(f"dummy_{dummy_id}" in backends)
+        self.storage_provider.delete_file(f"/Backend_files/Config/dummy_{dummy_id}")
