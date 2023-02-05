@@ -18,6 +18,9 @@ class Backend(models.Model):
     """
     The backend class, which allows us to safe the properties of the backends etc.
 
+    THIS CLASS IS OUTDATED and not used anymore.
+    IT SHOULD BE SAFELY REMOVED AT SOME POINT.
+
     Args:
         name: The name of the backend under which we will identify it later
         description: A description of the backend as it will be given to the user

@@ -16,6 +16,7 @@ jobs:
       SECRET_KEY: ${{secrets.SECRET_KEY}}
       USERNAME_TEST: ${{secrets.USERNAME_TEST}}
       PASSWORD_TEST: ${{secrets.PASSWORD_TEST}}
+      BASE_URL: ${{secrets.BASE_URL}}
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4

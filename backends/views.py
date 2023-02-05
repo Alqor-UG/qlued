@@ -5,6 +5,7 @@ import datetime
 import json
 import uuid
 from typing import Tuple
+from decouple import config
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -12,7 +13,6 @@ from django.contrib.auth import authenticate
 
 from dropbox.exceptions import ApiError, AuthError
 
-from .models import Backend
 from .apps import BackendsConfig as ac
 
 # pylint: disable=E1101
@@ -59,10 +59,10 @@ def check_request(
         job_response_dict["error_message"] = "Invalid credentials!"
         job_response_dict["detail"] = "Invalid credentials!"
         return job_response_dict, 401
+    storage_provider = getattr(ac, "storage")
 
-    try:
-        _ = Backend.objects.get(name=backend_name)
-    except Backend.DoesNotExist:
+    backend_names = storage_provider.get_backends()
+    if not backend_name in backend_names:
         job_response_dict["status"] = "ERROR"
         job_response_dict["detail"] = "Unknown back-end!"
         job_response_dict["error_message"] = "Unknown back-end!"
@@ -72,7 +72,7 @@ def check_request(
 
 # Create your views here.
 @csrf_exempt
-def get_config(request, backend_name: str) -> JsonResponse:
+def get_config_v2(request, backend_name: str) -> JsonResponse:
     """
     A view that returns the user the configuration dictionary of the backend.
 
@@ -89,42 +89,26 @@ def get_config(request, backend_name: str) -> JsonResponse:
     if job_response_dict["status"] == "ERROR":
         return JsonResponse(job_response_dict, status=html_status)
 
-    backend = Backend.objects.get(name=backend_name)
+    storage_provider = getattr(ac, "storage")
+    backend_json_path = "/Backend_files/Config/" + backend_name + "/config.json"
+    backend_config_dict = json.loads(
+        storage_provider.get_file_content(storage_path=backend_json_path)
+    )
 
-    config_dict = {
-        "conditional": False,
-        "coupling_map": "linear",
-        "dynamic_reprate_enabled": False,
-        "local": False,
-        "memory": True,
-        "open_pulse": False,
-    }
+    # for comaptibility with qiskit
+    backend_config_dict["basis_gates"] = []
+    for gate in backend_config_dict["gates"]:
+        backend_config_dict["basis_gates"].append(gate["name"])
 
-    # add information that is derived from the core information of the system
-    config_dict["display_name"] = backend_name
-    config_dict["description"] = backend.description
-    config_dict["backend_version"] = backend.version
-    config_dict["cold_atom_type"] = backend.cold_atom_type
-    config_dict["simulator"] = backend.simulator
-    config_dict["num_species"] = backend.num_species
-    config_dict["max_shots"] = backend.max_shots
-    config_dict["max_experiments"] = backend.max_experiments
-    config_dict["n_qubits"] = backend.num_wires
-    config_dict["supported_instructions"] = backend.supported_instructions
-    config_dict["wire_order"] = backend.wire_order
-    if backend.simulator:
-        config_dict["backend_name"] = "synqs_" + backend_name + "_simulator"
-    else:
-        config_dict["backend_name"] = "synqs_" + backend_name + "_machine"
-    config_dict["gates"] = backend.gates
+    backend_config_dict["backend_name"] = backend_config_dict["name"]
+    backend_config_dict["display_name"] = backend_name
+    backend_config_dict["n_qubits"] = backend_config_dict["num_wires"]
 
-    config_dict["basis_gates"] = []
-    for gate in config_dict["gates"]:
-        config_dict["basis_gates"].append(gate["name"])
+    # and the url
+    base_url = config("BASE_URL")
+    backend_config_dict["url"] = base_url + "/api/" + backend_name + "/"
 
-    # it would be really good to remove the first part and replace it by the domain
-    config_dict["url"] = "https://coquma-sim.herokuapp.com/api/" + backend_name + "/"
-    return JsonResponse(config_dict, status=200)
+    return JsonResponse(backend_config_dict, status=200)
 
 
 @csrf_exempt

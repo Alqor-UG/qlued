@@ -9,7 +9,7 @@ from backends import views
 from .api_v1 import api
 
 urlpatterns = [
-    path("<str:backend_name>/get_config/", views.get_config, name="get_config"),
+    path("<str:backend_name>/get_config/", views.get_config_v2, name="get_config"),
     path("<str:backend_name>/post_job/", views.post_job, name="post_job"),
     path(
         "<str:backend_name>/get_job_status/",

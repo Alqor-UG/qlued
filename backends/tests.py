@@ -233,9 +233,11 @@ class BackendConfigTest(TestCase):
         data = json.loads(req.content)
         self.assertEqual(req.status_code, 200)
         self.assertCountEqual(data["basis_gates"], ["fhop", "fint", "fphase"])
-        self.assertEqual(data["backend_name"], "synqs_fermions_simulator")
+        self.assertEqual(data["backend_name"], "synqs_fermionic_tweezer_simulator")
         self.assertEqual(data["display_name"], "fermions")
-        self.assertEqual(data["url"], "https://coquma-sim.herokuapp.com/api/fermions/")
+
+        base_url = config("BASE_URL")
+        self.assertEqual(data["url"], base_url + "/api/fermions/")
         self.assertEqual(data["n_qubits"], 8)
         self.assertEqual(data["num_species"], 2)
         gates = data["gates"]
@@ -264,9 +266,8 @@ class BackendConfigTest(TestCase):
         data = json.loads(req.content)
         self.assertEqual(data["display_name"], "singlequdit")
         self.assertEqual(data["backend_name"], "synqs_singlequdit_simulator")
-        self.assertEqual(
-            data["url"], "https://coquma-sim.herokuapp.com/api/singlequdit/"
-        )
+        base_url = config("BASE_URL")
+        self.assertEqual(data["url"], base_url + "/api/singlequdit/")
         self.assertEqual(req.status_code, 200)
 
     def test_multiqudit_get_config(self):
@@ -279,12 +280,13 @@ class BackendConfigTest(TestCase):
         )
         data = json.loads(req.content)
 
-        self.assertCountEqual(data["basis_gates"], ["rlx", "rlz", "rlz2", "rlxly"])
+        self.assertCountEqual(
+            data["basis_gates"], ["rlx", "rlz", "rlz2", "rlxly", "rlzlz"]
+        )
         self.assertEqual(data["backend_name"], "synqs_multiqudit_simulator")
         self.assertEqual(data["display_name"], "multiqudit")
-        self.assertEqual(
-            data["url"], "https://coquma-sim.herokuapp.com/api/multiqudit/"
-        )
+        base_url = config("BASE_URL")
+        self.assertEqual(data["url"], base_url + "/api/multiqudit/")
         self.assertEqual(data["max_experiments"], 1000)
         self.assertEqual(req.status_code, 200)
         gates = data["gates"]
@@ -349,13 +351,9 @@ class JobSubmissionTest(TestCase):
         self.assertEqual(req.status_code, 200)
 
         # clean up the file
-        file_path = "/Backend_files/Queued_Jobs/fermions/job-{}.json".format(
-            data["job_id"]
-        )
+        file_path = f"/Backend_files/Queued_Jobs/fermions/job-{data['job_id']}.json"
         self.storage_provider.delete_file(file_path)
-        file_path = "/Backend_files/Status/fermions/{}/status-{}.json".format(
-            self.username, data["job_id"]
-        )
+        file_path = f"/Backend_files/Status/fermions/{self.username}/status-{data['job_id']}.json"
         self.storage_provider.delete_file(file_path)
 
     def test_get_job_status(self):
@@ -404,14 +402,6 @@ class JobSubmissionTest(TestCase):
         self.assertEqual(req.status_code, 200)
         data = json.loads(req.content)
         self.assertEqual(data["job_id"], req_id)
-
-        # clean up the file
-        file_path = "/Backend_files/Queued_Jobs/fermions/job-{}.json".format(
-            data["job_id"]
-        )
-        file_path = "/Backend_files/Status/fermions/{}/status-{}.json".format(
-            self.username, data["job_id"]
-        )
 
     def test_get_next_job_in_queue(self):
         """
@@ -466,3 +456,17 @@ class DropboxProvideTest(TestCase):
 
         # clean up our mess
         self.storage_provider.delete_file(f"/test_folder/copied_world-{file_id}.txt")
+
+    def test_configs(self):
+        """
+        Test that we are able to obtain a list of backends.
+        """
+
+        # create a dummy config
+        dump_str = "Hello world"
+        dummy_f_name = "/Backend_files/Config/dummy/config.json"
+        self.storage_provider.upload(dump_str, dummy_f_name)
+
+        backends = self.storage_provider.get_backends()
+        self.assertTrue("dummy" in backends)
+        self.storage_provider.delete_file("/Backend_files/Config/dummy")
