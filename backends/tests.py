@@ -268,6 +268,13 @@ class BackendConfigTest(TestCase):
         self.assertEqual(data["backend_name"], "synqs_singlequdit_simulator")
         base_url = config("BASE_URL")
         self.assertEqual(data["url"], base_url + "/api/singlequdit/")
+        self.assertEqual(data["backend_version"], "0.0.2")
+        self.assertEqual(data["conditional"], False)
+        self.assertEqual(data["local"], False)
+        self.assertEqual(data["open_pulse"], False)
+        self.assertEqual(data["memory"], True)
+        self.assertEqual(data["coupling_map"], "linear")
+
         self.assertEqual(req.status_code, 200)
 
     def test_multiqudit_get_config(self):
