@@ -103,6 +103,13 @@ def get_config_v2(request, backend_name: str) -> JsonResponse:
     backend_config_dict["backend_name"] = backend_config_dict["name"]
     backend_config_dict["display_name"] = backend_name
     backend_config_dict["n_qubits"] = backend_config_dict["num_wires"]
+    backend_config_dict["backend_version"] = backend_config_dict["version"]
+
+    backend_config_dict["conditional"] = False
+    backend_config_dict["local"] = False
+    backend_config_dict["open_pulse"] = False
+    backend_config_dict["memory"] = True
+    backend_config_dict["coupling_map"] = "linear"
 
     # and the url
     base_url = config("BASE_URL")
