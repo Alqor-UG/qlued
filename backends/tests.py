@@ -233,7 +233,7 @@ class BackendConfigTest(TestCase):
         data = json.loads(req.content)
         self.assertEqual(req.status_code, 200)
         self.assertCountEqual(data["basis_gates"], ["fhop", "fint", "fphase"])
-        self.assertEqual(data["backend_name"], "synqs_fermionic_tweezer_simulator")
+        self.assertEqual(data["backend_name"], "alqor_fermionic_tweezer_simulator")
         self.assertEqual(data["display_name"], "fermions")
 
         base_url = config("BASE_URL")
@@ -265,7 +265,7 @@ class BackendConfigTest(TestCase):
         )
         data = json.loads(req.content)
         self.assertEqual(data["display_name"], "singlequdit")
-        self.assertEqual(data["backend_name"], "synqs_singlequdit_simulator")
+        self.assertEqual(data["backend_name"], "alqor_singlequdit_simulator")
         base_url = config("BASE_URL")
         self.assertEqual(data["url"], base_url + "/api/singlequdit/")
         self.assertEqual(data["backend_version"], "0.0.2")
@@ -290,7 +290,7 @@ class BackendConfigTest(TestCase):
         self.assertCountEqual(
             data["basis_gates"], ["rlx", "rlz", "rlz2", "rlxly", "rlzlz"]
         )
-        self.assertEqual(data["backend_name"], "synqs_multiqudit_simulator")
+        self.assertEqual(data["backend_name"], "alqor_multiqudit_simulator")
         self.assertEqual(data["display_name"], "multiqudit")
         base_url = config("BASE_URL")
         self.assertEqual(data["url"], base_url + "/api/multiqudit/")
