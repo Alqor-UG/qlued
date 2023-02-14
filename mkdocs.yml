@@ -5,3 +5,12 @@ theme:
     scheme: default
     primary: red
     accent: deep purple
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.expand
+    - navigation.footer
+    - toc.follow
+
+repo_url: https://github.com/alqor-ug/qlued
+edit_uri: edit/main/docs/
