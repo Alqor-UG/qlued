@@ -254,13 +254,12 @@ class BackendConfigTest(TestCase):
                 )
             if gate["name"] == "fint":
                 self.assertEqual(gate["coupling_map"], [[0, 1, 2, 3, 4, 5, 6, 7]])
-        
+
     def test_fermions_get_config_ninja(self):
         """
         Test the API that presents the capabilities of the backend through the new version of the API
         """
-        url= reverse_lazy("api-1.0.0:get_config", kwargs={"backend_name": "fermions"})
-        #url = reverse("get_config", kwargs={"backend_name": "fermions"})
+        url = reverse_lazy("api-1.0.0:get_config", kwargs={"backend_name": "fermions"})
         req = self.client.get(
             url, {"username": self.username, "password": self.password}
         )

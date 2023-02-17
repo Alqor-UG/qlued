@@ -14,7 +14,13 @@ from .apps import BackendsConfig as ac
 
 api = NinjaAPI(version="1.0.0")
 
-@api.get("{backend_name}/get_config", response=BackendSchemaOut, tags=["Backend"], url_name="get_config")
+
+@api.get(
+    "{backend_name}/get_config",
+    response=BackendSchemaOut,
+    tags=["Backend"],
+    url_name="get_config",
+)
 def get_config(request, backend_name: str):
     """
     Returns the list of backends.
