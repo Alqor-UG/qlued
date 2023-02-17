@@ -25,7 +25,7 @@ def get_config(request, backend_name: str):
     """
     Returns the list of backends.
     """
-
+    # pylint: disable=W0613
     storage_provider = getattr(ac, "storage")
     backend_json_path = "/Backend_files/Config/" + backend_name + "/config.json"
     backend_config_dict = json.loads(
