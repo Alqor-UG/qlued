@@ -271,7 +271,7 @@ class BackendConfigTest(TestCase):
         self.assertEqual(data["display_name"], "fermions")
 
         base_url = config("BASE_URL")
-        self.assertEqual(data["url"], base_url + "/api/fermions/")
+        self.assertEqual(data["url"], base_url + "/api/v1/fermions/")
         self.assertEqual(data["n_qubits"], 8)
         self.assertEqual(data["num_species"], 2)
         gates = data["gates"]

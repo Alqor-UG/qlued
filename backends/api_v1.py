@@ -50,7 +50,7 @@ def get_config(request, backend_name: str):
 
     # and the url
     base_url = config("BASE_URL")
-    backend_config_dict["url"] = base_url + "/api/" + backend_name + "/"
+    backend_config_dict["url"] = base_url + "/api/v1/" + backend_name + "/"
 
     return backend_config_dict
 
