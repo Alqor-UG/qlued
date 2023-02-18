@@ -4,10 +4,18 @@ Module that defines the user api v1 which goes through django-ninja.
 
 import json
 from typing import List
+import datetime
+import json
+import uuid
+
+
 from ninja import NinjaAPI
+from ninja.responses import codes_4xx
+
 from django.contrib.auth import authenticate
 
 from decouple import config
+from dropbox.exceptions import ApiError, AuthError
 
 from .schemas import BackendSchemaOut, JobSchemaIn, JobResponseSchema
 from .models import Backend
@@ -56,20 +64,16 @@ def get_config(request, backend_name: str):
     return backend_config_dict
 
 
-@api.get("{backend_name}/post_job", response= JobResponseSchema, tags=["Backend"], url_name="post_job")
+@api.post(
+    "{backend_name}/post_job",
+    response={200: JobResponseSchema, codes_4xx: JobResponseSchema},
+    tags=["Backend"],
+    url_name="post_job",
+)
 def post_job(request, data: JobSchemaIn, backend_name: str):
     """
     A view to submit the job to the backend.
-
-    Args:
-        request: The request coming in
-        backend_name (str): The name of the backend for the configuration should
-            be obtained
-
-    Returns:
-        JsonResponse : send back a response with the dict if successful
     """
-
     job_response_dict = {
         "job_id": "None",
         "status": "None",
@@ -77,9 +81,8 @@ def post_job(request, data: JobSchemaIn, backend_name: str):
         "error_message": "None",
     }
 
-    username = data["username"]
-    password = data["password"]
-    
+    username = data.username
+    password = data.password
     user = authenticate(username=username, password=password)
 
     if user is None:
@@ -87,15 +90,55 @@ def post_job(request, data: JobSchemaIn, backend_name: str):
         job_response_dict["error_message"] = "Invalid credentials!"
         job_response_dict["detail"] = "Invalid credentials!"
         return 401, job_response_dict
-    
     storage_provider = getattr(ac, "storage")
     backend_names = storage_provider.get_backends()
     if not backend_name in backend_names:
         job_response_dict["status"] = "ERROR"
         job_response_dict["detail"] = "Unknown back-end!"
         job_response_dict["error_message"] = "Unknown back-end!"
-    return 404, job_response_dict
+        return 404, job_response_dict
 
+    try:
+        job_data = data.job.encode("utf-8")
+    except UnicodeDecodeError:
+        job_response_dict["status"] = "ERROR"
+        job_response_dict["detail"] = "The encoding of your json seems non utf-8!"
+        job_response_dict[
+            "error_message"
+        ] = "The encoding of your json seems non utf-8!"
+        return 406, job_response_dict
+    try:
+        job_id = (
+            (datetime.datetime.utcnow().strftime("%Y%m%d_%H%M%S"))
+            + "-"
+            + backend_name
+            + "-"
+            + username
+            + "-"
+            + (uuid.uuid4().hex)[:5]
+        )
+        job_json_dir = "/Backend_files/Queued_Jobs/" + backend_name + "/"
+        job_json_name = "job-" + job_id + ".json"
+        job_json_path = job_json_dir + job_json_name
+
+        storage_provider = getattr(ac, "storage")
+        storage_provider.upload(
+            dump_str=job_data.decode("utf-8"), storage_path=job_json_path
+        )
+        status_json_dir = "/Backend_files/Status/" + backend_name + "/" + username + "/"
+        status_json_name = "status-" + job_id + ".json"
+        status_json_path = status_json_dir + status_json_name
+        job_response_dict["job_id"] = job_id
+        job_response_dict["status"] = "INITIALIZING"
+        job_response_dict["detail"] = "Got your json."
+        status_str = json.dumps(job_response_dict)
+        storage_provider.upload(dump_str=status_str, storage_path=status_json_path)
+        return job_response_dict
+    except (AuthError, ApiError):
+        job_response_dict["status"] = "ERROR"
+        job_response_dict["detail"] = "Error saving json data to database!"
+        job_response_dict["error_message"] = "Error saving json data to database!"
+        return 406, job_response_dict
 
 
 @api.get("/backends", response=List[BackendSchemaOut], tags=["Backend"])

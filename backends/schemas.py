@@ -23,7 +23,7 @@ class JobResponseSchema(Schema):
     """
     The schema for any job response.
     """
-    
+
     job_id: str
     status: str
     detail: str

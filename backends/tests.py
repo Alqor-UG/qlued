@@ -3,6 +3,8 @@ The models that define our tests for this app.
 """
 import json
 import uuid
+import requests
+
 from decouple import config
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
@@ -417,6 +419,7 @@ class JobSubmissionTest(TestCase):
         }
 
         url = reverse_lazy("api-1.0.0:post_job", kwargs={"backend_name": "fermions"})
+
         req = self.client.post(
             url,
             {
@@ -424,6 +427,7 @@ class JobSubmissionTest(TestCase):
                 "username": self.username,
                 "password": self.password,
             },
+            content_type="application/json",
         )
         data = json.loads(req.content)
         self.assertEqual(data["status"], "INITIALIZING")
