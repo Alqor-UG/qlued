@@ -4,8 +4,31 @@ The schemas that define our communication with the api_v1.
 
 
 from typing import List
-from ninja import ModelSchema
+from ninja import ModelSchema, Schema
 from .models import Backend
+
+# pylint: disable=R0903
+class JobSchemaIn(Schema):
+    """
+    The schema that is set up for the submission of new jobs.  We follow the
+    conventions of the `qiskit-cold-atom` here.
+    """
+
+    job: str
+    username: str
+    password: str
+
+
+class JobResponseSchema(Schema):
+    """
+    The schema for any job response.
+    """
+    
+    job_id: str
+    status: str
+    detail: str
+    error_message: str
+
 
 # pylint: disable=R0903
 class BackendSchemaOut(ModelSchema):
