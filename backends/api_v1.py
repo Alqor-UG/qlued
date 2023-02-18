@@ -73,7 +73,7 @@ def post_job(request, data: JobSchemaIn, backend_name: str):
     """
     A view to submit the job to the backend.
     """
-    #pylint: disable=R0914, W0613
+    # pylint: disable=R0914, W0613
     job_response_dict = {
         "job_id": "None",
         "status": "None",
