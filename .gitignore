@@ -128,3 +128,4 @@ dmypy.json
 .pyre/
 03_fermionic_tweezer_hardware.ipynb
 heroku_credentials.py
+docs/notebooks/credentials.py

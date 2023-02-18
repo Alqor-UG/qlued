@@ -3,6 +3,7 @@ The models that define our tests for this app.
 """
 import json
 import uuid
+
 from decouple import config
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
@@ -386,6 +387,46 @@ class JobSubmissionTest(TestCase):
                 "username": self.username,
                 "password": self.password,
             },
+        )
+        data = json.loads(req.content)
+        self.assertEqual(data["status"], "INITIALIZING")
+        self.assertEqual(req.status_code, 200)
+
+        # clean up the file
+        file_path = f"/Backend_files/Queued_Jobs/fermions/job-{data['job_id']}.json"
+        self.storage_provider.delete_file(file_path)
+        file_path = f"/Backend_files/Status/fermions/{self.username}/status-{data['job_id']}.json"
+        self.storage_provider.delete_file(file_path)
+
+    def test_post_job_ninja(self):
+        """
+        Test the API that presents the capabilities of the backend
+        """
+        job_payload = {
+            "experiment_0": {
+                "instructions": [
+                    ("load", [7], []),
+                    ("load", [2], []),
+                    ("measure", [2], []),
+                    ("measure", [6], []),
+                    ("measure", [7], []),
+                ],
+                "num_wires": 8,
+                "shots": 4,
+                "wire_order": "sequential",
+            },
+        }
+
+        url = reverse_lazy("api-1.0.0:post_job", kwargs={"backend_name": "fermions"})
+
+        req = self.client.post(
+            url,
+            {
+                "job": json.dumps(job_payload),
+                "username": self.username,
+                "password": self.password,
+            },
+            content_type="application/json",
         )
         data = json.loads(req.content)
         self.assertEqual(data["status"], "INITIALIZING")
