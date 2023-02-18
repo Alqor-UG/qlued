@@ -3,7 +3,6 @@ The models that define our tests for this app.
 """
 import json
 import uuid
-import requests
 
 from decouple import config
 from django.test import TestCase
