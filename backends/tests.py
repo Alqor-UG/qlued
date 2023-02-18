@@ -5,7 +5,7 @@ import json
 import uuid
 from decouple import config
 from django.test import TestCase
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth import get_user_model
 from .models import Backend
 from .apps import BackendsConfig as ac
@@ -238,6 +238,40 @@ class BackendConfigTest(TestCase):
 
         base_url = config("BASE_URL")
         self.assertEqual(data["url"], base_url + "/api/fermions/")
+        self.assertEqual(data["n_qubits"], 8)
+        self.assertEqual(data["num_species"], 2)
+        gates = data["gates"]
+        for gate in gates:
+            if gate["name"] == "fhop":
+                self.assertEqual(
+                    gate["coupling_map"],
+                    [
+                        [0, 1, 2, 3],
+                        [2, 3, 4, 5],
+                        [4, 5, 6, 7],
+                        [0, 1, 2, 3, 4, 5, 6, 7],
+                    ],
+                )
+            if gate["name"] == "fint":
+                self.assertEqual(gate["coupling_map"], [[0, 1, 2, 3, 4, 5, 6, 7]])
+
+    def test_fermions_get_config_ninja(self):
+        """
+        Test the API that presents the capabilities of the backend through the new version
+         of the API
+        """
+        url = reverse_lazy("api-1.0.0:get_config", kwargs={"backend_name": "fermions"})
+        req = self.client.get(
+            url, {"username": self.username, "password": self.password}
+        )
+        data = json.loads(req.content)
+        self.assertEqual(req.status_code, 200)
+        self.assertCountEqual(data["basis_gates"], ["fhop", "fint", "fphase"])
+        self.assertEqual(data["backend_name"], "alqor_fermionic_tweezer_simulator")
+        self.assertEqual(data["display_name"], "fermions")
+
+        base_url = config("BASE_URL")
+        self.assertEqual(data["url"], base_url + "/api/v1/fermions/")
         self.assertEqual(data["n_qubits"], 8)
         self.assertEqual(data["num_species"], 2)
         gates = data["gates"]
