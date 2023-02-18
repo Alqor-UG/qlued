@@ -141,6 +141,76 @@ def post_job(request, data: JobSchemaIn, backend_name: str):
         return 406, job_response_dict
 
 
+@api.get(
+    "{backend_name}/get_job_status",
+    response={200: JobResponseSchema, codes_4xx: JobResponseSchema},
+    tags=["Backend"],
+    url_name="get_job_status",
+)
+def get_job_status(
+    request, backend_name: str, job_id: str, username: str, password: str
+):
+    """
+    A view to check the job status that was previously submitted to the backend.
+    """
+    # pylint: disable=W0613
+    job_response_dict = {
+        "job_id": "None",
+        "status": "None",
+        "detail": "None",
+        "error_message": "None",
+    }
+
+    user = authenticate(username=username, password=password)
+
+    if user is None:
+        job_response_dict["status"] = "ERROR"
+        job_response_dict["error_message"] = "Invalid credentials!"
+        job_response_dict["detail"] = "Invalid credentials!"
+        return 401, job_response_dict
+    storage_provider = getattr(ac, "storage")
+    backend_names = storage_provider.get_backends()
+    if not backend_name in backend_names:
+        job_response_dict["status"] = "ERROR"
+        job_response_dict["detail"] = "Unknown back-end!"
+        job_response_dict["error_message"] = "Unknown back-end!"
+        return 404, job_response_dict
+
+    # complicated right now
+    # pylint: disable=W0702
+    try:
+        job_response_dict["job_id"] = job_id
+        extracted_username = job_id.split("-")[2]
+    except:
+        job_response_dict["status"] = "ERROR"
+        job_response_dict["detail"] = "Error loading json data from input request!"
+        job_response_dict[
+            "error_message"
+        ] = "Error loading json data from input request!"
+        return 406, job_response_dict
+    try:
+        status_json_dir = (
+            "/Backend_files/Status/" + backend_name + "/" + extracted_username + "/"
+        )
+        status_json_name = "status-" + job_id + ".json"
+        status_json_path = status_json_dir + status_json_name
+
+        storage_provider = getattr(ac, "storage")
+        job_response_dict = json.loads(
+            storage_provider.get_file_content(storage_path=status_json_path)
+        )
+        return 200, job_response_dict
+    except:
+        job_response_dict["status"] = "ERROR"
+        job_response_dict[
+            "detail"
+        ] = "Error getting status from database. Maybe invalid JOB ID!"
+        job_response_dict[
+            "error_message"
+        ] = "Error getting status from database. Maybe invalid JOB ID!"
+        return 406, job_response_dict
+
+
 @api.get("/backends", response=List[BackendSchemaOut], tags=["Backend"])
 def list_backends(request):
     """
