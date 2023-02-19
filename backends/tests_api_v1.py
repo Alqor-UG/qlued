@@ -166,3 +166,54 @@ class JobSubmissionTest(TestCase):
         self.assertEqual(req.status_code, 200)
         data = json.loads(req.content)
         self.assertEqual(data["job_id"], req_id)
+
+    def test_get_job_result_ninja(self):
+        """
+        Test the API that checks the job status
+        """
+        job_payload = {
+            "experiment_0": {
+                "instructions": [
+                    ("load", [7], []),
+                    ("load", [2], []),
+                    ("measure", [2], []),
+                    ("measure", [6], []),
+                    ("measure", [7], []),
+                ],
+                "num_wires": 8,
+                "shots": 4,
+                "wire_order": "sequential",
+            },
+        }
+        url = reverse_lazy("api-1.0.0:post_job", kwargs={"backend_name": "fermions"})
+
+        req = self.client.post(
+            url,
+            {
+                "job": json.dumps(job_payload),
+                "username": self.username,
+                "password": self.password,
+            },
+            content_type="application/json",
+        )
+
+        data = json.loads(req.content)
+        self.assertEqual(data["status"], "INITIALIZING")
+        self.assertEqual(req.status_code, 200)
+
+        req_id = data["job_id"]
+        url = reverse_lazy(
+            "api-1.0.0:get_job_result", kwargs={"backend_name": "fermions"}
+        )
+
+        req = self.client.get(
+            url,
+            {
+                "job_id": req_id,
+                "username": self.username,
+                "password": self.password,
+            },
+        )
+        self.assertEqual(req.status_code, 200)
+        data = json.loads(req.content)
+        self.assertEqual(data["job_id"], req_id)
