@@ -211,6 +211,94 @@ def get_job_status(
         return 406, job_response_dict
 
 
+@api.get(
+    "{backend_name}/get_job_result",
+    response={200: dict, codes_4xx: JobResponseSchema},
+    tags=["Backend"],
+    url_name="get_job_result",
+)
+def get_job_result(
+    request, backend_name: str, job_id: str, username: str, password: str
+):
+    """
+    A view to obtain the results of job that was previously submitted to the backend.
+    """
+    # pylint: disable=W0613, R0914, R0911
+    status_msg_dict = {
+        "job_id": "None",
+        "status": "None",
+        "detail": "None",
+        "error_message": "None",
+    }
+
+    user = authenticate(username=username, password=password)
+
+    if user is None:
+        status_msg_dict["status"] = "ERROR"
+        status_msg_dict["error_message"] = "Invalid credentials!"
+        status_msg_dict["detail"] = "Invalid credentials!"
+        return 401, status_msg_dict
+    storage_provider = getattr(ac, "storage")
+    backend_names = storage_provider.get_backends()
+    if not backend_name in backend_names:
+        status_msg_dict["status"] = "ERROR"
+        status_msg_dict["detail"] = "Unknown back-end!"
+        status_msg_dict["error_message"] = "Unknown back-end!"
+        return 404, status_msg_dict
+
+    # We should really handle these exceptions cleaner, but this seems a bit
+    # complicated right now
+    # pylint: disable=W0702
+    # decode the job-id to request the data from the queue
+    try:
+        status_msg_dict["job_id"] = job_id
+        extracted_username = job_id.split("-")[2]
+    except:
+        status_msg_dict["detail"] = "Error loading json data from input request!"
+        status_msg_dict["error_message"] = "Error loading json data from input request!"
+        return 406, status_msg_dict
+
+    # request the data from the queue
+    try:
+        status_json_dir = (
+            "/Backend_files/Status/" + backend_name + "/" + extracted_username + "/"
+        )
+        status_json_name = "status-" + job_id + ".json"
+        status_json_path = status_json_dir + status_json_name
+        storage_provider = getattr(ac, "storage")
+        status_msg_dict = json.loads(
+            storage_provider.get_file_content(storage_path=status_json_path)
+        )
+        if status_msg_dict["status"] != "DONE":
+            return 200, status_msg_dict
+    except:
+        status_msg_dict[
+            "detail"
+        ] = "Error getting status from database. Maybe invalid JOB ID!"
+        status_msg_dict[
+            "error_message"
+        ] = "Error getting status from database. Maybe invalid JOB ID!"
+        return 406, status_msg_dict
+    # and if the status is switched to done, we can also obtain the result
+    # one might attempt to connect this to the code above
+    try:
+        result_json_dir = (
+            "/Backend_files/Result/" + backend_name + "/" + extracted_username + "/"
+        )
+        result_json_name = "result-" + job_id + ".json"
+        result_json_path = result_json_dir + result_json_name
+        storage_provider = getattr(ac, "storage")
+        result_dict = json.loads(
+            storage_provider.get_file_content(storage_path=result_json_path)
+        )
+
+        return 200, result_dict
+    except:
+        status_msg_dict["detail"] = "Error getting result from database!"
+        status_msg_dict["error_message"] = "Error getting result from database!"
+        return 406, status_msg_dict
+
+
 @api.get("/backends", response=List[BackendSchemaOut], tags=["Backend"])
 def list_backends(request):
     """

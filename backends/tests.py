@@ -326,6 +326,44 @@ class JobSubmissionTest(TestCase):
         user.save()
         self.storage_provider = getattr(ac, "storage")
 
+    def test_post_job(self):
+        """
+        Test the API that presents the capabilities of the backend
+        """
+        job_payload = {
+            "experiment_0": {
+                "instructions": [
+                    ("load", [7], []),
+                    ("load", [2], []),
+                    ("measure", [2], []),
+                    ("measure", [6], []),
+                    ("measure", [7], []),
+                ],
+                "num_wires": 8,
+                "shots": 4,
+                "wire_order": "sequential",
+            },
+        }
+
+        url = reverse("post_job", kwargs={"backend_name": "fermions"})
+        req = self.client.post(
+            url,
+            {
+                "json": json.dumps(job_payload),
+                "username": self.username,
+                "password": self.password,
+            },
+        )
+        data = json.loads(req.content)
+        self.assertEqual(data["status"], "INITIALIZING")
+        self.assertEqual(req.status_code, 200)
+
+        # clean up the file
+        file_path = f"/Backend_files/Queued_Jobs/fermions/job-{data['job_id']}.json"
+        self.storage_provider.delete_file(file_path)
+        file_path = f"/Backend_files/Status/fermions/{self.username}/status-{data['job_id']}.json"
+        self.storage_provider.delete_file(file_path)
+
     def test_get_job_status(self):
         """
         Test the API that checks the job status
@@ -361,6 +399,53 @@ class JobSubmissionTest(TestCase):
         req_id = data["job_id"]
         status_payload = {"job_id": req_id}
         url = reverse("get_job_status", kwargs={"backend_name": "fermions"})
+        req = self.client.get(
+            url,
+            {
+                "json": json.dumps(status_payload),
+                "username": self.username,
+                "password": self.password,
+            },
+        )
+        self.assertEqual(req.status_code, 200)
+        data = json.loads(req.content)
+        self.assertEqual(data["job_id"], req_id)
+
+    def test_get_job_result(self):
+        """
+        Test the API that checks the job status
+        """
+        job_payload = {
+            "experiment_0": {
+                "instructions": [
+                    ("load", [7], []),
+                    ("load", [2], []),
+                    ("measure", [2], []),
+                    ("measure", [6], []),
+                    ("measure", [7], []),
+                ],
+                "num_wires": 8,
+                "shots": 4,
+                "wire_order": "sequential",
+            },
+        }
+
+        url = reverse("post_job", kwargs={"backend_name": "fermions"})
+        req = self.client.post(
+            url,
+            {
+                "json": json.dumps(job_payload),
+                "username": self.username,
+                "password": self.password,
+            },
+        )
+        data = json.loads(req.content)
+        self.assertEqual(data["status"], "INITIALIZING")
+        self.assertEqual(req.status_code, 200)
+
+        req_id = data["job_id"]
+        status_payload = {"job_id": req_id}
+        url = reverse("get_job_result", kwargs={"backend_name": "fermions"})
         req = self.client.get(
             url,
             {
