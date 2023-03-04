@@ -280,13 +280,15 @@ def get_job_result(
 )
 def list_backends(request):
     """
-    Returns the list of backends.
+    Returns the list of backends, excluding any device called "dummy_" as they are test systems.
     """
     # pylint: disable=W0613, E1101
     storage_provider = getattr(ac, "storage")
     backend_names = storage_provider.get_backends()
     backend_list = []
     for backend in backend_names:
-        config_dict = storage_provider.get_backend_dict(backend)
-        backend_list.append(config_dict)
+        # for testing we created dummy devices. We should ignore them in any other cases.
+        if not "dummy_" in backend:
+            config_dict = storage_provider.get_backend_dict(backend)
+            backend_list.append(config_dict)
     return backend_list

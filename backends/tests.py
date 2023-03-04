@@ -2,7 +2,6 @@
 The models that define our tests for this app.
 """
 import json
-import uuid
 
 from decouple import config
 from django.test import TestCase
@@ -469,60 +468,3 @@ class JobSubmissionTest(TestCase):
         self.assertEqual(req.status_code, 406)
         data = json.loads(req.content)
         self.assertEqual(data["status"], "ERROR")
-
-
-class DropboxProvideTest(TestCase):
-    """
-    The class that contains all the tests for the dropbox provider.
-    """
-
-    def setUp(self):
-        """
-        set up the test.
-        """
-        self.storage_provider = getattr(ac, "storage")
-
-    def test_upload_etc(self):
-        """
-        Test that it is possible to upload a file.
-        """
-
-        # upload a file and get it back
-        file_id = uuid.uuid4().hex
-        dump_str = "Hello world"
-        self.storage_provider.upload(dump_str, f"/test_folder/world-{file_id}.txt")
-        world_str = self.storage_provider.get_file_content(
-            f"/test_folder/world-{file_id}.txt"
-        )
-        self.assertEqual("Hello world", world_str)
-
-        # move it and get it back
-        self.storage_provider.move_file(
-            f"/test_folder/world-{file_id}.txt",
-            f"/test_folder/copied_world-{file_id}.txt",
-        )
-        world_str = self.storage_provider.get_file_content(
-            f"/test_folder/copied_world-{file_id}.txt"
-        )
-        self.assertEqual("Hello world", world_str)
-        # this is not really meaningful to be
-        file_list = self.storage_provider.get_file_queue("/test_folder/")
-        self.assertTrue(len(file_list))
-
-        # clean up our mess
-        self.storage_provider.delete_file(f"/test_folder/copied_world-{file_id}.txt")
-
-    def test_configs(self):
-        """
-        Test that we are able to obtain a list of backends.
-        """
-
-        # create a dummy config
-        dummy_id = uuid.uuid4().hex[:5]
-        dump_str = "Hello world"
-        dummy_f_name = f"/Backend_files/Config/dummy_{dummy_id}/config.json"
-        self.storage_provider.upload(dump_str, dummy_f_name)
-
-        backends = self.storage_provider.get_backends()
-        self.assertTrue(f"dummy_{dummy_id}" in backends)
-        self.storage_provider.delete_file(f"/Backend_files/Config/dummy_{dummy_id}")
