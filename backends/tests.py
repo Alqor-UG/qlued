@@ -2,7 +2,6 @@
 The models that define our tests for this app.
 """
 import json
-import uuid
 
 from decouple import config
 from django.test import TestCase
@@ -469,5 +468,3 @@ class JobSubmissionTest(TestCase):
         self.assertEqual(req.status_code, 406)
         data = json.loads(req.content)
         self.assertEqual(data["status"], "ERROR")
-
-
