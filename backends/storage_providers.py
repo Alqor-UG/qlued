@@ -5,6 +5,7 @@ storage for the jobs.
 from abc import ABC
 import sys
 from typing import List
+import json
 
 import dropbox
 from dropbox.files import WriteMode
@@ -40,6 +41,17 @@ class StorageProvider(ABC):
     def get_backends(self) -> List[str]:
         """
         Get a list of all the backends that the provider offers.
+        """
+
+    def get_backend_dict(self, backend_name: str) -> dict:
+        """
+        The configuration of the backend.
+
+        Args:
+            backend_name: The identifier of the backend
+
+        Returns:
+            The full schema of the backend.
         """
 
 
@@ -126,7 +138,6 @@ class DropboxProvider(StorageProvider):
 
             except Exception as err:
                 print(err)
-                sys.exit()
         return file_list
 
     def move_file(self, start_path: str, final_path: str) -> None:
@@ -201,3 +212,39 @@ class DropboxProvider(StorageProvider):
             except Exception as err:
                 sys.exit(err)
         return backend_names
+
+    def get_backend_dict(self, backend_name: str) -> dict:
+        """
+        The configuration of the backend.
+
+        Args:
+            backend_name: The identifier of the backend
+
+        Returns:
+            The full schema of the backend.
+        """
+        backend_json_path = "/Backend_files/Config/" + backend_name + "/config.json"
+        backend_config_dict = json.loads(
+            self.get_file_content(storage_path=backend_json_path)
+        )
+
+        # for comaptibility with qiskit
+        backend_config_dict["basis_gates"] = []
+        for gate in backend_config_dict["gates"]:
+            backend_config_dict["basis_gates"].append(gate["name"])
+
+        backend_config_dict["backend_name"] = backend_config_dict["name"]
+        backend_config_dict["display_name"] = backend_name
+        backend_config_dict["n_qubits"] = backend_config_dict["num_wires"]
+        backend_config_dict["backend_version"] = backend_config_dict["version"]
+
+        backend_config_dict["conditional"] = False
+        backend_config_dict["local"] = False
+        backend_config_dict["open_pulse"] = False
+        backend_config_dict["memory"] = True
+        backend_config_dict["coupling_map"] = "linear"
+
+        # and the url
+        base_url = config("BASE_URL")
+        backend_config_dict["url"] = base_url + "/api/v1/" + backend_name + "/"
+        return backend_config_dict
