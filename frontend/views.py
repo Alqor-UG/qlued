@@ -12,7 +12,6 @@ from django.contrib.auth.decorators import login_required
 
 from decouple import config
 
-from backends.models import Backend
 from backends.apps import BackendsConfig as ac
 
 from .forms import SignUpForm
@@ -24,7 +23,7 @@ def index(request):
     # pylint: disable=E1101
     template = loader.get_template("frontend/index.html")
     storage_provider = getattr(ac, "storage")
-    
+
     backend_names = storage_provider.get_backends()
     backend_list = []
     for backend in backend_names:
