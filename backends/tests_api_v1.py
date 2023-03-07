@@ -60,6 +60,16 @@ class BackendConfigTest(TestCase):
             if gate["name"] == "fint":
                 self.assertEqual(gate["coupling_map"], [[0, 1, 2, 3, 4, 5, 6, 7]])
 
+    def test_get_backends_ninja(self):
+        """
+        Test that we are able to obtain the config of all the backends.
+        """
+        url = reverse_lazy("api-1.0.0:get_backends")
+        req = self.client.get(url)
+        data = json.loads(req.content)
+        self.assertEqual(req.status_code, 200)
+        self.assertTrue(len(data) >= 4)
+
 
 class JobSubmissionTest(TestCase):
     """

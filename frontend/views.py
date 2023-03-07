@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 
 from decouple import config
 
-from backends.models import Backend
+from backends.apps import BackendsConfig as ac
 
 from .forms import SignUpForm
 from .models import Impressum
@@ -22,9 +22,17 @@ def index(request):
     """The index view that is called at the beginning."""
     # pylint: disable=E1101
     template = loader.get_template("frontend/index.html")
-    backend_list = Backend.objects.all()
+    storage_provider = getattr(ac, "storage")
+
+    backend_names = storage_provider.get_backends()
+    backend_list = []
+    for backend in backend_names:
+        # for testing we created dummy devices. We should ignore them in any other cases.
+        if not "dummy_" in backend:
+            config_dict = storage_provider.get_backend_dict(backend)
+            backend_list.append(config_dict)
     base_url = config("BASE_URL", default="http://www.example.com")
-    context = {"backend_list": backend_list.values(), "base_url": base_url}
+    context = {"backend_list": backend_list, "base_url": base_url}
     return HttpResponse(template.render(context, request))
 
 
