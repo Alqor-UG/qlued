@@ -26,9 +26,6 @@ mypy-extensions==0.4.3
 packaging==21.3
 pathspec==0.8.1
 platformdirs==2.4.1
-psycopg2-binary==2.9.3
-Pygments==2.11.2
-pylint==2.12.2
 pymdown-extensions==9.10
 pyparsing==3.0.6
 pyrsistent==0.17.3
