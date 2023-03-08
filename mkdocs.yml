@@ -12,5 +12,13 @@ theme:
     - navigation.footer
     - toc.follow
 
+nav:
+- Home: index.md
+- Notebook page: notebooks/rydberg_api_showcase.ipynb
+
+
+plugins:
+  - mkdocs-jupyter
+
 repo_url: https://github.com/alqor-ug/qlued
 edit_uri: edit/main/docs/
