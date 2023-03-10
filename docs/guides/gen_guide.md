@@ -1,6 +1,6 @@
 # General description
 ## The big picture
-The idea for developing [qlue][qlue_github] stems from the desire for unifying experiment execution on different platforms for quantum simulation/computation. These platforms can be based on different technologies (e.g. neutral atoms, ions, superconducting qubits, photonic systems etc.) and have different software for experiment control.
+The idea for developing [qlued][qlue_github] stems from the desire for unifying experiment execution on different platforms for quantum simulation/computation. These platforms can be based on different technologies (e.g. neutral atoms, ions, superconducting qubits, photonic systems etc.) and have different software for experiment control.
 
 In this diversity there is a unifying feature for different experiments, they essentially act as a backend for executing some instructions. On adopting this picture we quickly realise that we become totally agnostic to the details of how the instructions are executed on a hardware if we can provide a general higher level description of the experiments. A very suitable high-level description for experiments on different platforms is to think of these experiments as quantum circuits. In this picture any experiment essentially has three steps : state preparation, unitary evolution under a given Hamiltonian and measurement. Infact we are not just limited to experiments anymore and can even include theoretical simulator backends which execute the quantum circuits on a computer.
 
@@ -8,7 +8,7 @@ For providing software support for a given backend to use the language of quantu
 
 Another important point is that we assume that the user who writes the quantum circuits does not necessarily have local access to experiments. So the user submits quantum circuits to the backend remotely over the internet. We use the word job for the submissions by the remote user. Therefore, we also need a service which can act as the central point for various remote users to submit their jobs or fetch the result/status of their previously submitted jobs. For security reasons this service should provide robust user management and authentication.
 
-To address the issue we have developed a web interface called [qlue][qlue_github] which allows remote users to submit their jobs to remote cold atom backends. This architecture has several advantages :
+To address the issue we have developed a web interface called [qlued][qlue_github] which allows remote users to submit their jobs to remote cold atom backends. This architecture has several advantages :
 
 * The same circuit can be executed on different backends.
 * Makes collaboration between researchers easier.

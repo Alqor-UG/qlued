@@ -1,10 +1,6 @@
 site_name: Qlued
 theme:
   name: material
-  palette:
-    scheme: default
-    primary: red
-    accent: deep purple
   features:
     - navigation.instant
     - navigation.tracking
@@ -14,7 +10,13 @@ theme:
 
 nav:
 - Home: index.md
-- Notebook page: notebooks/rydberg_api_showcase.ipynb
+- "Guides":
+  - guides/gen_guide.md
+  - guides/user_guide.md
+  - guides/dev_guide.md
+- "Tutorials":
+  - Rydberg: notebooks/rydberg_api_showcase.ipynb
+  - Fermions: notebooks/fermions_api_showcase.ipynb
 
 
 plugins:
@@ -22,3 +24,11 @@ plugins:
 
 repo_url: https://github.com/alqor-ug/qlued
 edit_uri: edit/main/docs/
+
+markdown_extensions:
+  - toc
+  - attr_list
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
