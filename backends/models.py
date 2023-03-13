@@ -14,6 +14,17 @@ class User(AbstractUser):
     pass
 
 
+class Token(models.Model):
+    """
+    The backend class for the tokens that allow access to the different backends etc.
+    
+    Args:
+        key: CharField, contains authorization token value.
+        user: ForeignKey, foreign key to the logged user.
+        created_at: DateTimeField, contains date and time of token creation.
+        is_active: BooleanField contains if token is active.
+    """
+    
 class Backend(models.Model):
     """
     The backend class, which allows us to safe the properties of the backends etc.
