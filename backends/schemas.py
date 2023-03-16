@@ -7,6 +7,7 @@ from typing import List
 from ninja import ModelSchema, Schema
 from .models import Backend
 
+
 # pylint: disable=R0903
 class JobSchemaIn(Schema):
     """
@@ -49,6 +50,7 @@ class BackendSchemaOut(ModelSchema):
     backend_name: str
     basis_gates: List[str]
     url: str
+
     # pylint: disable=C0115
     class Config:
         model = Backend
