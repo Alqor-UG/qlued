@@ -7,13 +7,9 @@ from decouple import config
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from .models import Backend
 from .apps import BackendsConfig as ac
 
 User = get_user_model()
-
-
-
 
 
 class BackendConfigTest(TestCase):

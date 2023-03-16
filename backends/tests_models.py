@@ -1,21 +1,61 @@
 """
 Test the models of this app.
 """
-import json
+from datetime import datetime
+import uuid
+
+import pytz
 
 from decouple import config
 from django.test import TestCase
-from django.urls import reverse
 from django.contrib.auth import get_user_model
-from .models import Backend
-from .apps import BackendsConfig as ac
+from django.db.utils import IntegrityError
+
+from .models import Backend, Token
 
 User = get_user_model()
+
+
+class TokenCreationTest(TestCase):
+    """
+    The test for token creation etc.
+    """
+
+    def setUp(self):
+        self.username = config("USERNAME_TEST")
+        self.password = config("PASSWORD_TEST")
+        user = User.objects.create(username=self.username)
+        user.set_password(self.password)
+        user.save()
+        self.user = user
+
+    def test_token_creation(self):
+        """
+        Test that we can properly create tokens.
+        """
+
+        key = uuid.uuid4().hex
+        token = Token.objects.create(
+            key=key, user=self.user, created_at=datetime.now(pytz.utc), is_active=True
+        )
+        self.assertEqual(token.key, key)
+
+        # make sure that we cannot create a second token with the same key
+        with self.assertRaises(IntegrityError):
+            _ = Token.objects.create(
+                key=key,
+                user=self.user,
+                created_at=datetime.now(pytz.utc),
+                is_active=True,
+            )
+
 
 # pylint: disable=E1101
 class BackendCreationTest(TestCase):
     """
     The test for the creation of the backends.
+
+    THIS SHOULD BE REMOVED AT SOME POINT AS THIS CLASS IS NOW DEPRECEATED.
     """
 
     def test_fermion_creation(self):
