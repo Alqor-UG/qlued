@@ -2,12 +2,19 @@
 The models that define our tests for the api in version 1.
 """
 import json
+from datetime import datetime
+import uuid
+
+import pytz
+
 
 from decouple import config
 from django.test import TestCase
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 from .apps import BackendsConfig as ac
+
+from .models import Token
 
 User = get_user_model()
 
@@ -79,11 +86,20 @@ class JobSubmissionTest(TestCase):
     fixtures = ["backend.json"]
 
     def setUp(self):
+        # create a user
         self.username = config("USERNAME_TEST")
         self.password = config("PASSWORD_TEST")
         user = User.objects.create(username=self.username)
         user.set_password(self.password)
         user.save()
+
+        # give the user a token
+        key = uuid.uuid4().hex
+        self.token = Token.objects.create(
+            key=key, user=user, created_at=datetime.now(pytz.utc), is_active=True
+        )
+
+        # get the storage
         self.storage_provider = getattr(ac, "storage")
 
     def test_post_job_ninja(self):
@@ -109,11 +125,7 @@ class JobSubmissionTest(TestCase):
 
         req = self.client.post(
             url,
-            {
-                "job": json.dumps(job_payload),
-                "username": self.username,
-                "password": self.password,
-            },
+            {"job": json.dumps(job_payload), "api_token": self.token.key},
             content_type="application/json",
         )
         data = json.loads(req.content)
@@ -125,6 +137,15 @@ class JobSubmissionTest(TestCase):
         self.storage_provider.delete_file(file_path)
         file_path = f"/Backend_files/Status/fermions/{self.username}/status-{data['job_id']}.json"
         self.storage_provider.delete_file(file_path)
+
+        # test that we cannot create a job with invalid token
+        req = self.client.post(
+            url,
+            {"job": json.dumps(job_payload), "api_token": "DUMMY"},
+            content_type="application/json",
+        )
+        data = req.json()
+        self.assertEqual(data["status"], "ERROR")
 
     def test_get_job_status_ninja(self):
         """
@@ -148,11 +169,7 @@ class JobSubmissionTest(TestCase):
 
         req = self.client.post(
             url,
-            {
-                "job": json.dumps(job_payload),
-                "username": self.username,
-                "password": self.password,
-            },
+            {"job": json.dumps(job_payload), "api_token": self.token.key},
             content_type="application/json",
         )
 
@@ -199,11 +216,7 @@ class JobSubmissionTest(TestCase):
 
         req = self.client.post(
             url,
-            {
-                "job": json.dumps(job_payload),
-                "username": self.username,
-                "password": self.password,
-            },
+            {"job": json.dumps(job_payload), "api_token": self.token.key},
             content_type="application/json",
         )
 

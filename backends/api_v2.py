@@ -15,8 +15,13 @@ from django.contrib.auth import authenticate
 
 from dropbox.exceptions import ApiError, AuthError
 
-from .schemas import BackendSchemaOut, JobSchemaIn, JobResponseSchema
+from .schemas import (
+    BackendSchemaOut,
+    JobSchemaWithTokenIn,
+    JobResponseSchema,
+)
 from .apps import BackendsConfig as ac
+from .models import Token
 
 api = NinjaAPI(version="2.0.0")
 
@@ -42,7 +47,7 @@ def get_config(request, backend_name: str):
     tags=["Backend"],
     url_name="post_job",
 )
-def post_job(request, data: JobSchemaIn, backend_name: str):
+def post_job(request, data: JobSchemaWithTokenIn, backend_name: str):
     """
     A view to submit the job to the backend.
     """
@@ -54,15 +59,17 @@ def post_job(request, data: JobSchemaIn, backend_name: str):
         "error_message": "None",
     }
 
-    username = data.username
-    password = data.password
-    user = authenticate(username=username, password=password)
+    api_key = data.api_token
 
-    if user is None:
+    try:
+        token = Token.objects.get(key=api_key)
+    except Token.DoesNotExist:
         job_response_dict["status"] = "ERROR"
         job_response_dict["error_message"] = "Invalid credentials!"
         job_response_dict["detail"] = "Invalid credentials!"
         return 401, job_response_dict
+
+    username = token.user.username
     storage_provider = getattr(ac, "storage")
     backend_names = storage_provider.get_backends()
     if not backend_name in backend_names:

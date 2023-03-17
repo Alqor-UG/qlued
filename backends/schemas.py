@@ -20,6 +20,17 @@ class JobSchemaIn(Schema):
     password: str
 
 
+# pylint: disable=R0903
+class JobSchemaWithTokenIn(Schema):
+    """
+    The schema that is set up for the submission of new jobs.  This is the schema used in v2
+    as it allows for token based authentification only.
+    """
+
+    job: str
+    api_token: str
+
+
 class JobResponseSchema(Schema):
     """
     The schema for any job response.
