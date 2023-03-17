@@ -39,9 +39,7 @@ class BackendConfigTest(TestCase):
          of the API
         """
         url = reverse_lazy("api-2.0.0:get_config", kwargs={"backend_name": "fermions"})
-        req = self.client.get(
-            url, {"username": self.username, "password": self.password}
-        )
+        req = self.client.get(url)
         data = json.loads(req.content)
         self.assertEqual(req.status_code, 200)
         self.assertCountEqual(data["basis_gates"], ["fhop", "fint", "fphase"])
@@ -184,11 +182,7 @@ class JobSubmissionTest(TestCase):
 
         req = self.client.get(
             url,
-            {
-                "job_id": req_id,
-                "username": self.username,
-                "password": self.password,
-            },
+            {"job_id": req_id, "api_token": self.token.key},
         )
         self.assertEqual(req.status_code, 200)
         data = json.loads(req.content)
@@ -231,11 +225,7 @@ class JobSubmissionTest(TestCase):
 
         req = self.client.get(
             url,
-            {
-                "job_id": req_id,
-                "username": self.username,
-                "password": self.password,
-            },
+            {"job_id": req_id, "api_token": self.token.key},
         )
         self.assertEqual(req.status_code, 200)
         data = json.loads(req.content)
