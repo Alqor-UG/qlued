@@ -9,6 +9,7 @@ colorama==0.4.4
 Django==4.1.7
 django-on-heroku==1.1.2
 django-ninja==0.16.1
+dropbox==10.10.0
 dj-database-url==0.5.0
 ghp-import==2.0.2
 idna==3.3
