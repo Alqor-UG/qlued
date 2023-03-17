@@ -39,13 +39,20 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
       - name: Run Tests
         run: |
           python manage.py test --settings main.local_settings
 
   lint:
-
+    env:
+      APP_KEY: ${{secrets.APP_KEY}}
+      APP_SECRET: ${{secrets.APP_SECRET}}
+      REFRESH_TOKEN: ${{secrets.REFRESH_TOKEN}}
+      SECRET_KEY: ${{secrets.SECRET_KEY}}
+      USERNAME_TEST: ${{secrets.USERNAME_TEST}}
+      PASSWORD_TEST: ${{secrets.PASSWORD_TEST}}
+      BASE_URL: ${{secrets.BASE_URL}}
     runs-on: ubuntu-latest
 
     steps:
@@ -57,11 +64,11 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
         pip install pipenv
     - name: Run pylint
       run: |
-        pylint backends frontend
+        pylint --load-plugins pylint_django --django-settings-module=main.local_settings backends frontend
     - name: Run black
       run: |
         black --check .

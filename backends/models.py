@@ -2,6 +2,7 @@
 The models that define our sql tables for the app.
 """
 
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -13,6 +14,26 @@ class User(AbstractUser):
     """
 
     pass
+
+
+class Token(models.Model):
+    """
+    The backend class for the tokens that allow access to the different backends etc.
+
+    Args:
+        key: CharField, contains authorization token value.
+        user: ForeignKey, foreign key to the logged user.
+        created_at: DateTimeField, contains date and time of token creation.
+        is_active: BooleanField contains if token is active.
+    """
+
+    key = models.CharField(max_length=40, unique=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    created_at = models.DateTimeField()
+    is_active = models.BooleanField(default=False)
 
 
 class Backend(models.Model):

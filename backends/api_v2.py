@@ -11,12 +11,15 @@ import uuid
 from ninja import NinjaAPI
 from ninja.responses import codes_4xx
 
-from django.contrib.auth import authenticate
-
 from dropbox.exceptions import ApiError, AuthError
 
-from .schemas import BackendSchemaOut, JobSchemaIn, JobResponseSchema
+from .schemas import (
+    BackendSchemaOut,
+    JobSchemaWithTokenIn,
+    JobResponseSchema,
+)
 from .apps import BackendsConfig as ac
+from .models import Token
 
 api = NinjaAPI(version="2.0.0")
 
@@ -42,7 +45,7 @@ def get_config(request, backend_name: str):
     tags=["Backend"],
     url_name="post_job",
 )
-def post_job(request, data: JobSchemaIn, backend_name: str):
+def post_job(request, data: JobSchemaWithTokenIn, backend_name: str):
     """
     A view to submit the job to the backend.
     """
@@ -54,15 +57,17 @@ def post_job(request, data: JobSchemaIn, backend_name: str):
         "error_message": "None",
     }
 
-    username = data.username
-    password = data.password
-    user = authenticate(username=username, password=password)
+    api_key = data.api_token
 
-    if user is None:
+    try:
+        token = Token.objects.get(key=api_key)
+    except Token.DoesNotExist:
         job_response_dict["status"] = "ERROR"
         job_response_dict["error_message"] = "Invalid credentials!"
         job_response_dict["detail"] = "Invalid credentials!"
         return 401, job_response_dict
+
+    username = token.user.username
     storage_provider = getattr(ac, "storage")
     backend_names = storage_provider.get_backends()
     if not backend_name in backend_names:
@@ -120,9 +125,7 @@ def post_job(request, data: JobSchemaIn, backend_name: str):
     tags=["Backend"],
     url_name="get_job_status",
 )
-def get_job_status(
-    request, backend_name: str, job_id: str, username: str, password: str
-):
+def get_job_status(request, backend_name: str, job_id: str, api_token: str):
     """
     A view to check the job status that was previously submitted to the backend.
     """
@@ -134,13 +137,15 @@ def get_job_status(
         "error_message": "None",
     }
 
-    user = authenticate(username=username, password=password)
-
-    if user is None:
+    try:
+        token = Token.objects.get(key=api_token)
+    except Token.DoesNotExist:
         job_response_dict["status"] = "ERROR"
         job_response_dict["error_message"] = "Invalid credentials!"
         job_response_dict["detail"] = "Invalid credentials!"
         return 401, job_response_dict
+
+    username = token.user.username
     storage_provider = getattr(ac, "storage")
     backend_names = storage_provider.get_backends()
     if not backend_name in backend_names:
@@ -153,7 +158,6 @@ def get_job_status(
     # pylint: disable=W0702
     try:
         job_response_dict["job_id"] = job_id
-        extracted_username = job_id.split("-")[2]
     except:
         job_response_dict["status"] = "ERROR"
         job_response_dict["detail"] = "Error loading json data from input request!"
@@ -162,9 +166,7 @@ def get_job_status(
         ] = "Error loading json data from input request!"
         return 406, job_response_dict
     try:
-        status_json_dir = (
-            "/Backend_files/Status/" + backend_name + "/" + extracted_username + "/"
-        )
+        status_json_dir = "/Backend_files/Status/" + backend_name + "/" + username + "/"
         status_json_name = "status-" + job_id + ".json"
         status_json_path = status_json_dir + status_json_name
 
@@ -190,9 +192,7 @@ def get_job_status(
     tags=["Backend"],
     url_name="get_job_result",
 )
-def get_job_result(
-    request, backend_name: str, job_id: str, username: str, password: str
-):
+def get_job_result(request, backend_name: str, job_id: str, api_token: str):
     """
     A view to obtain the results of job that was previously submitted to the backend.
     """
@@ -204,13 +204,16 @@ def get_job_result(
         "error_message": "None",
     }
 
-    user = authenticate(username=username, password=password)
-
-    if user is None:
+    try:
+        token = Token.objects.get(key=api_token)
+    except Token.DoesNotExist:
         status_msg_dict["status"] = "ERROR"
         status_msg_dict["error_message"] = "Invalid credentials!"
         status_msg_dict["detail"] = "Invalid credentials!"
         return 401, status_msg_dict
+
+    username = token.user.username
+
     storage_provider = getattr(ac, "storage")
     backend_names = storage_provider.get_backends()
     if not backend_name in backend_names:
@@ -225,7 +228,6 @@ def get_job_result(
     # decode the job-id to request the data from the queue
     try:
         status_msg_dict["job_id"] = job_id
-        extracted_username = job_id.split("-")[2]
     except:
         status_msg_dict["detail"] = "Error loading json data from input request!"
         status_msg_dict["error_message"] = "Error loading json data from input request!"
@@ -233,9 +235,7 @@ def get_job_result(
 
     # request the data from the queue
     try:
-        status_json_dir = (
-            "/Backend_files/Status/" + backend_name + "/" + extracted_username + "/"
-        )
+        status_json_dir = "/Backend_files/Status/" + backend_name + "/" + username + "/"
         status_json_name = "status-" + job_id + ".json"
         status_json_path = status_json_dir + status_json_name
         storage_provider = getattr(ac, "storage")
@@ -255,9 +255,7 @@ def get_job_result(
     # and if the status is switched to done, we can also obtain the result
     # one might attempt to connect this to the code above
     try:
-        result_json_dir = (
-            "/Backend_files/Result/" + backend_name + "/" + extracted_username + "/"
-        )
+        result_json_dir = "/Backend_files/Result/" + backend_name + "/" + username + "/"
         result_json_name = "result-" + job_id + ".json"
         result_json_path = result_json_dir + result_json_name
         storage_provider = getattr(ac, "storage")
