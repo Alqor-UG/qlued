@@ -6,7 +6,8 @@ html addresses.
 from django.urls import path
 from backends import views
 
-from .api_v1 import api
+from .api_v1 import api as api_v1
+from .api_v2 import api as api_v2
 
 urlpatterns = [
     path("<str:backend_name>/get_config/", views.get_config_v2, name="get_config"),
@@ -29,5 +30,6 @@ urlpatterns = [
     path(
         "<str:backend_name>/get_user_jobs/", views.get_user_jobs, name="get_user_jobs"
     ),
-    path("v1/", api.urls),
+    path("v1/", api_v1.urls),
+    path("v2_beta/", api_v2.urls),
 ]
