@@ -22,7 +22,7 @@ mkdocs-material==8.5.10
 mkdocs-material-extensions==1.1.1
 mkdocs-jupyter==0.22.0
 mypy-extensions==0.4.3
-packaging==21.3
+packaging==22.0
 pathspec==0.11.0
 pylint==2.12.2
 pylint-django==2.5.3
