@@ -5,6 +5,7 @@ The models that define our sql tables for the app.
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+
 # pylint: disable=W0611, W0107
 class User(AbstractUser):
     """

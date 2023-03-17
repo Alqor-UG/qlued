@@ -12,6 +12,7 @@ from .apps import BackendsConfig as ac
 
 User = get_user_model()
 
+
 # pylint: disable=E1101
 class BackendCreationTest(TestCase):
     """
