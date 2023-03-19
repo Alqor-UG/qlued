@@ -7,7 +7,7 @@ django-on-heroku==1.1.2
 django-ninja==0.16.1
 dropbox==10.10.0
 gunicorn==20.1.0
-jsonschema==3.2.0
+jsonschema==4.17.3
 mypy-extensions==0.4.3
 pathspec==0.11.0
 pyrsistent==0.17.3
