@@ -1,5 +1,9 @@
 """Module that defines the user api.
 """
+from datetime import datetime
+import uuid
+
+import pytz
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
@@ -13,6 +17,7 @@ from django.contrib.auth.decorators import login_required
 from decouple import config
 
 from backends.apps import BackendsConfig as ac
+from backends.models import Token
 
 from .forms import SignUpForm
 from .models import Impressum
@@ -43,7 +48,6 @@ def about(request):
 
     impressums_text = Impressum.objects.first()
     context = {"impressums_text": impressums_text.impressum}
-    print(context)
     return HttpResponse(template.render(context, request))
 
 
@@ -52,12 +56,25 @@ def profile(request):
     """
     Given the user an appropiate profile page
     """
+    current_user = request.user
+
+    try:
+        token = Token.objects.get(user=current_user)
+    except Token.DoesNotExist:
+        # create a token if it does not exist yet.
+        key = uuid.uuid4().hex
+        token = Token.objects.create(
+            key=key,
+            user=current_user,
+            created_at=datetime.now(pytz.utc),
+            is_active=True,
+        )
+        token.save()
     template = loader.get_template("frontend/user.html")
-    context = {}
+    context = {"token_key": token.key}
     return HttpResponse(template.render(context, request))
 
 
-@csrf_exempt
 def signup(request):
     """
     Allow the user to sign up on our website.
@@ -69,13 +86,12 @@ def signup(request):
             raw_password = form.cleaned_data.get("password1")
             user = authenticate(username=user.username, password=raw_password)
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("profile"))
     else:
         form = SignUpForm()
     return render(request, "frontend/signup.html", {"form": form})
 
 
-@csrf_exempt
 def change_password(request):
     """Function that changes the password.
 
