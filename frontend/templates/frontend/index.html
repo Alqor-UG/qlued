@@ -1,7 +1,14 @@
-{% extends "base.html" %}
-
-{% load static %}
+{% extends "base.html" %}{% load socialaccount %}
+{% load i18n %}
 {% block content %}
+
+    <!-- GitHub button starts here -->
+    <a href="{% provider_login_url 'github' %}" class="btn btn-secondary">
+      <i class="fa fa-github fa-fw"></i>
+      <span>Login with GitHub</span>
+    </a>
+    <!-- GitHub button ends here -->
+  
 <div class="container">
   <div class="row justify-content-center">
     <div class="col">

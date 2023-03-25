@@ -39,6 +39,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.github",
+    'allauth.socialaccount.providers.google',
+
     "frontend",
     "backends",
 ]
@@ -108,6 +115,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -128,5 +139,9 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
+SITE_ID = 1
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
 LOGIN_REDIRECT_URL = "accounts/profile"
 LOGOUT_REDIRECT_URL = "index"
+ACCOUNT_LOGOUT_ON_GET = True
