@@ -42,7 +42,7 @@ jobs:
           pip install -r requirements-dev.txt
       - name: Run Tests
         run: |
-          python manage.py test --settings main.local_settings
+          python manage.py test
 
   lint:
     env:
@@ -68,7 +68,7 @@ jobs:
         pip install pipenv
     - name: Run pylint
       run: |
-        pylint --load-plugins pylint_django --django-settings-module=main.local_settings backends frontend
+        pylint --load-plugins pylint_django --django-settings-module=main.settings backends frontend
     - name: Run black
       run: |
         black --check .

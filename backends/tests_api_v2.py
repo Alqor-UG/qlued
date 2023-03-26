@@ -130,12 +130,6 @@ class JobSubmissionTest(TestCase):
         self.assertEqual(data["status"], "INITIALIZING")
         self.assertEqual(req.status_code, 200)
 
-        # clean up the file
-        file_path = f"/Backend_files/Queued_Jobs/fermions/job-{data['job_id']}.json"
-        self.storage_provider.delete_file(file_path)
-        file_path = f"/Backend_files/Status/fermions/{self.username}/status-{data['job_id']}.json"
-        self.storage_provider.delete_file(file_path)
-
         # test that we cannot create a job with invalid token
         req = self.client.post(
             url,
