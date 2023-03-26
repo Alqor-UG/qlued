@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+    
+    <h1>Available hardware simulators</h2>
+    <p>
+    We currently have the following devices online
+    </p>
+    {% for backend in backend_list %}
+
+    <div class="col-4">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">{{backend.display_name}} simulator</h3>
+          <p class="card-text">{{backend.description}} <br>
+          It is accessible under the URL
+          <code>{{backend.url}}</code></p>
+          <h4> Qiskit users</h4>
+          Before you can get started, please execute the following line of code, which saves your credentials:<br>
+          <code>provider = ColdAtomProvider.save_account(url = ["{{backend.url}}"], username="your_username",token="your_password")</code><br>
+        </div>
+      </div>
+    </div>
+
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}
