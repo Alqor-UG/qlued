@@ -28,7 +28,7 @@ class JobSchemaWithTokenIn(Schema):
     """
 
     job: str
-    api_token: str
+    token: str
 
 
 class JobResponseSchema(Schema):
