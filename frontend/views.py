@@ -28,13 +28,14 @@ def index(request):
     template = loader.get_template("frontend/index.html")
 
     base_url = config("BASE_URL", default="http://www.example.com")
-    context = { "base_url": base_url}
+    context = {"base_url": base_url}
     return HttpResponse(template.render(context, request))
+
 
 def devices(request):
     """The about that contains all the available backend devices."""
     template = loader.get_template("frontend/backends.html")
-    
+
     storage_provider = getattr(ac, "storage")
     backend_names = storage_provider.get_backends()
     backend_list = []
