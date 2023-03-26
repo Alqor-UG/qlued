@@ -130,7 +130,6 @@ class JobSubmissionTest(TestCase):
         self.assertEqual(data["status"], "INITIALIZING")
         self.assertEqual(req.status_code, 200)
 
-
         # test that we cannot create a job with invalid token
         req = self.client.post(
             url,

@@ -39,7 +39,6 @@ else:
     ALLOWED_HOSTS = []
 
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -98,12 +97,11 @@ DATABASES = {
 }
 
 
-
-
 if IS_HEROKU and "DATABASE_URL" in os.environ:
     # Configure Django for DATABASE_URL environment variable.
     DATABASES["default"] = dj_database_url.config(
-        conn_max_age=MAX_CONN_AGE, ssl_require=True)
+        conn_max_age=MAX_CONN_AGE, ssl_require=True
+    )
 
     # Enable test database if found in CI environment.
     if "CI" in os.environ:
@@ -167,8 +165,8 @@ class HerokuDiscoverRunner(DiscoverRunner):
 
 
 # Use HerokuDiscoverRunner on Heroku CI
-if "CI" in os.environ:
-    TEST_RUNNER = "gettingstarted.settings.HerokuDiscoverRunner"
+if IS_HEROKU and "CI" in os.environ:
+    TEST_RUNNER = "main.settings.HerokuDiscoverRunner"
 
 LOGIN_REDIRECT_URL = "accounts/profile"
 LOGOUT_REDIRECT_URL = "index"
