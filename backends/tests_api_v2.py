@@ -123,7 +123,7 @@ class JobSubmissionTest(TestCase):
 
         req = self.client.post(
             url,
-            {"job": json.dumps(job_payload), "api_token": self.token.key},
+            {"job": json.dumps(job_payload), "token": self.token.key},
             content_type="application/json",
         )
         data = json.loads(req.content)
@@ -139,7 +139,7 @@ class JobSubmissionTest(TestCase):
         # test that we cannot create a job with invalid token
         req = self.client.post(
             url,
-            {"job": json.dumps(job_payload), "api_token": "DUMMY"},
+            {"job": json.dumps(job_payload), "token": "DUMMY"},
             content_type="application/json",
         )
         data = req.json()
@@ -167,7 +167,7 @@ class JobSubmissionTest(TestCase):
 
         req = self.client.post(
             url,
-            {"job": json.dumps(job_payload), "api_token": self.token.key},
+            {"job": json.dumps(job_payload), "token": self.token.key},
             content_type="application/json",
         )
 
@@ -182,7 +182,7 @@ class JobSubmissionTest(TestCase):
 
         req = self.client.get(
             url,
-            {"job_id": req_id, "api_token": self.token.key},
+            {"job_id": req_id, "token": self.token.key},
         )
         self.assertEqual(req.status_code, 200)
         data = json.loads(req.content)
@@ -210,7 +210,7 @@ class JobSubmissionTest(TestCase):
 
         req = self.client.post(
             url,
-            {"job": json.dumps(job_payload), "api_token": self.token.key},
+            {"job": json.dumps(job_payload), "token": self.token.key},
             content_type="application/json",
         )
 
@@ -225,7 +225,7 @@ class JobSubmissionTest(TestCase):
 
         req = self.client.get(
             url,
-            {"job_id": req_id, "api_token": self.token.key},
+            {"job_id": req_id, "token": self.token.key},
         )
         self.assertEqual(req.status_code, 200)
         data = json.loads(req.content)

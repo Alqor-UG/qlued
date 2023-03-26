@@ -57,7 +57,7 @@ def post_job(request, data: JobSchemaWithTokenIn, backend_name: str):
         "error_message": "None",
     }
 
-    api_key = data.api_token
+    api_key = data.token
 
     try:
         token = Token.objects.get(key=api_key)
@@ -125,7 +125,7 @@ def post_job(request, data: JobSchemaWithTokenIn, backend_name: str):
     tags=["Backend"],
     url_name="get_job_status",
 )
-def get_job_status(request, backend_name: str, job_id: str, api_token: str):
+def get_job_status(request, backend_name: str, job_id: str, token: str):
     """
     A view to check the job status that was previously submitted to the backend.
     """
@@ -138,7 +138,7 @@ def get_job_status(request, backend_name: str, job_id: str, api_token: str):
     }
 
     try:
-        token = Token.objects.get(key=api_token)
+        token = Token.objects.get(key=token)
     except Token.DoesNotExist:
         job_response_dict["status"] = "ERROR"
         job_response_dict["error_message"] = "Invalid credentials!"
@@ -192,7 +192,7 @@ def get_job_status(request, backend_name: str, job_id: str, api_token: str):
     tags=["Backend"],
     url_name="get_job_result",
 )
-def get_job_result(request, backend_name: str, job_id: str, api_token: str):
+def get_job_result(request, backend_name: str, job_id: str, token: str):
     """
     A view to obtain the results of job that was previously submitted to the backend.
     """
@@ -205,7 +205,7 @@ def get_job_result(request, backend_name: str, job_id: str, api_token: str):
     }
 
     try:
-        token = Token.objects.get(key=api_token)
+        token = Token.objects.get(key=token)
     except Token.DoesNotExist:
         status_msg_dict["status"] = "ERROR"
         status_msg_dict["error_message"] = "Invalid credentials!"
