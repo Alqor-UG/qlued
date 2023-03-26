@@ -150,8 +150,9 @@ USE_TZ = True
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = "static/"
 
-# Enable WhiteNoise's GZip compression of static assets.
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# Enable WhiteNoise's GZip compression of static assets, but only within Heroku
+if IS_HEROKU:
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 # Test Runner Config
