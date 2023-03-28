@@ -2,12 +2,6 @@
 {% load i18n %}
 {% block content %}
 
-    <!-- GitHub button starts here -->
-    <a href="{% provider_login_url 'github' %}" class="btn btn-secondary">
-      <i class="fa fa-github fa-fw"></i>
-      <span>Login with GitHub</span>
-    </a>
-    <!-- GitHub button ends here -->
   
 <div class="container">
   <div class="row justify-content-center">
@@ -21,8 +15,8 @@
       {% if user.is_authenticated %}
       <p>To access the simulator, you will need to use the credentials from this website: <code> username='{{user.username}}' token='YOUR-PASSWORD'</code></p>
       {% else %}
-      <p>Before you can get started, you first have to sign up. </p>
-      <a role="button" href = "{% url 'signup' %}" class="btn btn-primary btn-lg">Sign up.</a>
+      <p>Just login through a third-party provider or sign up to get the necessary user token. </p>
+      <a role="button" href = "{% url 'account_login' %}" class="btn btn-primary btn-lg">Get started.</a>
       {% endif %}
     </div>
   </div>
