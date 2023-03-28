@@ -10,6 +10,7 @@ theme:
 
 nav:
 - Home: index.md
+- contributing.md
 - "Guides":
   - guides/gen_guide.md
   - guides/user_guide.md

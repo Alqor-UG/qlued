@@ -31,9 +31,9 @@ jobs:
           echo -e "\033[31;1;4mConcurrency Group\033[0m"
           echo -e "$CONCURRENCY_GROUP\n"
         shell: bash
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install Dependencies
@@ -42,7 +42,7 @@ jobs:
           pip install -r requirements-dev.txt
       - name: Run Tests
         run: |
-          python manage.py test --settings main.local_settings
+          python manage.py test
 
   lint:
     env:
@@ -56,11 +56,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
       with:
-        python-version: 3.8
+        python-version: 3.9
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
@@ -68,7 +68,7 @@ jobs:
         pip install pipenv
     - name: Run pylint
       run: |
-        pylint --load-plugins pylint_django --django-settings-module=main.local_settings backends frontend
+        pylint --load-plugins pylint_django --django-settings-module=main.settings backends frontend
     - name: Run black
       run: |
         black --check .

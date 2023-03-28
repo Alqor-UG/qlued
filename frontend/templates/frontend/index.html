@@ -13,50 +13,25 @@
   <div class="row justify-content-center">
     <div class="col">
       <h1 >Welcome to qlued</h1>
-      <a href="https://github.com/alqor-ug/qlued" target="_blank" rel="noopener noreferrer">Qlued</a> is a project to provide access to various quantum hardware simulators. It enables simple access to simulators of various
-      machines.  After you created yourself an account you can access the devices through pennylane or qiskit.
-    </div>
-  </div>
-  <div class="row justify-content-center">
-    <h2>User credentials</h2>
+      <p>
+        <a href="https://github.com/alqor-ug/qlued" target="_blank" rel="noopener noreferrer">Qlued</a> is an open source project to provide access to various quantum hardware simulators. It enables simple access to simulators of various
+        machines that emulate for example <a href="https://alqor-ug.github.io/qlued/notebooks/rydberg_api_showcase/" target="_blank" rel="noopener noreferrer">Rydberg atoms</a> or <a href="https://alqor-ug.github.io/qlued/notebooks/fermions_api_showcase/" target="_blank" rel="noopener noreferrer">hopping fermions</a>.
+      </p>
+
       {% if user.is_authenticated %}
       <p>To access the simulator, you will need to use the credentials from this website: <code> username='{{user.username}}' token='YOUR-PASSWORD'</code></p>
-
-
       {% else %}
-      <p>Before you can get started, you first have to sign up. Get started with the sign up below.</p>
+      <p>Before you can get started, you first have to sign up. </p>
       <a role="button" href = "{% url 'signup' %}" class="btn btn-primary btn-lg">Sign up.</a>
       {% endif %}
     </div>
-    <div class="row justify-content-center">
+  </div>
 
-    <h2>Available hardware simulators</h2>
-    <p>
-    At this stage stage, we currently have the following devices online
-    </p>
-    {% for backend in backend_list %}
-
-    <div class="col-4">
-      <div class="card">
-        <div class="card-body">
-          <h3 class="card-title">{{backend.display_name}} simulator</h3>
-          <p class="card-text">{{backend.description}} <br>
-          It is accessible under the URL
-          <code>{{backend.url}}</code></p>
-          <h4> Qiskit users</h4>
-          Before you can get started, please execute the following line of code, which saves your credentials:<br>
-          <code>provider = ColdAtomProvider.save_account(url = ["{{backend.url}}"], username="your_username",token="your_password")</code><br>
-        </div>
-      </div>
-    </div>
-
-    {% endfor %}
-    </div>
     <div class="row justify-content-center">
 
     <h2>Tutorials</h2>
     <p>
-    We have put together a number of tutorials that should allow you to get started
+    We have put together a number of tutorials that should help with your first moves.
     </p>
       <h3>QISKIT</h3>
       <ul>
