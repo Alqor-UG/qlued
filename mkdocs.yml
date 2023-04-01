@@ -16,8 +16,11 @@ nav:
   - guides/user_guide.md
   - guides/dev_guide.md
 - "Tutorials":
-  - Rydberg: notebooks/rydberg_api_showcase.ipynb
+  - Rydberg: notebooks/rydberg_api_showcase_v1.ipynb
   - Fermions: notebooks/fermions_api_showcase.ipynb
+- "Tutorials for v2-beta":
+  - Rydberg: notebooks/rydberg_api_showcase_v2.ipynb
+  - Fermions: notebooks/fermions_api_showcase_v2.ipynb
 
 
 plugins:
