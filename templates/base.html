@@ -19,9 +19,6 @@
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{% url 'index'%}">
-      <img src="{% static 'main/logo.svg' %}" height="40" alt="">
-    </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -35,6 +32,7 @@
           <a class="nav-item nav-link" href="{% url 'account_login'%}">Login</a>
         {% endif %}
         <a class="nav-item nav-link" href="{% url 'devices'%}">Devices</a>
+        <a class="nav-item nav-link" href="/api/v1/docs">API</a>
         <a class="nav-item nav-link" href="{% url 'about'%}">About</a>
       </div>
     </div>
