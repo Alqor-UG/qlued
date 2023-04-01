@@ -186,6 +186,6 @@ if IS_HEROKU and "CI" in os.environ:
 SITE_ID = 1
 ACCOUNT_EMAIL_VERIFICATION = "none"
 
-LOGIN_REDIRECT_URL = "accounts/profile"
+LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "index"
 ACCOUNT_LOGOUT_ON_GET = True
