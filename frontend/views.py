@@ -32,7 +32,7 @@ def index(request):
 
     if current_user.is_authenticated:
         try:
-           token = Token.objects.get(user=current_user)
+            token = Token.objects.get(user=current_user)
         except Token.DoesNotExist:
             # create a token if it does not exist yet.
             key = uuid.uuid4().hex
@@ -44,7 +44,7 @@ def index(request):
             )
             token.save()
         context = {"token_key": token.key}
-    
+
     return HttpResponse(template.render(context, request))
 
 
