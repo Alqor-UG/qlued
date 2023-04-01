@@ -27,8 +27,24 @@ def index(request):
     # pylint: disable=E1101
     template = loader.get_template("frontend/index.html")
 
-    base_url = config("BASE_URL", default="http://www.example.com")
-    context = {"base_url": base_url}
+    current_user = request.user
+    context = {}
+
+    if current_user.is_authenticated:
+        try:
+            token = Token.objects.get(user=current_user)
+        except Token.DoesNotExist:
+            # create a token if it does not exist yet.
+            key = uuid.uuid4().hex
+            token = Token.objects.create(
+                key=key,
+                user=current_user,
+                created_at=datetime.now(pytz.utc),
+                is_active=True,
+            )
+            token.save()
+        context = {"token_key": token.key}
+
     return HttpResponse(template.render(context, request))
 
 

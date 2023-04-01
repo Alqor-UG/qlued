@@ -12,7 +12,7 @@
     <div class="row justify-content-center">
       <h2>Login information</h2>
         <h3>What is needed for <code>v1</code> of the API </h3>
-        <p>To access the simulator, you will need to use the credentials from this website: <code> username='{{user.username}}' token='YOUR-PASSWORD'</code></p>
+        <p>To access the simulator, you will need to use the credentials from this website: <code> username='{{user.username}}' token='YOUR-PASSWORD'</code>. Be aware that <code>v1</code> does not work with third-party accounts.</p>
         <h3>What is needed for <code>v2-beta</code> of the API </h3>
         <p>In the second version, the access is token based. You will need to use the credentials: <code> username='{{user.username}}' token='{{token_key}}'</code></p>
     </div>
@@ -24,9 +24,9 @@
       <h3>Working with the API directly</h3>
       <p>We have several ways to test the API and find its documentation</p>
       <ul>
-        <li> The documentation of qlued also contains an <a href="">extensive section</a> on the API.</li>
-        <li> We have an OpenAPI documentation of <code>v1</code>, which is the production version</li>
-        <li> We have an OpenAPI documentation of <code>v2-beta</code>, which is the version, that is currently under development.</li>
+        <li> The documentation of qlued also contains an <a href="https://alqor-ug.github.io/qlued/">extensive section</a> on the API.</li>
+        <li> We have an <a href="/api/v1/docs">OpenAPI</a> documentation of <code>v1</code>, which is the production version</li>
+        <li> We have an <a href="/api/v2_beta/docs">OpenAPI</a> documentation of <code>v2-beta</code>, which is the version, that is currently under development.</li>
       </ul>
       <h3>Access through QISKIT</h3>
       <p>Quite often you would like to access the backends through some kind of python SDK like qiskit. We have currently set up an integration with <code>qiskit-cold-atoms</code>. Please be aware that the SDK is currently only compatible with <code>v1</code> of the API. Below you can find two tutorials, which guide you directly through the first steps:</p>

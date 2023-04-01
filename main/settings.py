@@ -48,6 +48,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.github",
+    "allauth.socialaccount.providers.google",
     "frontend",
     "backends",
 ]
@@ -68,7 +74,7 @@ AUTH_USER_MODEL = "backends.User"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -131,6 +137,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
 
 # Internationalization
 
@@ -169,5 +180,11 @@ class HerokuDiscoverRunner(DiscoverRunner):
 if IS_HEROKU and "CI" in os.environ:
     TEST_RUNNER = "main.settings.HerokuDiscoverRunner"
 
-LOGIN_REDIRECT_URL = "accounts/profile"
+
+# social account login etc
+SITE_ID = 1
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
+LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "index"
+ACCOUNT_LOGOUT_ON_GET = True
