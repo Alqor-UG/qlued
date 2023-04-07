@@ -31,5 +31,5 @@ urlpatterns = [
         "<str:backend_name>/get_user_jobs/", views.get_user_jobs, name="get_user_jobs"
     ),
     path("v1/", api_v1.urls),
-    path("v2_beta/", api_v2.urls),
+    path("v2/", api_v2.urls),
 ]
