@@ -15,6 +15,7 @@ nav:
   - guides/gen_guide.md
   - guides/user_guide.md
   - guides/dev_guide.md
+  - guides/oauth.md
 - "Tutorials":
   - Rydberg: notebooks/rydberg_api_showcase_v1.ipynb
   - Fermions: notebooks/fermions_api_showcase.ipynb
