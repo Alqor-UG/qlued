@@ -48,9 +48,22 @@ Since you are currently logged in as a superuser, logout and login again using y
 
 ## Github
 
+Google is already enabled as a provider. However, you have to add the proper credentials to enable it for your instance. The following is strongly inspired by the blog post  [here](https://testdriven.io/blog/django-social-auth/).
+
 Create a new OAuth application on github via [this link](https://github.com/settings/applications/new). Most fields are already super well explained. It is important to set:
 
 Under 'Authorized JavaScript origins', add the following URI:
 
    Homepage URL: `https://<YOUR-DOMAIN>`
    Authorization Callback URL: `https://<YOUR-DOMAIN>/accounts/github/login/callback/`
+
+
+Click "Register application". You'll be redirected to your app. Take note of the Client ID and Client Secret. If a Client Secret wasn't generated, click "Generate a new client secret".
+
+### Add social app in Django admin 
+
+This follows the same steps as above.
+
+### Further questions ?
+
+Just leave them in the comments below and we will see if we can find a solution.
