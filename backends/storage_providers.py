@@ -43,12 +43,13 @@ class StorageProvider(ABC):
         Get a list of all the backends that the provider offers.
         """
 
-    def get_backend_dict(self, backend_name: str) -> dict:
+    def get_backend_dict(self, backend_name: str, version: str) -> dict:
         """
         The configuration of the backend.
 
         Args:
             backend_name: The identifier of the backend
+            version: the version of the API you are using
 
         Returns:
             The full schema of the backend.
@@ -213,7 +214,7 @@ class DropboxProvider(StorageProvider):
                 sys.exit(err)
         return backend_names
 
-    def get_backend_dict(self, backend_name: str) -> dict:
+    def get_backend_dict(self, backend_name: str, version: str = "v2") -> dict:
         """
         The configuration of the backend.
 
@@ -246,5 +247,5 @@ class DropboxProvider(StorageProvider):
 
         # and the url
         base_url = config("BASE_URL")
-        backend_config_dict["url"] = base_url + "/api/v1/" + backend_name + "/"
+        backend_config_dict["url"] = base_url + f"/api/{version}/" + backend_name + "/"
         return backend_config_dict
