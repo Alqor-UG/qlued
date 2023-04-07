@@ -33,7 +33,7 @@ def get_config(request, backend_name: str):
     """
     # pylint: disable=W0613
     storage_provider = getattr(ac, "storage")
-    return storage_provider.get_backend_dict(backend_name)
+    return storage_provider.get_backend_dict(backend_name, version="v1")
 
 
 @api.post(

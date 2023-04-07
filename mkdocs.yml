@@ -19,7 +19,7 @@ nav:
 - "Tutorials":
   - Rydberg: notebooks/rydberg_api_showcase_v1.ipynb
   - Fermions: notebooks/fermions_api_showcase.ipynb
-- "Tutorials for v2-beta":
+- "Tutorials for v2":
   - Rydberg: notebooks/rydberg_api_showcase_v2.ipynb
   - Fermions: notebooks/fermions_api_showcase_v2.ipynb
 
