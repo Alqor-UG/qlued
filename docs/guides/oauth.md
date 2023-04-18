@@ -1,4 +1,8 @@
-# Third-party signon
+---
+comments: true
+---
+
+# Third-party sign on
 
 We have added third party sign on to `qlued`. It is enabled through [django-allauth](https://django-allauth.readthedocs.io/en/latest/templates.html) and currently we have identification for github and google working. In the following we have documented how you might add it on yourself, if you would like to create your own `qlued` instance.
 

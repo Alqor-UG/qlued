@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Developer Guide
 One of the following should describe your use case.
 
