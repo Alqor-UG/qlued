@@ -14,7 +14,7 @@ nav:
 - "Guides":
   - guides/gen_guide.md
   - guides/user_guide.md
-  - guides/dev_guide.md
+  - "Own instance" : guides/local_installation.md
   - guides/oauth.md
 - "Tutorials":
   - Rydberg: notebooks/rydberg_api_showcase_v1.ipynb
@@ -34,6 +34,9 @@ markdown_extensions:
   - toc
   - attr_list
   - md_in_html
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
