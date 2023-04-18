@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # General description
 ## The big picture
 The idea for developing [qlued][qlue_github] stems from the desire for unifying experiment execution on different platforms for quantum simulation/computation. These platforms can be based on different technologies (e.g. neutral atoms, ions, superconducting qubits, photonic systems etc.) and have different software for experiment control.
