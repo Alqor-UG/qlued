@@ -29,7 +29,7 @@ packaging==22.0
 pathspec==0.11.0
 pylint==2.17.1
 pylint-django==2.5.3
-platformdirs==2.4.1
+platformdirs==3.2.0
 pymdown-extensions==9.10
 pyparsing==3.0.6
 pyrsistent==0.17.3
