@@ -249,3 +249,57 @@ class DropboxProvider(StorageProvider):
         base_url = config("BASE_URL")
         backend_config_dict["url"] = base_url + f"/api/{version}/" + backend_name + "/"
         return backend_config_dict
+
+
+class MongodbProvider(StorageProvider):
+    """
+    The access to the mongodb
+    """
+
+    def upload(self, content_dict: dict, storage_path: str, file_id: str) -> None:
+        """
+        Upload the file to the storage
+
+        content_dict: the content that should be uploaded onto the mongodb base
+        storage_path: the access path towards the mongodb collection
+        file_id: the id of the file we are about to create
+        """
+
+    def get_file_content(self, storage_path: str) -> str:
+        """
+        Get the file content from the storage
+
+        storage_path: the path towards the file, excluding the filename / id
+        file_id: the id of the file we are about to look up
+        """
+
+    def get_file_queue(self, storage_path: str) -> List[str]:
+        """
+        Get a list of files
+        """
+
+    def move_file(self, start_path: str, final_path: str) -> None:
+        """
+        Move the file from start_path to `final_path`
+
+        storage_path: the access path at which we start (excluding the file id)
+        final_path: the access path at which we put the file (excluding the file id)
+        file_id: the id of the file we are about to move
+        """
+
+    def get_backends(self) -> List[str]:
+        """
+        Get a list of all the backends that the provider offers.
+        """
+
+    def get_backend_dict(self, backend_name: str, version: str) -> dict:
+        """
+        The configuration of the backend.
+
+        Args:
+            backend_name: The identifier of the backend
+            version: the version of the API you are using
+
+        Returns:
+            The full schema of the backend.
+        """
