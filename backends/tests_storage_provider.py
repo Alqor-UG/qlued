@@ -26,28 +26,22 @@ class DropboxProvideTest(TestCase):
 
         # upload a file and get it back
         file_id = uuid.uuid4().hex
-        dump_str = "Hello world"
-        self.storage_provider.upload(dump_str, f"/test_folder/world-{file_id}.txt")
-        world_str = self.storage_provider.get_file_content(
-            f"/test_folder/world-{file_id}.txt"
-        )
-        self.assertEqual("Hello world", world_str)
+        test_content = {"experiment_0": "Nothing happened here."}
+        storage_path = "test_folder"
+        job_id = f"world-{file_id}"
+        self.storage_provider.upload(test_content, storage_path, job_id)
+        test_result = self.storage_provider.get_file_content(storage_path, job_id)
+
+        self.assertDictEqual(test_content, test_result)
 
         # move it and get it back
-        self.storage_provider.move_file(
-            f"/test_folder/world-{file_id}.txt",
-            f"/test_folder/copied_world-{file_id}.txt",
-        )
-        world_str = self.storage_provider.get_file_content(
-            f"/test_folder/copied_world-{file_id}.txt"
-        )
-        self.assertEqual("Hello world", world_str)
-        # this is not really meaningful to be
-        file_list = self.storage_provider.get_file_queue("/test_folder/")
-        self.assertTrue(len(file_list))
+        second_path = "test_folder_2"
+        self.storage_provider.move_file(storage_path, second_path, job_id)
+        test_result = self.storage_provider.get_file_content(second_path, job_id)
+        self.assertDictEqual(test_content, test_result)
 
         # clean up our mess
-        self.storage_provider.delete_file(f"/test_folder/copied_world-{file_id}.txt")
+        self.storage_provider.delete_file(second_path, job_id)
 
     def test_configs(self):
         """
@@ -63,8 +57,8 @@ class DropboxProvideTest(TestCase):
         dummy_dict["version"] = "0.0.1"
 
         backend_name = f"dummy_{dummy_id}"
-        dummy_f_name = f"/Backend_files/Config/{backend_name}/config.json"
-        self.storage_provider.upload(json.dumps(dummy_dict), dummy_f_name)
+        dummy_path = f"Backend_files/Config/{backend_name}"
+        self.storage_provider.upload(dummy_dict, dummy_path, job_id="config")
 
         # can we get the backend in the list ?
         backends = self.storage_provider.get_backends()
@@ -73,4 +67,4 @@ class DropboxProvideTest(TestCase):
         # can we get the config of the backend ?
         backend_dict = self.storage_provider.get_backend_dict(backend_name)
         self.assertEqual(backend_dict["backend_name"], dummy_dict["name"])
-        self.storage_provider.delete_file(f"/Backend_files/Config/{backend_name}")
+        self.storage_provider.delete_file(dummy_path, "config")

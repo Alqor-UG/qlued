@@ -77,13 +77,13 @@ def post_job(request, data: JobSchemaWithTokenIn, backend_name: str):
         return 404, job_response_dict
 
     try:
-        job_data = data.job.encode("utf-8")
-    except UnicodeDecodeError:
+        job_dict = json.loads(data.job)
+    except json.decoder.JSONDecodeError:
         job_response_dict["status"] = "ERROR"
-        job_response_dict["detail"] = "The encoding of your json seems non utf-8!"
+        job_response_dict["detail"] = "The encoding of your json seems not work out!"
         job_response_dict[
             "error_message"
-        ] = "The encoding of your json seems non utf-8!"
+        ] = "The encoding of your json seems not work out!"
         return 406, job_response_dict
     try:
         job_id = (
@@ -97,20 +97,23 @@ def post_job(request, data: JobSchemaWithTokenIn, backend_name: str):
         )
         job_json_dir = "/Backend_files/Queued_Jobs/" + backend_name + "/"
         job_json_name = "job-" + job_id + ".json"
-        job_json_path = job_json_dir + job_json_name
 
         storage_provider = getattr(ac, "storage")
         storage_provider.upload(
-            dump_str=job_data.decode("utf-8"), storage_path=job_json_path
+            content_dict=job_dict, storage_path=job_json_dir, job_id=job_json_name
         )
+
         status_json_dir = "/Backend_files/Status/" + backend_name + "/" + username + "/"
         status_json_name = "status-" + job_id + ".json"
-        status_json_path = status_json_dir + status_json_name
         job_response_dict["job_id"] = job_id
         job_response_dict["status"] = "INITIALIZING"
         job_response_dict["detail"] = "Got your json."
-        status_str = json.dumps(job_response_dict)
-        storage_provider.upload(dump_str=status_str, storage_path=status_json_path)
+
+        storage_provider.upload(
+            content_dict=job_response_dict,
+            storage_path=status_json_dir,
+            job_id=status_json_name,
+        )
         return job_response_dict
     except (AuthError, ApiError):
         job_response_dict["status"] = "ERROR"
@@ -167,13 +170,13 @@ def get_job_status(request, backend_name: str, job_id: str, token: str):
         return 406, job_response_dict
     try:
         status_json_dir = "/Backend_files/Status/" + backend_name + "/" + username + "/"
-        status_json_name = "status-" + job_id + ".json"
-        status_json_path = status_json_dir + status_json_name
+        status_json_name = "status-" + job_id
 
         storage_provider = getattr(ac, "storage")
-        job_response_dict = json.loads(
-            storage_provider.get_file_content(storage_path=status_json_path)
+        job_response_dict = storage_provider.get_file_content(
+            storage_path=status_json_dir, job_id=status_json_name
         )
+
         return 200, job_response_dict
     except:
         job_response_dict["status"] = "ERROR"
@@ -236,11 +239,11 @@ def get_job_result(request, backend_name: str, job_id: str, token: str):
     # request the data from the queue
     try:
         status_json_dir = "/Backend_files/Status/" + backend_name + "/" + username + "/"
-        status_json_name = "status-" + job_id + ".json"
-        status_json_path = status_json_dir + status_json_name
+        status_json_name = "status-" + job_id
+
         storage_provider = getattr(ac, "storage")
-        status_msg_dict = json.loads(
-            storage_provider.get_file_content(storage_path=status_json_path)
+        status_msg_dict = storage_provider.get_file_content(
+            storage_path=status_json_dir, job_id=status_json_name
         )
         if status_msg_dict["status"] != "DONE":
             return 200, status_msg_dict
@@ -256,11 +259,10 @@ def get_job_result(request, backend_name: str, job_id: str, token: str):
     # one might attempt to connect this to the code above
     try:
         result_json_dir = "/Backend_files/Result/" + backend_name + "/" + username + "/"
-        result_json_name = "result-" + job_id + ".json"
-        result_json_path = result_json_dir + result_json_name
+        result_json_name = "result-" + job_id
         storage_provider = getattr(ac, "storage")
-        result_dict = json.loads(
-            storage_provider.get_file_content(storage_path=result_json_path)
+        result_dict = storage_provider.get_file_content(
+            storage_path=result_json_dir, job_id=result_json_name
         )
 
         return 200, result_dict
