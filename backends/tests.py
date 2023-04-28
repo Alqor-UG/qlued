@@ -172,10 +172,12 @@ class JobSubmissionTest(TestCase):
         self.assertEqual(req.status_code, 200)
 
         # clean up the file
-        file_path = f"/Backend_files/Queued_Jobs/fermions/job-{data['job_id']}.json"
-        self.storage_provider.delete_file(file_path)
-        file_path = f"/Backend_files/Status/fermions/{self.username}/status-{data['job_id']}.json"
-        self.storage_provider.delete_file(file_path)
+        file_path = "Backend_files/Queued_Jobs/fermions"
+        file_id = f"job-{data['job_id']}"
+        self.storage_provider.delete_file(file_path, file_id)
+        file_path = f"Backend_files/Status/fermions/{self.username}"
+        file_id = f"status-{data['job_id']}"
+        self.storage_provider.delete_file(file_path, file_id)
 
     def test_get_job_status(self):
         """

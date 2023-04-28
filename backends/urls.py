@@ -23,11 +23,6 @@ urlpatterns = [
         name="get_job_result",
     ),
     path(
-        "<str:backend_name>/get_next_job_in_queue/",
-        views.get_next_job_in_queue,
-        name="get_next_job_in_queue",
-    ),
-    path(
         "<str:backend_name>/get_user_jobs/", views.get_user_jobs, name="get_user_jobs"
     ),
     path("v1/", api_v1.urls),

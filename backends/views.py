@@ -90,10 +90,8 @@ def get_config_v2(request, backend_name: str) -> JsonResponse:
         return JsonResponse(job_response_dict, status=html_status)
 
     storage_provider = getattr(ac, "storage")
-    backend_json_path = "/Backend_files/Config/" + backend_name + "/config.json"
-    backend_config_dict = json.loads(
-        storage_provider.get_file_content(storage_path=backend_json_path)
-    )
+    backend_json_path = "Backend_files/Config" + backend_name
+    backend_config_dict = storage_provider.get_file_content(backend_json_path, "config")
 
     # for comaptibility with qiskit
     backend_config_dict["basis_gates"] = []
@@ -156,21 +154,17 @@ def post_job(request, backend_name: str) -> JsonResponse:
             + (uuid.uuid4().hex)[:5]
         )
         job_json_dir = "/Backend_files/Queued_Jobs/" + backend_name + "/"
-        job_json_name = "job-" + job_id + ".json"
-        job_json_path = job_json_dir + job_json_name
+        job_json_name = "job-" + job_id
 
         storage_provider = getattr(ac, "storage")
-        storage_provider.upload(
-            dump_str=data.decode("utf-8"), storage_path=job_json_path
-        )
-        status_json_dir = "/Backend_files/Status/" + backend_name + "/" + username + "/"
-        status_json_name = "status-" + job_id + ".json"
-        status_json_path = status_json_dir + status_json_name
+        storage_provider.upload(json.loads(data), job_json_dir, job_json_name)
+
+        status_json_dir = "Backend_files/Status/" + backend_name + "/" + username
+        status_json_name = "status-" + job_id
         job_response_dict["job_id"] = job_id
         job_response_dict["status"] = "INITIALIZING"
         job_response_dict["detail"] = "Got your json."
-        status_str = json.dumps(job_response_dict)
-        storage_provider.upload(dump_str=status_str, storage_path=status_json_path)
+        storage_provider.upload(job_response_dict, status_json_dir, status_json_name)
         return JsonResponse(job_response_dict)
     except (AuthError, ApiError):
         job_response_dict["status"] = "ERROR"
@@ -211,14 +205,14 @@ def get_job_status(request, backend_name: str) -> JsonResponse:
         return JsonResponse(status_msg_dict, status=406)
     try:
         status_json_dir = (
-            "/Backend_files/Status/" + backend_name + "/" + extracted_username + "/"
+            "Backend_files/Status/" + backend_name + "/" + extracted_username
         )
-        status_json_name = "status-" + job_id + ".json"
-        status_json_path = status_json_dir + status_json_name
+
+        status_json_name = "status-" + job_id
 
         storage_provider = getattr(ac, "storage")
-        status_msg_dict = json.loads(
-            storage_provider.get_file_content(storage_path=status_json_path)
+        status_msg_dict = storage_provider.get_file_content(
+            status_json_dir, status_json_name
         )
         return JsonResponse(status_msg_dict, status=200)
     except:
@@ -269,11 +263,11 @@ def get_job_result(request, backend_name: str) -> JsonResponse:
             "/Backend_files/Status/" + backend_name + "/" + extracted_username + "/"
         )
         status_json_name = "status-" + job_id + ".json"
-        status_json_path = status_json_dir + status_json_name
         storage_provider = getattr(ac, "storage")
-        status_msg_dict = json.loads(
-            storage_provider.get_file_content(storage_path=status_json_path)
+        status_msg_dict = storage_provider.get_file_content(
+            status_json_dir, status_json_name
         )
+
         if status_msg_dict["status"] != "DONE":
             return JsonResponse(status_msg_dict, status=200)
     except:
@@ -290,79 +284,18 @@ def get_job_result(request, backend_name: str) -> JsonResponse:
         result_json_dir = (
             "/Backend_files/Result/" + backend_name + "/" + extracted_username + "/"
         )
-        result_json_name = "result-" + job_id + ".json"
-        result_json_path = result_json_dir + result_json_name
+        result_json_name = "result-" + job_id
         storage_provider = getattr(ac, "storage")
-        result_dict = json.loads(
-            storage_provider.get_file_content(storage_path=result_json_path)
+        result_dict = storage_provider.get_file_content(
+            result_json_dir, result_json_name
         )
+
         return JsonResponse(result_dict, status=200)
     except:
         status_msg_dict["detail"] = "Error getting result from database!"
         status_msg_dict["error_message"] = "Error getting result from database!"
         return JsonResponse(status_msg_dict, status=406)
 
-
-@csrf_exempt
-def get_next_job_in_queue(request, backend_name: str) -> JsonResponse:
-    """
-    A view that obtains the next job in the queue. It is only allowed for the
-    user, which is named `spooler`
-
-    Args:
-        request: The request coming in
-        backend_name (str): The name of the backend
-
-    Returns:
-        JsonResponse : send back a response with the dict if successful
-    """
-    status_msg_dict, html_status = check_request(request, backend_name)
-    if status_msg_dict["status"] == "ERROR":
-        return JsonResponse(status_msg_dict, status=html_status)
-    username = request.GET["username"]
-    if not username == "spooler":
-        status_msg_dict["status"] = "ERROR"
-        status_msg_dict["error_message"] = "This is for the spooler only"
-        status_msg_dict["detail"] = "This is for the spooler only"
-        return JsonResponse(status_msg_dict, status=406)
-
-    job_msg_dict = {"job_id": "None", "job_json": "None"}
-
-    # We should really handle these exceptions cleaner, but this seems a bit
-    # complicated right now
-    # pylint: disable=W0702
-    try:
-        ###_Checking already queued files for a possible freeze_##
-        job_json_dir = "/Backend_files/Running_Jobs/"
-        storage_provider = getattr(ac, "storage")
-        job_list = storage_provider.get_file_queue(job_json_dir)
-        if job_list:
-            job_id_list = [name[4:-5] for name in job_list]
-            for job_id_el in job_id_list:
-                split_job_id = job_id_el.split("-")
-                if backend_name == split_job_id[1]:
-                    job_msg_dict["job_id"] = job_id_el
-                    job_msg_dict["job_json"] = (
-                        job_json_dir + job_list[job_id_list.index(job_id_el)]
-                    )
-                    return JsonResponse(job_msg_dict, status=200)
-        ###_Now proceed as usual_##
-        job_json_dir = "/Backend_files/Queued_Jobs/" + backend_name + "/"
-        storage_provider = getattr(ac, "storage")
-        job_list = storage_provider.get_file_queue(job_json_dir)
-        assert len(job_list) != 0
-        job_json_name = job_list[0]
-        job_msg_dict["job_id"] = job_json_name[4:-5]
-        job_json_start_path = job_json_dir + job_json_name
-        job_json_final_path = "/Backend_files/Running_Jobs/" + job_json_name
-
-        storage_provider.move_file(
-            start_path=job_json_start_path, final_path=job_json_final_path
-        )
-        job_msg_dict["job_json"] = job_json_final_path
-        return JsonResponse(job_msg_dict, status=200)
-    except:
-        return JsonResponse(job_msg_dict, status=406)
 
 
 @csrf_exempt

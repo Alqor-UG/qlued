@@ -1,7 +1,6 @@
 """
 The tests for the storage provider
 """
-import json
 import uuid
 
 from django.test import TestCase
