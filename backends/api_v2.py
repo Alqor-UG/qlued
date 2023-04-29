@@ -96,7 +96,7 @@ def post_job(request, data: JobSchemaWithTokenIn, backend_name: str):
             + (uuid.uuid4().hex)[:5]
         )
         job_json_dir = "/Backend_files/Queued_Jobs/" + backend_name + "/"
-        job_json_name = "job-" + job_id + ".json"
+        job_json_name = "job-" + job_id
 
         storage_provider = getattr(ac, "storage")
         storage_provider.upload(
