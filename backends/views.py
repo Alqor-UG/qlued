@@ -262,7 +262,7 @@ def get_job_result(request, backend_name: str) -> JsonResponse:
         status_json_dir = (
             "Backend_files/Status/" + backend_name + "/" + extracted_username
         )
-        status_json_name = "status-" + job_id 
+        status_json_name = "status-" + job_id
         storage_provider = getattr(ac, "storage")
         status_msg_dict = storage_provider.get_file_content(
             status_json_dir, status_json_name
@@ -282,7 +282,7 @@ def get_job_result(request, backend_name: str) -> JsonResponse:
     # one might attempt to connect this to the code above
     try:
         result_json_dir = (
-            "Backend_files/Result/" + backend_name + "/" + extracted_username 
+            "Backend_files/Result/" + backend_name + "/" + extracted_username
         )
         result_json_name = "result-" + job_id
         storage_provider = getattr(ac, "storage")
@@ -295,7 +295,6 @@ def get_job_result(request, backend_name: str) -> JsonResponse:
         status_msg_dict["detail"] = "Error getting result from database!"
         status_msg_dict["error_message"] = "Error getting result from database!"
         return JsonResponse(status_msg_dict, status=406)
-
 
 
 @csrf_exempt

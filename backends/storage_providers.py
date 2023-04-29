@@ -7,10 +7,10 @@ import sys
 from typing import List
 import json
 
-import dropbox  
-from dropbox.files import WriteMode  
-from dropbox.exceptions import AuthError  
-from decouple import config  
+import dropbox
+from dropbox.files import WriteMode
+from dropbox.exceptions import AuthError
+from decouple import config
 
 
 class StorageProvider(ABC):

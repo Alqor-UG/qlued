@@ -104,7 +104,7 @@ def post_job(request, data: JobSchemaWithTokenIn, backend_name: str):
         )
 
         status_json_dir = "/Backend_files/Status/" + backend_name + "/" + username + "/"
-        status_json_name = "status-" + job_id 
+        status_json_name = "status-" + job_id
         job_response_dict["job_id"] = job_id
         job_response_dict["status"] = "INITIALIZING"
         job_response_dict["detail"] = "Got your json."
@@ -169,7 +169,7 @@ def get_job_status(request, backend_name: str, job_id: str, token: str):
         ] = "Error loading json data from input request!"
         return 406, job_response_dict
     try:
-        status_json_dir = "Backend_files/Status/" + backend_name + "/" + username 
+        status_json_dir = "Backend_files/Status/" + backend_name + "/" + username
         status_json_name = "status-" + job_id
 
         storage_provider = getattr(ac, "storage")
