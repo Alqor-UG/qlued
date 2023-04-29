@@ -5,6 +5,8 @@ import uuid
 
 from django.test import TestCase
 from .apps import BackendsConfig as ac
+from decouple import config
+from .storage_providers import MongodbProvider
 
 
 class DropboxProvideTest(TestCase):
@@ -49,7 +51,7 @@ class DropboxProvideTest(TestCase):
 
         # create a dummy config
         dummy_id = uuid.uuid4().hex[:5]
-        dummy_dict = {}
+        dummy_dict: dict = {}
         dummy_dict["gates"] = []
         dummy_dict["name"] = "Dummy"
         dummy_dict["num_wires"] = 3
@@ -67,3 +69,40 @@ class DropboxProvideTest(TestCase):
         backend_dict = self.storage_provider.get_backend_dict(backend_name)
         self.assertEqual(backend_dict["backend_name"], dummy_dict["name"])
         self.storage_provider.delete_file(dummy_path, "config")
+
+
+class MongodbProviderTest(TestCase):
+    """
+    The class that contains all the tests for the dropbox provider.
+    """
+
+    def setUp(self):
+        """
+        set up the test.
+        """
+        # load the credentials from the environment through decouple
+        self.storage_provider = MongodbProvider()
+
+    def test_upload_etc(self):
+        """
+        Test that it is possible to upload a file.
+        """
+
+        # upload a file and get it back
+        test_content = {"experiment_0": "Nothing happened here."}
+        storage_path = "test/subcollection"
+
+        job_id = uuid.uuid4().hex[:24]
+        self.storage_provider.upload(test_content, storage_path, job_id)
+        test_result = self.storage_provider.get_file_content(storage_path, job_id)
+
+        self.assertDictEqual(test_content, test_result)
+
+        # move it and get it back
+        second_path = "test/subcollection_2"
+        self.storage_provider.move_file(storage_path, second_path, job_id)
+        test_result = self.storage_provider.get_file_content(second_path, job_id)
+        self.assertDictEqual(test_content, test_result)
+
+        # clean up our mess
+        self.storage_provider.delete_file(second_path, job_id)
