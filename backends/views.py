@@ -90,7 +90,7 @@ def get_config_v2(request, backend_name: str) -> JsonResponse:
         return JsonResponse(job_response_dict, status=html_status)
 
     storage_provider = getattr(ac, "storage")
-    backend_json_path = "Backend_files/Config" + backend_name
+    backend_json_path = "Backend_files/Config/" + backend_name
     backend_config_dict = storage_provider.get_file_content(backend_json_path, "config")
 
     # for comaptibility with qiskit
@@ -260,9 +260,9 @@ def get_job_result(request, backend_name: str) -> JsonResponse:
     # request the data from the queue
     try:
         status_json_dir = (
-            "/Backend_files/Status/" + backend_name + "/" + extracted_username + "/"
+            "Backend_files/Status/" + backend_name + "/" + extracted_username
         )
-        status_json_name = "status-" + job_id + ".json"
+        status_json_name = "status-" + job_id 
         storage_provider = getattr(ac, "storage")
         status_msg_dict = storage_provider.get_file_content(
             status_json_dir, status_json_name
@@ -282,7 +282,7 @@ def get_job_result(request, backend_name: str) -> JsonResponse:
     # one might attempt to connect this to the code above
     try:
         result_json_dir = (
-            "/Backend_files/Result/" + backend_name + "/" + extracted_username + "/"
+            "Backend_files/Result/" + backend_name + "/" + extracted_username 
         )
         result_json_name = "result-" + job_id
         storage_provider = getattr(ac, "storage")

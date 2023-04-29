@@ -70,7 +70,7 @@ class DropboxProvider(StorageProvider):
     # Add OAuth2 access token here.
     # You can generate one for yourself in the App Console.
     # <https://blogs.dropbox.com/developers/2014/05/generate-an-access-token-for-your-own-account/>
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Set up the neccessary keys.
         """

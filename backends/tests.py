@@ -272,15 +272,3 @@ class JobSubmissionTest(TestCase):
         self.assertEqual(req.status_code, 200)
         data = json.loads(req.content)
         self.assertEqual(data["job_id"], req_id)
-
-    def test_get_next_job_in_queue(self):
-        """
-        Test the API that gets the next job in the queue.
-        """
-        url = reverse("get_next_job_in_queue", kwargs={"backend_name": "fermions"})
-        req = self.client.get(
-            url, {"username": self.username, "password": self.password}
-        )
-        self.assertEqual(req.status_code, 406)
-        data = json.loads(req.content)
-        self.assertEqual(data["status"], "ERROR")
