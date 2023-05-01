@@ -369,8 +369,8 @@ class MongodbProvider(StorageProvider):
         """
 
         # get the database on which we work
-        database = self.client["Backend_files"]
-        config_collection = database["Config"]
+        database = self.client["backends"]
+        config_collection = database["configs"]
         # get all the documents in the collection configs and save the disply_name in a list
         backend_names: list[str] = []
         for config in config_collection.find():

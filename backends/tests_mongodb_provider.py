@@ -59,7 +59,7 @@ class MongodbProviderTest(TestCase):
         backend_name = f"dummy_{dummy_id}"
         dummy_dict["display_name"] = backend_name
 
-        config_path = "Backend_files/Config"
+        config_path = "backends/configs"
         self.storage_provider.upload(
             dummy_dict, config_path, job_id=uuid.uuid4().hex[:24]
         )
