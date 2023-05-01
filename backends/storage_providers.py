@@ -377,9 +377,10 @@ class MongodbProvider(StorageProvider):
             backend_names.append(config["display_name"])
         return backend_names
 
-    def get_backend_dict(self, backend_name: str, version: str) -> dict:
+    def get_backend_dict(self, backend_name: str, version: str = "v2") -> dict:
         """
-        The configuration of the backend.
+        The configuration dictionary of the backend such that it can be sent out to the API to
+        the common user. We make sure that it is compatible with QISKIT within this function.
 
         Args:
             backend_name: The identifier of the backend
@@ -388,3 +389,34 @@ class MongodbProvider(StorageProvider):
         Returns:
             The full schema of the backend.
         """
+        # get the database on which we work
+        database = self.client["backends"]
+        config_collection = database["configs"]
+
+        # create the filter for the document with display_name that is equal to backend_name
+        document_to_find = {"display_name": backend_name}
+        backend_config_dict = config_collection.find_one(document_to_find)
+
+        if not backend_config_dict:
+            return {}
+
+        # for comaptibility with qiskit
+        backend_config_dict["basis_gates"] = []
+        for gate in backend_config_dict["gates"]:
+            backend_config_dict["basis_gates"].append(gate["name"])
+
+        backend_config_dict["backend_name"] = backend_config_dict["name"]
+        backend_config_dict["display_name"] = backend_name
+        backend_config_dict["n_qubits"] = backend_config_dict["num_wires"]
+        backend_config_dict["backend_version"] = backend_config_dict["version"]
+
+        backend_config_dict["conditional"] = False
+        backend_config_dict["local"] = False
+        backend_config_dict["open_pulse"] = False
+        backend_config_dict["memory"] = True
+        backend_config_dict["coupling_map"] = "linear"
+
+        # and the url
+        base_url = config("BASE_URL")
+        backend_config_dict["url"] = f"{base_url}/api/{version}/{backend_name}"
+        return backend_config_dict

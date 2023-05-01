@@ -60,10 +60,14 @@ class MongodbProviderTest(TestCase):
         dummy_dict["display_name"] = backend_name
 
         config_path = "backends/configs"
-        self.storage_provider.upload(
-            dummy_dict, config_path, job_id=uuid.uuid4().hex[:24]
-        )
+        mongo_id = uuid.uuid4().hex[:24]
+        self.storage_provider.upload(dummy_dict, config_path, job_id=mongo_id)
 
         # can we get the backend in the list ?
         backends = self.storage_provider.get_backends()
         self.assertTrue(f"dummy_{dummy_id}" in backends)
+
+        # can we get the config of the backend ?
+        backend_dict = self.storage_provider.get_backend_dict(backend_name)
+        self.assertEqual(backend_dict["backend_name"], dummy_dict["name"])
+        self.storage_provider.delete_file(config_path, mongo_id)
