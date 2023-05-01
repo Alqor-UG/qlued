@@ -14,7 +14,6 @@ from dropbox.exceptions import AuthError
 
 # necessary for the mongodb provider
 from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
 from bson.objectid import ObjectId
 
 # get the environment variables
@@ -368,6 +367,15 @@ class MongodbProvider(StorageProvider):
         """
         Get a list of all the backends that the provider offers.
         """
+
+        # get the database on which we work
+        database = self.client["Backend_files"]
+        config_collection = database["Config"]
+        # get all the documents in the collection configs and save the disply_name in a list
+        backend_names: list[str] = []
+        for config in config_collection.find():
+            backend_names.append(config["display_name"])
+        return backend_names
 
     def get_backend_dict(self, backend_name: str, version: str) -> dict:
         """

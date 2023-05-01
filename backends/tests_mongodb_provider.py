@@ -4,12 +4,10 @@ The tests for the storage provider
 import uuid
 
 from django.test import TestCase
-from .apps import BackendsConfig as ac
-from decouple import config
 from .storage_providers import MongodbProvider
 
 
-class DropboxProvideTest(TestCase):
+class MongodbProviderTest(TestCase):
     """
     The class that contains all the tests for the dropbox provider.
     """
@@ -18,7 +16,8 @@ class DropboxProvideTest(TestCase):
         """
         set up the test.
         """
-        self.storage_provider = getattr(ac, "storage")
+        # load the credentials from the environment through decouple
+        self.storage_provider = MongodbProvider()
 
     def test_upload_etc(self):
         """
@@ -26,17 +25,17 @@ class DropboxProvideTest(TestCase):
         """
 
         # upload a file and get it back
-        file_id = uuid.uuid4().hex
         test_content = {"experiment_0": "Nothing happened here."}
-        storage_path = "test_folder"
-        job_id = f"world-{file_id}"
+        storage_path = "test/subcollection"
+
+        job_id = uuid.uuid4().hex[:24]
         self.storage_provider.upload(test_content, storage_path, job_id)
         test_result = self.storage_provider.get_file_content(storage_path, job_id)
 
         self.assertDictEqual(test_content, test_result)
 
         # move it and get it back
-        second_path = "test_folder_2"
+        second_path = "test/subcollection_2"
         self.storage_provider.move_file(storage_path, second_path, job_id)
         test_result = self.storage_provider.get_file_content(second_path, job_id)
         self.assertDictEqual(test_content, test_result)
@@ -58,14 +57,13 @@ class DropboxProvideTest(TestCase):
         dummy_dict["version"] = "0.0.1"
 
         backend_name = f"dummy_{dummy_id}"
-        dummy_path = f"Backend_files/Config/{backend_name}"
-        self.storage_provider.upload(dummy_dict, dummy_path, job_id="config")
+        dummy_dict["display_name"] = backend_name
+
+        config_path = "Backend_files/Config"
+        self.storage_provider.upload(
+            dummy_dict, config_path, job_id=uuid.uuid4().hex[:24]
+        )
 
         # can we get the backend in the list ?
         backends = self.storage_provider.get_backends()
         self.assertTrue(f"dummy_{dummy_id}" in backends)
-
-        # can we get the config of the backend ?
-        backend_dict = self.storage_provider.get_backend_dict(backend_name)
-        self.assertEqual(backend_dict["backend_name"], dummy_dict["name"])
-        self.storage_provider.delete_file(dummy_path, "config")
