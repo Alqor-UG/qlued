@@ -1,9 +1,7 @@
 """
 Module that defines the user api.
 """
-import datetime
 import json
-import uuid
 from typing import Tuple
 from decouple import config
 
@@ -90,8 +88,7 @@ def get_config_v2(request, backend_name: str) -> JsonResponse:
         return JsonResponse(job_response_dict, status=html_status)
 
     storage_provider = getattr(ac, "storage")
-    backend_json_path = "Backend_files/Config/" + backend_name
-    backend_config_dict = storage_provider.get_file_content(backend_json_path, "config")
+    backend_config_dict = storage_provider.get_backend_dict(backend_name)
 
     # for comaptibility with qiskit
     backend_config_dict["basis_gates"] = []
@@ -144,27 +141,19 @@ def post_job(request, backend_name: str) -> JsonResponse:
         ] = "The encoding of your json seems non utf-8!"
         return JsonResponse(job_response_dict, status=406)
     try:
-        job_id = (
-            (datetime.datetime.utcnow().strftime("%Y%m%d_%H%M%S"))
-            + "-"
-            + backend_name
-            + "-"
-            + username
-            + "-"
-            + (uuid.uuid4().hex)[:5]
-        )
-        job_json_dir = "/Backend_files/Queued_Jobs/" + backend_name + "/"
-        job_json_name = "job-" + job_id
-
+        # upload the job to the database
         storage_provider = getattr(ac, "storage")
-        storage_provider.upload(json.loads(data), job_json_dir, job_json_name)
+        job_id = storage_provider.upload_job(
+            json.loads(data), backend_name=backend_name, username=username
+        )
 
-        status_json_dir = "Backend_files/Status/" + backend_name + "/" + username
-        status_json_name = "status-" + job_id
-        job_response_dict["job_id"] = job_id
-        job_response_dict["status"] = "INITIALIZING"
-        job_response_dict["detail"] = "Got your json."
-        storage_provider.upload(job_response_dict, status_json_dir, status_json_name)
+        # now we upload the status json to the backend. this is the same status json
+        # that is returned to the user
+        job_response_dict = storage_provider.upload_status(
+            backend_name=backend_name,
+            username=username,
+            job_id=job_id,
+        )
         return JsonResponse(job_response_dict)
     except (AuthError, ApiError):
         job_response_dict["status"] = "ERROR"
@@ -204,16 +193,13 @@ def get_job_status(request, backend_name: str) -> JsonResponse:
         status_msg_dict["error_message"] = "Error loading json data from input request!"
         return JsonResponse(status_msg_dict, status=406)
     try:
-        status_json_dir = (
-            "Backend_files/Status/" + backend_name + "/" + extracted_username
-        )
-
-        status_json_name = "status-" + job_id
-
         storage_provider = getattr(ac, "storage")
-        status_msg_dict = storage_provider.get_file_content(
-            status_json_dir, status_json_name
+        status_msg_dict = storage_provider.get_status(
+            backend_name=backend_name,
+            username=extracted_username,
+            job_id=job_id,
         )
+
         return JsonResponse(status_msg_dict, status=200)
     except:
         status_msg_dict["status"] = "ERROR"
@@ -259,13 +245,12 @@ def get_job_result(request, backend_name: str) -> JsonResponse:
 
     # request the data from the queue
     try:
-        status_json_dir = (
-            "Backend_files/Status/" + backend_name + "/" + extracted_username
-        )
-        status_json_name = "status-" + job_id
+        # first we check if the status is done
         storage_provider = getattr(ac, "storage")
-        status_msg_dict = storage_provider.get_file_content(
-            status_json_dir, status_json_name
+        status_msg_dict = storage_provider.get_status(
+            backend_name=backend_name,
+            username=extracted_username,
+            job_id=job_id,
         )
 
         if status_msg_dict["status"] != "DONE":
@@ -281,52 +266,14 @@ def get_job_result(request, backend_name: str) -> JsonResponse:
     # and if the status is switched to done, we can also obtain the result
     # one might attempt to connect this to the code above
     try:
-        result_json_dir = (
-            "Backend_files/Result/" + backend_name + "/" + extracted_username
-        )
-        result_json_name = "result-" + job_id
-        storage_provider = getattr(ac, "storage")
-        result_dict = storage_provider.get_file_content(
-            result_json_dir, result_json_name
+        # get the result from the queue
+        result_dict = storage_provider.get_result(
+            backend_name, extracted_username, job_id
         )
 
+        # and return it
         return JsonResponse(result_dict, status=200)
     except:
         status_msg_dict["detail"] = "Error getting result from database!"
         status_msg_dict["error_message"] = "Error getting result from database!"
         return JsonResponse(status_msg_dict, status=406)
-
-
-@csrf_exempt
-def get_user_jobs(request, backend_name: str) -> JsonResponse:
-    """
-    A view that all the jobs of a user for the specified backend
-
-    Args:
-        request: The request coming in
-        backend_name (str): The name of the backend
-
-    Returns:
-        JsonResponse : send back a response with the dict if successful
-    """
-    status_msg_dict, html_status = check_request(request, backend_name)
-    if status_msg_dict["status"] == "ERROR":
-        return JsonResponse(status_msg_dict, status=html_status)
-
-    user_job_dict = {"job_ids": "None"}
-    username = request.GET["username"]
-    # We should really handle these exceptions cleaner, but this seems a bit
-    # complicated right now
-    # pylint: disable=W0702
-    try:
-        job_json_dir = (
-            "/Backend_files/Finished_Jobs/" + backend_name + "/" + username + "/"
-        )
-        storage_provider = getattr(ac, "storage")
-        job_list = storage_provider.get_file_queue(job_json_dir)
-        assert len(job_list) != 0
-        job_list = [job_json_name[4:-5] for job_json_name in job_list]
-        user_job_dict["job_ids"] = job_list
-        return JsonResponse(user_job_dict)
-    except:
-        return JsonResponse(user_job_dict)
