@@ -7,6 +7,9 @@ import sys
 from typing import List
 import json
 
+import datetime
+import uuid
+
 import dropbox
 from dropbox.files import WriteMode
 from dropbox.exceptions import AuthError
@@ -275,3 +278,100 @@ class DropboxProvider(StorageProvider):
         base_url = config("BASE_URL")
         backend_config_dict["url"] = base_url + f"/api/{version}/" + backend_name + "/"
         return backend_config_dict
+
+    def upload_job(self, job_dict: dict, backend_name: str, username: str) -> str:
+        """
+        This function uploads a job to the backend and creates the job_id.
+
+        Args:
+            job_dict: The job dictionary that should be uploaded
+            backend_name: The name of the backend to which we want to upload the job
+            username: The username of the user that is uploading the job
+
+        Returns:
+            The job_id of the uploaded job
+        """
+        job_id = (
+            (datetime.datetime.utcnow().strftime("%Y%m%d_%H%M%S"))
+            + "-"
+            + backend_name
+            + "-"
+            + username
+            + "-"
+            + (uuid.uuid4().hex)[:5]
+        )
+        # now we upload the job to the backend
+        # this is currently very much backend specific
+        job_json_dir = "/Backend_files/Queued_Jobs/" + backend_name + "/"
+        job_json_name = "job-" + job_id
+
+        self.upload(
+            content_dict=job_dict, storage_path=job_json_dir, job_id=job_json_name
+        )
+        return job_id
+
+    def upload_status(self, backend_name: str, username: str, job_id: str) -> dict:
+        """
+        This function uploads a status file to the backend and creates the status dict.
+
+        Args:
+            backend_name: The name of the backend to which we want to upload the job
+            username: The username of the user that is uploading the job
+            job_id: The job_id of the job that we want to upload the status for
+
+        Returns:
+            The status dict of the job
+        """
+        status_json_dir = "Backend_files/Status/" + backend_name + "/" + username
+        status_json_name = "status-" + job_id
+        status_dict = {
+            "job_id": job_id,
+            "status": "INITIALIZING",
+            "detail": "Got your json.",
+            "error_message": "None",
+        }
+        self.upload(
+            content_dict=status_dict,
+            storage_path=status_json_dir,
+            job_id=status_json_name,
+        )
+        return status_dict
+
+    def get_status(self, backend_name: str, username: str, job_id: str) -> dict:
+        """
+        This function gets the status file from the backend and returns the status dict.
+
+        Args:
+            backend_name: The name of the backend to which we want to upload the job
+            username: The username of the user that is uploading the job
+            job_id: The job_id of the job that we want to upload the status for
+
+        Returns:
+            The status dict of the job
+        """
+        status_json_dir = "Backend_files/Status/" + backend_name + "/" + username
+        status_json_name = "status-" + job_id
+
+        status_dict = self.get_file_content(
+            storage_path=status_json_dir, job_id=status_json_name
+        )
+        return status_dict
+
+    def get_result(self, backend_name: str, username: str, job_id: str) -> dict:
+        """
+        This function gets the result file from the backend and returns the result dict.
+
+        Args:
+            backend_name: The name of the backend to which we want to upload the job
+            username: The username of the user that is uploading the job
+            job_id: The job_id of the job that we want to upload the status for
+
+        Returns:
+            The result dict of the job
+        """
+        result_json_dir = "Backend_files/Result/" + backend_name + "/" + username
+        result_json_name = "result-" + job_id
+        result_dict = self.get_file_content(
+            storage_path=result_json_dir, job_id=result_json_name
+        )
+        return result_dict
