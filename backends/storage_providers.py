@@ -65,6 +65,62 @@ class StorageProvider(ABC):
             The full schema of the backend.
         """
 
+    @abstractmethod
+    def upload_job(self, job_dict: dict, backend_name: str, username: str) -> str:
+        """
+        Upload the job to the storage provider.
+
+        Args:
+            job_dict: the full job dict
+            backend_name: the name of the backend
+            username: the name of the user that submitted the job
+
+        Returns:
+            The job id of the uploaded job.
+        """
+
+    @abstractmethod
+    def upload_status(self, backend_name: str, username: str, job_id: str) -> dict:
+        """
+        This function uploads a status file to the backend and creates the status dict.
+
+        Args:
+            backend_name: The name of the backend to which we want to upload the job
+            username: The username of the user that is uploading the job
+            job_id: The job_id of the job that we want to upload the status for
+
+        Returns:
+            The status dict of the job
+        """
+
+    @abstractmethod
+    def get_status(self, backend_name: str, username: str, job_id: str) -> dict:
+        """
+        This function gets the status file from the backend and returns the status dict.
+
+        Args:
+            backend_name: The name of the backend to which we want to upload the job
+            username: The username of the user that is uploading the job
+            job_id: The job_id of the job that we want to upload the status for
+
+        Returns:
+            The status dict of the job
+        """
+
+    @abstractmethod
+    def get_result(self, backend_name: str, username: str, job_id: str) -> dict:
+        """
+        This function gets the result file from the backend and returns the result dict.
+
+        Args:
+            backend_name: The name of the backend to which we want to upload the job
+            username: The username of the user that is uploading the job
+            job_id: The job_id of the job that we want to upload the status for
+
+        Returns:
+            The result dict of the job
+        """
+
 
 class DropboxProvider(StorageProvider):
     """
@@ -363,7 +419,8 @@ class MongodbProvider(StorageProvider):
         mongodb_password = config("MONGODB_PASSWORD")
         mongodb_database_url = config("MONGODB_DATABASE_URL")
 
-        uri = f"mongodb+srv://{mongodb_username}:{mongodb_password}@{mongodb_database_url}/?retryWrites=true&w=majority"
+        uri = f"mongodb+srv://{mongodb_username}:{mongodb_password}@{mongodb_database_url}"
+        uri = uri + "/?retryWrites=true&w=majority"
         # Create a new client and connect to the server
         self.client: MongoClient = MongoClient(uri)
 
@@ -473,8 +530,8 @@ class MongodbProvider(StorageProvider):
         config_collection = database["configs"]
         # get all the documents in the collection configs and save the disply_name in a list
         backend_names: list[str] = []
-        for config in config_collection.find():
-            backend_names.append(config["display_name"])
+        for config_dict in config_collection.find():
+            backend_names.append(config_dict["display_name"])
         return backend_names
 
     def get_backend_dict(self, backend_name: str, version: str = "v2") -> dict:
@@ -518,5 +575,89 @@ class MongodbProvider(StorageProvider):
 
         # and the url
         base_url = config("BASE_URL")
-        backend_config_dict["url"] = f"{base_url}/api/{version}/{backend_name}"
+        backend_config_dict["url"] = f"{base_url}/api/{version}/{backend_name}/"
         return backend_config_dict
+
+    def upload_job(self, job_dict: dict, backend_name: str, username: str) -> str:
+        """
+        Upload the job to the storage provider.
+
+        Args:
+            job_dict: the full job dict
+            backend_name: the name of the backend
+            username: the name of the user that submitted the job
+
+        Returns:
+            The job id of the uploaded job.
+        """
+
+        storage_path = "jobs/queued/" + backend_name
+        job_id = (uuid.uuid4().hex)[:24]
+
+        self.upload(content_dict=job_dict, storage_path=storage_path, job_id=job_id)
+        return job_id
+
+    def upload_status(self, backend_name: str, username: str, job_id: str) -> dict:
+        """
+        This function uploads a status file to the backend and creates the status dict.
+
+        Args:
+            backend_name: The name of the backend to which we want to upload the job
+            username: The username of the user that is uploading the job
+            job_id: The job_id of the job that we want to upload the status for
+
+        Returns:
+            The status dict of the job
+        """
+        storage_path = "status/" + backend_name
+        status_dict = {
+            "job_id": job_id,
+            "status": "INITIALIZING",
+            "detail": "Got your json.",
+            "error_message": "None",
+        }
+
+        # should we also upload the username into the dict ?
+
+        # now upload the status dict
+        self.upload(
+            content_dict=status_dict,
+            storage_path=storage_path,
+            job_id=job_id,
+        )
+        return status_dict
+
+    def get_status(self, backend_name: str, username: str, job_id: str) -> dict:
+        """
+        This function gets the status file from the backend and returns the status dict.
+
+        Args:
+            backend_name: The name of the backend to which we want to upload the job
+            username: The username of the user that is uploading the job
+            job_id: The job_id of the job that we want to upload the status for
+
+        Returns:
+            The status dict of the job
+        """
+        status_json_dir = "status/" + backend_name
+
+        status_dict = self.get_file_content(storage_path=status_json_dir, job_id=job_id)
+        status_dict.pop("_id")
+        return status_dict
+
+    def get_result(self, backend_name: str, username: str, job_id: str) -> dict:
+        """
+        This function gets the result file from the backend and returns the result dict.
+
+        Args:
+            backend_name: The name of the backend to which we want to upload the job
+            username: The username of the user that is uploading the job
+            job_id: The job_id of the job that we want to upload the status for
+
+        Returns:
+            The result dict of the job
+        """
+        result_json_dir = "results/" + backend_name
+        result_dict = self.get_file_content(storage_path=result_json_dir, job_id=job_id)
+        result_dict.pop("_id")
+        return result_dict

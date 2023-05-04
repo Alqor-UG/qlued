@@ -6,7 +6,6 @@ import uuid
 from django.test import TestCase
 from .storage_providers import MongodbProvider
 
-
 class MongodbProviderTest(TestCase):
     """
     The class that contains all the tests for the dropbox provider.
@@ -71,3 +70,72 @@ class MongodbProviderTest(TestCase):
         backend_dict = self.storage_provider.get_backend_dict(backend_name)
         self.assertEqual(backend_dict["backend_name"], dummy_dict["name"])
         self.storage_provider.delete_file(config_path, mongo_id)
+
+    def test_jobs(self):
+        """
+        Test that we can handle the necessary functions for the jobs and status.
+        """
+        # let us first test the we can upload a dummy job
+        job_payload = {
+            "experiment_0": {
+                "instructions": [
+                    ("load", [7], []),
+                    ("load", [2], []),
+                    ("measure", [2], []),
+                    ("measure", [6], []),
+                    ("measure", [7], []),
+                ],
+                "num_wires": 8,
+                "shots": 4,
+                "wire_order": "sequential",
+            },
+        }
+        backend_name = "dummy" + uuid.uuid4().hex[:5]
+        username = "dummy_user"
+
+        job_id = self.storage_provider.upload_job(
+            job_dict=job_payload, backend_name=backend_name, username=username
+        )
+        self.assertTrue(len(job_id) > 1)
+
+        # now also test that we can upload the status
+        job_response_dict = self.storage_provider.upload_status(
+            backend_name=backend_name,
+            username=username,
+            job_id=job_id,
+        )
+        self.assertTrue(len(job_response_dict["job_id"]) > 1)
+        # now test that we can get the job status
+        job_status = self.storage_provider.get_status(
+            backend_name=backend_name,
+            username=username,
+            job_id=job_id,
+        )
+        self.assertFalse("_id" in job_status.keys())
+        self.assertEqual(job_status["job_id"], job_id)
+
+        # test that we can get a job result
+        # first upload a dummy result
+        dummy_result = {"result": "dummy"}
+        result_json_dir = "results/" + backend_name
+        self.storage_provider.upload(dummy_result, result_json_dir, job_id)
+
+        # now get the result
+        result = self.storage_provider.get_result(
+            backend_name=backend_name,
+            username=username,
+            job_id=job_id,
+        )
+        self.assertFalse("_id" in result.keys())
+        self.assertEqual(dummy_result["result"], result["result"])
+
+        # remove the obsolete job from the storage
+        job_dir = "jobs/queued/" + backend_name
+        self.storage_provider.delete_file(job_dir, job_id)
+
+        # remove the obsolete status from the storage
+        status_dir = "status/" + backend_name
+        self.storage_provider.delete_file(status_dir, job_id)
+
+        # remove the obsolete result from the storage
+        self.storage_provider.delete_file(result_json_dir, job_id)

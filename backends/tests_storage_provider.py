@@ -4,9 +4,7 @@ The tests for the storage provider
 import uuid
 
 from django.test import TestCase
-from .apps import BackendsConfig as ac
-from decouple import config
-from .storage_providers import MongodbProvider
+from .storage_providers import DropboxProvider
 
 
 class DropboxProvideTest(TestCase):
@@ -18,7 +16,7 @@ class DropboxProvideTest(TestCase):
         """
         set up the test.
         """
-        self.storage_provider = getattr(ac, "storage")
+        self.storage_provider = DropboxProvider()
 
     def test_upload_etc(self):
         """
