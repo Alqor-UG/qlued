@@ -2,9 +2,9 @@ name: Django CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   tests:
@@ -17,11 +17,14 @@ jobs:
       USERNAME_TEST: ${{secrets.USERNAME_TEST}}
       PASSWORD_TEST: ${{secrets.PASSWORD_TEST}}
       BASE_URL: ${{secrets.BASE_URL}}
+      MONGODB_USERNAME: ${{secrets.MONGODB_USERNAME}}
+      MONGODB_PASSWORD: ${{secrets.MONGODB_PASSWORD}}
+      MONGODB_DATABASE_URL: ${{secrets.MONGODB_DATABASE_URL}}
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.9, '3.10']
+        python-version: [3.9, "3.10"]
         os: ["ubuntu-latest", "macOS-latest", "windows-latest"]
     steps:
       - name: Print Concurrency Group
@@ -53,26 +56,30 @@ jobs:
       USERNAME_TEST: ${{secrets.USERNAME_TEST}}
       PASSWORD_TEST: ${{secrets.PASSWORD_TEST}}
       BASE_URL: ${{secrets.BASE_URL}}
+      MONGODB_USERNAME: ${{secrets.MONGODB_USERNAME}}
+      MONGODB_PASSWORD: ${{secrets.MONGODB_PASSWORD}}
+      MONGODB_DATABASE_URL: ${{secrets.MONGODB_DATABASE_URL}}
+
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.9
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements-dev.txt
-        pip install pipenv
-    - name: Run pylint
-      run: |
-        pylint --load-plugins pylint_django --django-settings-module=main.settings backends frontend
-    - name: Run black
-      run: |
-        black --check .
-    - name: Run mypy
-      run: |
-        mypy backends/storage_providers.py
-        mypy backends/tests_storage_provider.py
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          pip install pipenv
+      - name: Run pylint
+        run: |
+          pylint --load-plugins pylint_django --django-settings-module=main.settings backends frontend
+      - name: Run black
+        run: |
+          black --check .
+      - name: Run mypy
+        run: |
+          mypy backends/storage_providers.py
+          mypy backends/tests_storage_provider.py
