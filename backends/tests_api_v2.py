@@ -193,7 +193,6 @@ class JobSubmissionTest(TestCase):
             job_id = f"status-{data['job_id']}"
             self.storage_provider.delete_file(storage_path, job_id)
         elif self.storage_provider.__class__.__name__ == "MongodbProvider":
-            print("MongodbProvider")
             storage_path = "jobs/queued/fermions"
             self.storage_provider.delete_file(storage_path, data["job_id"])
 

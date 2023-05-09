@@ -632,9 +632,6 @@ class MongodbProvider(StorageProvider):
             storage_path=storage_path,
             job_id=job_id,
         )
-
-        # TODO: this is a bug in the upload function, it adds an extra _id field.
-        status_dict.pop("_id", None)
         return status_dict
 
     def get_status(self, backend_name: str, username: str, job_id: str) -> dict:
