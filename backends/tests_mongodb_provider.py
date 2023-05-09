@@ -6,6 +6,7 @@ import uuid
 from django.test import TestCase
 from .storage_providers import MongodbProvider
 
+
 class MongodbProviderTest(TestCase):
     """
     The class that contains all the tests for the dropbox provider.
