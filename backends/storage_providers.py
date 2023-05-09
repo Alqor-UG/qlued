@@ -447,6 +447,9 @@ class MongodbProvider(StorageProvider):
         content_dict["_id"] = ObjectId(job_id)
         collection.insert_one(content_dict)
 
+        # remove the id from the content dict for further use
+        content_dict.pop("_id", None)
+
     def get_file_content(self, storage_path: str, job_id: str) -> dict:
         """
         Get the file content from the storage
@@ -467,6 +470,9 @@ class MongodbProvider(StorageProvider):
 
         if not result_found:
             return {}
+
+        # remove the id from the result dict for further use
+        result_found.pop("_id", None)
         return result_found
 
     def move_file(self, start_path: str, final_path: str, job_id: str) -> None:
@@ -557,6 +563,7 @@ class MongodbProvider(StorageProvider):
         if not backend_config_dict:
             return {}
 
+        backend_config_dict.pop("_id")
         # for comaptibility with qiskit
         backend_config_dict["basis_gates"] = []
         for gate in backend_config_dict["gates"]:
@@ -625,6 +632,9 @@ class MongodbProvider(StorageProvider):
             storage_path=storage_path,
             job_id=job_id,
         )
+
+        # TODO: this is a bug in the upload function, it adds an extra _id field.
+        status_dict.pop("_id", None)
         return status_dict
 
     def get_status(self, backend_name: str, username: str, job_id: str) -> dict:
@@ -642,7 +652,6 @@ class MongodbProvider(StorageProvider):
         status_json_dir = "status/" + backend_name
 
         status_dict = self.get_file_content(storage_path=status_json_dir, job_id=job_id)
-        status_dict.pop("_id")
         return status_dict
 
     def get_result(self, backend_name: str, username: str, job_id: str) -> dict:
@@ -659,5 +668,4 @@ class MongodbProvider(StorageProvider):
         """
         result_json_dir = "results/" + backend_name
         result_dict = self.get_file_content(storage_path=result_json_dir, job_id=job_id)
-        result_dict.pop("_id")
         return result_dict

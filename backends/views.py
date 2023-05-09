@@ -186,7 +186,7 @@ def get_job_status(request, backend_name: str) -> JsonResponse:
         data = json.loads(request.GET["json"])
         job_id = data["job_id"]
         status_msg_dict["job_id"] = job_id
-        extracted_username = job_id.split("-")[2]
+        username = request.GET["username"]
     except:
         status_msg_dict["status"] = "ERROR"
         status_msg_dict["detail"] = "Error loading json data from input request!"
@@ -196,7 +196,7 @@ def get_job_status(request, backend_name: str) -> JsonResponse:
         storage_provider = getattr(ac, "storage")
         status_msg_dict = storage_provider.get_status(
             backend_name=backend_name,
-            username=extracted_username,
+            username=username,
             job_id=job_id,
         )
 
@@ -237,7 +237,7 @@ def get_job_result(request, backend_name: str) -> JsonResponse:
         data = json.loads(request.GET["json"])
         job_id = data["job_id"]
         status_msg_dict["job_id"] = job_id
-        extracted_username = job_id.split("-")[2]
+        username = request.GET["username"]
     except:
         status_msg_dict["detail"] = "Error loading json data from input request!"
         status_msg_dict["error_message"] = "Error loading json data from input request!"
@@ -249,7 +249,7 @@ def get_job_result(request, backend_name: str) -> JsonResponse:
         storage_provider = getattr(ac, "storage")
         status_msg_dict = storage_provider.get_status(
             backend_name=backend_name,
-            username=extracted_username,
+            username=username,
             job_id=job_id,
         )
 
@@ -267,9 +267,7 @@ def get_job_result(request, backend_name: str) -> JsonResponse:
     # one might attempt to connect this to the code above
     try:
         # get the result from the queue
-        result_dict = storage_provider.get_result(
-            backend_name, extracted_username, job_id
-        )
+        result_dict = storage_provider.get_result(backend_name, username, job_id)
 
         # and return it
         return JsonResponse(result_dict, status=200)

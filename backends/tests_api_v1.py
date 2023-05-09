@@ -120,14 +120,23 @@ class JobSubmissionTest(TestCase):
         self.assertEqual(data["status"], "INITIALIZING")
         self.assertEqual(req.status_code, 200)
 
-        # clean up the file
-        storage_path = "Backend_files/Queued_Jobs/fermions"
-        job_id = f"job-{data['job_id']}"
-        self.storage_provider.delete_file(storage_path, job_id)
+        # verify if the storageprovider is of the type DropboxProvider or MongodbProvider
+        if self.storage_provider.__class__.__name__ == "DropboxProvider":
+            # clean up the file
+            storage_path = "Backend_files/Queued_Jobs/fermions"
+            job_id = f"job-{data['job_id']}"
+            self.storage_provider.delete_file(storage_path, job_id)
 
-        storage_path = f"/Backend_files/Status/fermions/{self.username}"
-        job_id = f"status-{data['job_id']}"
-        self.storage_provider.delete_file(storage_path, job_id)
+            storage_path = f"/Backend_files/Status/fermions/{self.username}"
+            job_id = f"status-{data['job_id']}"
+            self.storage_provider.delete_file(storage_path, job_id)
+        elif self.storage_provider.__class__.__name__ == "MongodbProvider":
+            print("MongodbProvider")
+            storage_path = "jobs/queued/fermions"
+            self.storage_provider.delete_file(storage_path, data["job_id"])
+
+            storage_path = "status/fermions"
+            self.storage_provider.delete_file(storage_path, data["job_id"])
 
     def test_get_job_status_ninja(self):
         """

@@ -93,6 +93,7 @@ def post_job(request, data: JobSchemaIn, backend_name: str):
         )
         return job_response_dict
     except (AuthError, ApiError):
+        print("Error saving json data to database!")
         job_response_dict["status"] = "ERROR"
         job_response_dict["detail"] = "Error saving json data to database!"
         job_response_dict["error_message"] = "Error saving json data to database!"
@@ -138,7 +139,6 @@ def get_job_status(
     # pylint: disable=W0702
     try:
         job_response_dict["job_id"] = job_id
-        extracted_username = job_id.split("-")[2]
     except:
         job_response_dict["status"] = "ERROR"
         job_response_dict["detail"] = "Error loading json data from input request!"
@@ -150,7 +150,7 @@ def get_job_status(
         # get the status json from the backend through storage provider
         storage_provider = getattr(ac, "storage")
         job_response_dict = storage_provider.get_status(
-            backend_name=backend_name, username=extracted_username, job_id=job_id
+            backend_name=backend_name, username=username, job_id=job_id
         )
 
         return 200, job_response_dict
@@ -206,7 +206,6 @@ def get_job_result(
     # decode the job-id to request the data from the queue
     try:
         status_msg_dict["job_id"] = job_id
-        extracted_username = job_id.split("-")[2]
     except:
         status_msg_dict["detail"] = "Error loading json data from input request!"
         status_msg_dict["error_message"] = "Error loading json data from input request!"
@@ -215,7 +214,7 @@ def get_job_result(
     # request the data from the queue
     try:
         status_msg_dict = storage_provider.get_status(
-            backend_name=backend_name, username=extracted_username, job_id=job_id
+            backend_name=backend_name, username=username, job_id=job_id
         )
 
         if status_msg_dict["status"] != "DONE":
@@ -233,7 +232,7 @@ def get_job_result(
     try:
         # now get the result from the database
         result_dict = storage_provider.get_result(
-            backend_name=backend_name, username=extracted_username, job_id=job_id
+            backend_name=backend_name, username=username, job_id=job_id
         )
 
         return 200, result_dict

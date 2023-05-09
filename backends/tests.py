@@ -171,13 +171,21 @@ class JobSubmissionTest(TestCase):
         self.assertEqual(data["status"], "INITIALIZING")
         self.assertEqual(req.status_code, 200)
 
-        # clean up the file
-        file_path = "Backend_files/Queued_Jobs/fermions"
-        file_id = f"job-{data['job_id']}"
-        self.storage_provider.delete_file(file_path, file_id)
-        file_path = f"Backend_files/Status/fermions/{self.username}"
-        file_id = f"status-{data['job_id']}"
-        self.storage_provider.delete_file(file_path, file_id)
+        if self.storage_provider.__class__.__name__ == "DropboxProvider":
+            # clean up the file
+            file_path = "Backend_files/Queued_Jobs/fermions"
+            file_id = f"job-{data['job_id']}"
+            self.storage_provider.delete_file(file_path, file_id)
+            file_path = f"Backend_files/Status/fermions/{self.username}"
+            file_id = f"status-{data['job_id']}"
+            self.storage_provider.delete_file(file_path, file_id)
+        elif self.storage_provider.__class__.__name__ == "MongodbProvider":
+            print("MongodbProvider")
+            storage_path = "jobs/queued/fermions"
+            self.storage_provider.delete_file(storage_path, data["job_id"])
+
+            storage_path = "status/fermions"
+            self.storage_provider.delete_file(storage_path, data["job_id"])
 
     def test_get_job_status(self):
         """

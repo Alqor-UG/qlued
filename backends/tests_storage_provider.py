@@ -29,6 +29,10 @@ class DropboxProvideTest(TestCase):
         storage_path = "test_folder"
         job_id = f"world-{file_id}"
         self.storage_provider.upload(test_content, storage_path, job_id)
+
+        # make sure that this did not add the _id field to the dict
+        self.assertFalse("_id" in test_content)
+
         test_result = self.storage_provider.get_file_content(storage_path, job_id)
 
         self.assertDictEqual(test_content, test_result)
