@@ -8,6 +8,8 @@ theme:
     - navigation.footer
     - toc.follow
 
+  custom_dir: docs/overrides
+  
 nav:
 - Home: index.md
 - contributing.md

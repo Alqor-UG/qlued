@@ -7,13 +7,10 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-# pylint: disable=W0611, W0107
 class User(AbstractUser):
     """
     The class that will contain all the fancy features of a user.
     """
-
-    pass
 
 
 class Token(models.Model):

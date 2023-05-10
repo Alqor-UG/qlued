@@ -8,7 +8,7 @@ from django.core.validators import RegexValidator
 from django import forms
 
 
-# pylint: disable=C0115, R0903
+# pylint: disable=R0901
 class SignUpForm(UserCreationForm):
     """
     Form that is used to register users.

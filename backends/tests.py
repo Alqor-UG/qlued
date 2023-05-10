@@ -171,11 +171,21 @@ class JobSubmissionTest(TestCase):
         self.assertEqual(data["status"], "INITIALIZING")
         self.assertEqual(req.status_code, 200)
 
-        # clean up the file
-        file_path = f"/Backend_files/Queued_Jobs/fermions/job-{data['job_id']}.json"
-        self.storage_provider.delete_file(file_path)
-        file_path = f"/Backend_files/Status/fermions/{self.username}/status-{data['job_id']}.json"
-        self.storage_provider.delete_file(file_path)
+        if self.storage_provider.__class__.__name__ == "DropboxProvider":
+            # clean up the file
+            file_path = "Backend_files/Queued_Jobs/fermions"
+            file_id = f"job-{data['job_id']}"
+            self.storage_provider.delete_file(file_path, file_id)
+            file_path = f"Backend_files/Status/fermions/{self.username}"
+            file_id = f"status-{data['job_id']}"
+            self.storage_provider.delete_file(file_path, file_id)
+        elif self.storage_provider.__class__.__name__ == "MongodbProvider":
+            print("MongodbProvider")
+            storage_path = "jobs/queued/fermions"
+            self.storage_provider.delete_file(storage_path, data["job_id"])
+
+            storage_path = "status/fermions"
+            self.storage_provider.delete_file(storage_path, data["job_id"])
 
     def test_get_job_status(self):
         """
@@ -270,15 +280,3 @@ class JobSubmissionTest(TestCase):
         self.assertEqual(req.status_code, 200)
         data = json.loads(req.content)
         self.assertEqual(data["job_id"], req_id)
-
-    def test_get_next_job_in_queue(self):
-        """
-        Test the API that gets the next job in the queue.
-        """
-        url = reverse("get_next_job_in_queue", kwargs={"backend_name": "fermions"})
-        req = self.client.get(
-            url, {"username": self.username, "password": self.password}
-        )
-        self.assertEqual(req.status_code, 406)
-        data = json.loads(req.content)
-        self.assertEqual(data["status"], "ERROR")

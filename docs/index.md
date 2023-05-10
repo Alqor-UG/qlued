@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Welcome to Qlued
 
 Qlued is a django based webframework that allows you to submit jobs quantum various quantum hardware architectures. It is meant for every research group to be self-hostable and as flexible as possible.

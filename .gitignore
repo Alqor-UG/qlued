@@ -133,3 +133,4 @@ dmypy.json
 heroku_credentials.py
 docs/notebooks/credentials.py
 docs/notebooks/credentials_v2.py
+.vscode/settings.json

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # User Guide
 To use our existing service, the steps are very simple:
 
