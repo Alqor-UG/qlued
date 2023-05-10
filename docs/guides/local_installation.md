@@ -22,16 +22,26 @@ DEBUG=False
 # URL from which you would like to serve 
 BASE_URL=<YOUR-URL>
 
-# settings for the Dropbox
+# settings for MongoDB
+MONGODB_USERNAME = <YOUR-USERNAME>
+MONGODB_PASSWORD = <YOUR-PASSWORD>
+MONGODB_DATABASE_URL = <YOUR-URL>
+
+# settings for the Dropbox, if you use the dropbox storage
 APP_KEY=<YOUR-KEY>
 APP_SECRET=<YOUR-SECRET>
 REFRESH_TOKEN=<YOUR-REFRESH-TOKEN>
 
 ```
 
-Make sure that you set an appropiate `SECRET_KEY`, `USERNAME_TEST` and `PASSWORD_TEST` of the django environment.
+Make sure that you set an appropiate `SECRET_KEY`, `USERNAME_TEST` and `PASSWORD_TEST` of the django environment. 
+Next, you have to set the `BASE_URL` to the URL from which you would like to serve the service.
 
-Set the `APP_KEY` for the Dropbox backend (if you set it up follow the steps below). Otherwise, the person responsible for the Dropbox backend has to give you the key.
+Then, to configure the storage make sure which one you use as we provide different options. For example, if you use the MongoDB storage you have to set the `MONGODB_USERNAME`, `MONGODB_PASSWORD` and `MONGODB_DATABASE_URL`.
+
+If you use the Dropbox storage, add the `APP_KEY`, `APP_SECRET` and `REFRESH_TOKEN` to the `.env` file.
+
+We describe you below how to set up the different storages.
 
 Finally, you should run `python manage.py test` to see if everything works out.
 
@@ -41,6 +51,25 @@ Finally, you should run `python manage.py test` to see if everything works out.
 - To fill up the database with some standard back-ends etc you can simply run `python manage.py loaddata backends/fixtures/backend.json`.
 - You should now be able to run `python manage.py runserver`.
 - To also test the admin interface you have to create the superuse via `python manage.py createsuperuser`.
+
+
+!!! note
+
+    You can decide on different storages for the jobs. We provide you with the following options:
+    - MongoDB
+    - Dropbox
+    Both can be set through the import in the `backends/app` file.
+
+## Setting up a new MongoDB storage
+
+By default, `qlued` uses a [MongoDB](https://www.mongodb.com/) storage. Several options for hosting a mongoDB database are available. If you would like to deploy the system, we recommend to use [MongoDB Atlas](https://www.mongodb.com/cloud/atlas). However, it is also possible to set up a local MongoDB database. In the following, we will explain how to set up a MongoDB Atlas database (help to improve this description is welcome):
+
+- Create an account on [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
+- Create a new project.
+- Create a new cluster.
+- Create a new user.
+- Obtain the url of the database through connect -> driver -> python and there copy the url.
+- Add the `MONGODB_USERNAME`, `MONGODB_PASSWORD` and `MONGODB_DATABASE_URL` to the `.env` file.
 
 ## Setting up a new dropbox storage
 The jobs for qlue are stored on a dropbox. If you would like to set it up you have to follow these steps (help to improve this description is welcome):

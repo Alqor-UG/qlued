@@ -39,7 +39,7 @@ That's all that is required on the client side. Basically choose one of these fr
 Here we describe 3 parts:
 
 * The Django app (`qlued`).
-* The Dropbox storage.
+* The storage.
 * The backends.
 
 ![](arch.png)
@@ -86,9 +86,14 @@ Now we explain different view functions and their purpose :
 
 We will frequently use the term status dictionary and result dictionary. These are just text files which host the appropriate JSON data. These files are stored on the Dropbox like job_JSON. When a view reads these text files, it coverts the data in them to a python dictionary and sends it to the client or modifies the dictionary further before saving it back to the text file.
 
-Since we use Dropbox to store JSONs, the view functions call functions written in a file called ``storage_providers.py`` which in turn calls Dropbox python API functions for reading and writing to Dropbox. Note that Dropbox can be **replaced** with any other storage service (like Amazon S3, Microsoft azure storage, Google cloud storage etc.) which allows a user to read and write content using a python API. For this one would need to implement four basic functions for accessing the cloud storage provider. The details of these four functions are given in ``storage_providers.py`` with an example implementation for Dropbox. A new storage service can have its own class inheriting from the base class (just like the Dropbox class) and override the base functions.
+Since we use MongoDB or Dropbox to store JSONs, the view functions call functions written in a file called ``storage_providers.py`` which in turn calls  API functions for reading and writing. Note that we currently provide storage with MongoDB by default or Dropbox. However, it can be **replaced** with any other storage service (like Amazon S3, Microsoft azure storage, Google cloud storage etc.) which allows a user to read and write content using a python API. For this one would need to implement four basic functions for accessing the cloud storage provider. The details of these four functions are given in ``storage_providers.py`` with an example implementation for Dropbox. A new storage service can have its own class inheriting from the base class (just like the Dropbox class) and override the base functions.
 
-### The Dropbox storage
+## The Dropbox storage
+
+!!! note
+
+    Beware, we have recently updated the default storage to mongoDb. The following description is outdated. However, the main idea is still the same. We will update the description soon.
+
 We use Dropbox to store all our JSONS. This approach has several benefits:
 
 * We immediately implement asynchronous job management. Basically the Heroku server dumps the job coming from the remote client onto Dropbox. Then whenever the Spooler belonging to a backend is free, it will query to ``get_next_job_in_queue`` view and act on the next job which is appropriate for that particular backend.
@@ -139,7 +144,7 @@ If however, the job_JSON passes sanity checking, then it is executed. The spoole
 
 This completes the execution of the job and the results are now available.
 
-### The backends
+## The backends
 The backend can be a real cold atom machine or a simulator running on a computer. In summary, the backend runs a spooler which is responsible for executing job_JSONs and updating status_JSONs and result_JSONs. However different backends have different Spoolers. The Spoolers of different simulator backends have similar structure. The experiment backends have slightly different implementation of spoolers. This is because simulators and real machine operate in different conditions. We first describe the simulator backend and then the experiment one.
 
 #### The simulator backend

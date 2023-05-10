@@ -9,22 +9,22 @@ theme:
     - toc.follow
 
   custom_dir: docs/overrides
-  
-nav:
-- Home: index.md
-- contributing.md
-- "Guides":
-  - guides/gen_guide.md
-  - guides/user_guide.md
-  - "Own instance" : guides/local_installation.md
-  - guides/oauth.md
-- "Tutorials":
-  - Rydberg: notebooks/rydberg_api_showcase_v1.ipynb
-  - Fermions: notebooks/fermions_api_showcase.ipynb
-- "Tutorials for v2":
-  - Rydberg: notebooks/rydberg_api_showcase_v2.ipynb
-  - Fermions: notebooks/fermions_api_showcase_v2.ipynb
 
+nav:
+  - Home: index.md
+  - Contributing: contributing.md
+  - "Guides":
+      - guides/gen_guide.md
+      - guides/user_guide.md
+      - "Own instance": guides/local_installation.md
+      - guides/oauth.md
+  - "Tutorials for v2":
+      - Rydberg: notebooks/rydberg_api_showcase_v2.ipynb
+      - Fermions: notebooks/fermions_api_showcase_v2.ipynb
+
+  - "Tutorials":
+      - Rydberg: notebooks/rydberg_api_showcase_v1.ipynb
+      - Fermions: notebooks/fermions_api_showcase.ipynb
 
 plugins:
   - mkdocs-jupyter
