@@ -8,21 +8,23 @@ theme:
     - navigation.footer
     - toc.follow
 
-nav:
-- Home: index.md
-- contributing.md
-- "Guides":
-  - guides/gen_guide.md
-  - guides/user_guide.md
-  - guides/dev_guide.md
-  - guides/oauth.md
-- "Tutorials":
-  - Rydberg: notebooks/rydberg_api_showcase_v1.ipynb
-  - Fermions: notebooks/fermions_api_showcase.ipynb
-- "Tutorials for v2":
-  - Rydberg: notebooks/rydberg_api_showcase_v2.ipynb
-  - Fermions: notebooks/fermions_api_showcase_v2.ipynb
+  custom_dir: docs/overrides
 
+nav:
+  - Home: index.md
+  - Contributing: contributing.md
+  - "Guides":
+      - guides/gen_guide.md
+      - guides/user_guide.md
+      - "Own instance": guides/local_installation.md
+      - guides/oauth.md
+  - "Tutorials for v2":
+      - Rydberg: notebooks/rydberg_api_showcase_v2.ipynb
+      - Fermions: notebooks/fermions_api_showcase_v2.ipynb
+
+  - "Tutorials":
+      - Rydberg: notebooks/rydberg_api_showcase_v1.ipynb
+      - Fermions: notebooks/fermions_api_showcase.ipynb
 
 plugins:
   - mkdocs-jupyter
@@ -34,6 +36,9 @@ markdown_extensions:
   - toc
   - attr_list
   - md_in_html
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg

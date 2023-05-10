@@ -4,9 +4,6 @@ Module that defines the user api v1 which goes through django-ninja.
 
 import json
 from typing import List
-import datetime
-import uuid
-
 
 from ninja import NinjaAPI
 from ninja.responses import codes_4xx
@@ -72,7 +69,7 @@ def post_job(request, data: JobSchemaIn, backend_name: str):
         return 404, job_response_dict
 
     try:
-        job_data = data.job.encode("utf-8")
+        job_dict = json.loads(data.job)
     except UnicodeDecodeError:
         job_response_dict["status"] = "ERROR"
         job_response_dict["detail"] = "The encoding of your json seems non utf-8!"
@@ -81,33 +78,22 @@ def post_job(request, data: JobSchemaIn, backend_name: str):
         ] = "The encoding of your json seems non utf-8!"
         return 406, job_response_dict
     try:
-        job_id = (
-            (datetime.datetime.utcnow().strftime("%Y%m%d_%H%M%S"))
-            + "-"
-            + backend_name
-            + "-"
-            + username
-            + "-"
-            + (uuid.uuid4().hex)[:5]
-        )
-        job_json_dir = "/Backend_files/Queued_Jobs/" + backend_name + "/"
-        job_json_name = "job-" + job_id + ".json"
-        job_json_path = job_json_dir + job_json_name
-
+        # upload the job json to the backend through storage provider
         storage_provider = getattr(ac, "storage")
-        storage_provider.upload(
-            dump_str=job_data.decode("utf-8"), storage_path=job_json_path
+        job_id = storage_provider.upload_job(
+            job_dict=job_dict, backend_name=backend_name, username=username
         )
-        status_json_dir = "/Backend_files/Status/" + backend_name + "/" + username + "/"
-        status_json_name = "status-" + job_id + ".json"
-        status_json_path = status_json_dir + status_json_name
-        job_response_dict["job_id"] = job_id
-        job_response_dict["status"] = "INITIALIZING"
-        job_response_dict["detail"] = "Got your json."
-        status_str = json.dumps(job_response_dict)
-        storage_provider.upload(dump_str=status_str, storage_path=status_json_path)
+
+        # now we upload the status json to the backend. this is the same status json
+        # that is returned to the user
+        job_response_dict = storage_provider.upload_status(
+            backend_name=backend_name,
+            username=username,
+            job_id=job_id,
+        )
         return job_response_dict
     except (AuthError, ApiError):
+        print("Error saving json data to database!")
         job_response_dict["status"] = "ERROR"
         job_response_dict["detail"] = "Error saving json data to database!"
         job_response_dict["error_message"] = "Error saving json data to database!"
@@ -153,7 +139,6 @@ def get_job_status(
     # pylint: disable=W0702
     try:
         job_response_dict["job_id"] = job_id
-        extracted_username = job_id.split("-")[2]
     except:
         job_response_dict["status"] = "ERROR"
         job_response_dict["detail"] = "Error loading json data from input request!"
@@ -162,16 +147,12 @@ def get_job_status(
         ] = "Error loading json data from input request!"
         return 406, job_response_dict
     try:
-        status_json_dir = (
-            "/Backend_files/Status/" + backend_name + "/" + extracted_username + "/"
-        )
-        status_json_name = "status-" + job_id + ".json"
-        status_json_path = status_json_dir + status_json_name
-
+        # get the status json from the backend through storage provider
         storage_provider = getattr(ac, "storage")
-        job_response_dict = json.loads(
-            storage_provider.get_file_content(storage_path=status_json_path)
+        job_response_dict = storage_provider.get_status(
+            backend_name=backend_name, username=username, job_id=job_id
         )
+
         return 200, job_response_dict
     except:
         job_response_dict["status"] = "ERROR"
@@ -225,7 +206,6 @@ def get_job_result(
     # decode the job-id to request the data from the queue
     try:
         status_msg_dict["job_id"] = job_id
-        extracted_username = job_id.split("-")[2]
     except:
         status_msg_dict["detail"] = "Error loading json data from input request!"
         status_msg_dict["error_message"] = "Error loading json data from input request!"
@@ -233,15 +213,10 @@ def get_job_result(
 
     # request the data from the queue
     try:
-        status_json_dir = (
-            "/Backend_files/Status/" + backend_name + "/" + extracted_username + "/"
+        status_msg_dict = storage_provider.get_status(
+            backend_name=backend_name, username=username, job_id=job_id
         )
-        status_json_name = "status-" + job_id + ".json"
-        status_json_path = status_json_dir + status_json_name
-        storage_provider = getattr(ac, "storage")
-        status_msg_dict = json.loads(
-            storage_provider.get_file_content(storage_path=status_json_path)
-        )
+
         if status_msg_dict["status"] != "DONE":
             return 200, status_msg_dict
     except:
@@ -255,14 +230,9 @@ def get_job_result(
     # and if the status is switched to done, we can also obtain the result
     # one might attempt to connect this to the code above
     try:
-        result_json_dir = (
-            "/Backend_files/Result/" + backend_name + "/" + extracted_username + "/"
-        )
-        result_json_name = "result-" + job_id + ".json"
-        result_json_path = result_json_dir + result_json_name
-        storage_provider = getattr(ac, "storage")
-        result_dict = json.loads(
-            storage_provider.get_file_content(storage_path=result_json_path)
+        # now get the result from the database
+        result_dict = storage_provider.get_result(
+            backend_name=backend_name, username=username, job_id=job_id
         )
 
         return 200, result_dict
