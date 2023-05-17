@@ -63,6 +63,11 @@ We describe you below how to set up the different storages.
 
 Finally, you should run `python manage.py test` to see if everything works out.
 
+!!! note
+
+    If you did not set up the dropbox storage you will get an error message from `backends.tests_storage_provider.DropboxProvideTest`. This is fine as long as you do not want to use the dropbox storage.
+
+
 ## Getting the server started locally
 
 - Create a simple local database for the back-end with `python manage.py migrate`.
