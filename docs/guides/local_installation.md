@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Set up of your own instance
 
 In this part we explain how can set up your own instance.
