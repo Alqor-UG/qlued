@@ -8,16 +8,35 @@ In this part we explain how can set up your own instance.
 
 ## First steps
 
-First, create a local environment. The whole system is set up on [django](https://www.djangoproject.com/) and hence should be operated within the python framework.
+The whole system is set up on [django](https://www.djangoproject.com/) and hence should be operated within the python framework.
 
-Second, create a `.env` file in the root directory. An example content of this file would be:
+First, create a local environment. You can then install the requirements via `pip install -r requirements-dev.txt`.
+
+Second, create a `.env` file in the root directory. 
+```
+project
+│   README.md
+│   manage.py
+|   .env
+|   ...    
+│
+└───.github
+│   │   ...
+|
+└───backends
+│   │   ...
+|
+│   ...
+```
+
+
+An example content of this file would be:
 
 ``` python
 # settings for the local Django server
 USERNAME_TEST=john_test 
 PASSWORD_TEST=dogs_and_cats
 SECRET_KEY=A_RANDOM_SECRET_KEY_12345
-DEBUG=False
 
 # URL from which you would like to serve 
 BASE_URL=<YOUR-URL>
@@ -31,7 +50,6 @@ MONGODB_DATABASE_URL = <YOUR-URL>
 APP_KEY=<YOUR-KEY>
 APP_SECRET=<YOUR-SECRET>
 REFRESH_TOKEN=<YOUR-REFRESH-TOKEN>
-
 ```
 
 Make sure that you set an appropiate `SECRET_KEY`, `USERNAME_TEST` and `PASSWORD_TEST` of the django environment. 
