@@ -4,7 +4,7 @@ This project handles user and device registration for quantum hardware simulator
 
 ## Setup and installation
 
-Have a look [here](docs/guides/local_installation.md) for a more detailed description.
+Have a look [here](https://alqor-ug.github.io/qlued/guides/local_installation/) for a more detailed description.
 
 
 ## Contributing
