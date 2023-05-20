@@ -39,7 +39,7 @@ if IS_HEROKU:
     # improving security
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = 3600  # 1 hour
+    SECURE_HSTS_SECONDS = 15768000  # 1/2 year
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
 else:
