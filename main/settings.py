@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     "allauth",
+    "csp",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.github",
@@ -202,7 +203,7 @@ LOGOUT_REDIRECT_URL = "index"
 ACCOUNT_LOGOUT_ON_GET = True
 
 # Content Security Policy (CSP)
-# CSP_REPORT_ONLY = True
+CSP_REPORT_ONLY = True
 
 
 CSP_IMG_SRC = "'self'"
