@@ -206,12 +206,22 @@ ACCOUNT_LOGOUT_ON_GET = True
 CSP_REPORT_ONLY = False
 
 
-CSP_IMG_SRC = ("'self'", "data:")
+CSP_IMG_SRC = (
+    "'self'",
+    "data:",
+    "https://django-ninja.rest-framework.com/img/favicon.png",
+)
 CSP_STYLE_SRC = (
     "'self'",
     "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css",
+    "https://cdn.jsdelivr.net/npm/swagger-ui-dist@4.15.5/swagger-ui.css",
 )
 CSP_SCRIPT_SRC = (
     "'self'",
     "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js",
+    "https://cdn.jsdelivr.net/npm/swagger-ui-dist@4.15.5/swagger-ui-bundle.js",
 )
+
+CSP_INCLUDE_NONCE_IN = {
+    "script-src": ["<nonce>"],
+}
