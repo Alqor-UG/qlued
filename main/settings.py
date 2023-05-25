@@ -203,10 +203,10 @@ LOGOUT_REDIRECT_URL = "index"
 ACCOUNT_LOGOUT_ON_GET = True
 
 # Content Security Policy (CSP)
-CSP_REPORT_ONLY = True
+CSP_REPORT_ONLY = False
 
 
-CSP_IMG_SRC = "'self'"
+CSP_IMG_SRC = ("'self'", "data:")
 CSP_STYLE_SRC = (
     "'self'",
     "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css",
