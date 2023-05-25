@@ -80,10 +80,11 @@ Finally, you should run `python manage.py test` to see if everything works out.
 ## Getting the server started locally
 
 - Create a simple local database for the back-end with `python manage.py migrate`.
+- You should now be able to run `python manage.py runserver`.
 - To also test the admin interface you have to create the superuse via `python manage.py createsuperuser`.
 - Once you have done that you can access the admin interface via `http://localhost:8000/admin/` and login with the credentials you just created.
 
-This ends the set up of the server. You can now run the first tutorials as explained [here](../../notebooks/rydberg_api_showcase_v2)
+This ends the set up of the server. You can now run the first tutorials as explained [here](notebooks/rydberg_api_showcase_v2)
 
 !!! note
 
