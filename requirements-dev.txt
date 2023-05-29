@@ -15,7 +15,7 @@ dropbox==11.36.0
 dj-database-url==1.2.0
 dnspython==2.3.0
 ghp-import==2.1.0
-idna==3.3
+idna==3.4
 importlib-metadata==6.6.0
 isort==5.10.1
 Jinja2==3.0.3
