@@ -30,7 +30,7 @@ mkdocs-material-extensions==1.1.1
 mkdocs-jupyter==0.24.1
 mypy==1.2.0
 packaging==22.0
-pathspec==0.11.0
+pathspec==0.11.1
 pylint==2.17.1
 pylint-django==2.5.3
 platformdirs==3.5.1
