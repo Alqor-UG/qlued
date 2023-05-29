@@ -9,7 +9,7 @@ colorama==0.4.6
 Django==4.2.1
 django-allauth==0.54.0
 django-csp==3.7
-django-ninja==0.21
+django-ninja==0.22.1
 django-stubs[compatible-mypy]==4.2.0
 dropbox==11.36.0
 dj-database-url==1.2.0
