@@ -4,6 +4,7 @@ from datetime import datetime
 import uuid
 
 import pytz
+from decouple import config
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
@@ -13,7 +14,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
-from decouple import config
 
 from backends.apps import BackendsConfig as ac
 from backends.models import Token

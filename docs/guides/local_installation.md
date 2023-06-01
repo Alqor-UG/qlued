@@ -1,6 +1,16 @@
+---
+comments: true
+---
+
 # Set up of your own instance
 
-In this part we explain how can set up your own instance.
+In this part we explain how can set up your own instance. This will involve three major steps:
+
+1. Setting up the server
+2. Setting up the storage via MongoDB or Dropbox.
+3. Setting up the backend for example via [sqooler](https://github.com/Alqor-UG/sqooler).
+
+Here, we will explain the first and the second step. The third step is explained in the installation guide of [sqooler](https://alqor-ug.github.io/sqooler/).
 
 !!! note
 
@@ -8,16 +18,35 @@ In this part we explain how can set up your own instance.
 
 ## First steps
 
-First, create a local environment. The whole system is set up on [django](https://www.djangoproject.com/) and hence should be operated within the python framework.
+The whole system is set up on [django](https://www.djangoproject.com/) and hence should be operated within the python framework.
 
-Second, create a `.env` file in the root directory. An example content of this file would be:
+First, create a local environment. You can then install the requirements via `pip install -r requirements-dev.txt`.
+
+Second, we need to enable the storage of the settings, which we manage with [python-decouple](https://pypi.org/project/python-decouple/). To do so, create a `.env` file in the root directory. 
+```
+project
+│   README.md
+│   manage.py
+|   .env
+|   ...    
+│
+└───.github
+│   │   ...
+|
+└───backends
+│   │   ...
+|
+│   ...
+```
+
+
+An example content of this file would be:
 
 ``` python
 # settings for the local Django server
 USERNAME_TEST=john_test 
 PASSWORD_TEST=dogs_and_cats
 SECRET_KEY=A_RANDOM_SECRET_KEY_12345
-DEBUG=False
 
 # URL from which you would like to serve 
 BASE_URL=<YOUR-URL>
@@ -31,7 +60,6 @@ MONGODB_DATABASE_URL = <YOUR-URL>
 APP_KEY=<YOUR-KEY>
 APP_SECRET=<YOUR-SECRET>
 REFRESH_TOKEN=<YOUR-REFRESH-TOKEN>
-
 ```
 
 Make sure that you set an appropiate `SECRET_KEY`, `USERNAME_TEST` and `PASSWORD_TEST` of the django environment. 
@@ -45,13 +73,18 @@ We describe you below how to set up the different storages.
 
 Finally, you should run `python manage.py test` to see if everything works out.
 
+!!! note
+
+    If you did not set up the dropbox storage you will get an error message from `backends.tests_storage_provider.DropboxProvideTest`. This is fine as long as you do not want to use the dropbox storage.
+
 ## Getting the server started locally
 
 - Create a simple local database for the back-end with `python manage.py migrate`.
-- To fill up the database with some standard back-ends etc you can simply run `python manage.py loaddata backends/fixtures/backend.json`.
 - You should now be able to run `python manage.py runserver`.
 - To also test the admin interface you have to create the superuse via `python manage.py createsuperuser`.
+- Once you have done that you can access the admin interface via `http://localhost:8000/admin/` and login with the credentials you just created.
 
+This ends the set up of the server. You can now run the first tutorials as explained [here](notebooks/rydberg_api_showcase_v2)
 
 !!! note
 
@@ -59,6 +92,8 @@ Finally, you should run `python manage.py test` to see if everything works out.
     - MongoDB
     - Dropbox
     Both can be set through the import in the `backends/app` file.
+
+
 
 ## Setting up a new MongoDB storage
 
@@ -71,8 +106,15 @@ By default, `qlued` uses a [MongoDB](https://www.mongodb.com/) storage. Several 
 - Obtain the url of the database through connect -> driver -> python and there copy the url.
 - Add the `MONGODB_USERNAME`, `MONGODB_PASSWORD` and `MONGODB_DATABASE_URL` to the `.env` file.
 
+Finally, you should run `python manage.py test` to see if everything works out. 
+
+!!! note
+
+    If you did not set up the `sqooler` you are going to get several errors. This is due to the fact that `sqooler` will define the backend configurations. So try to install it as described [here](https://alqor-ug.github.io/sqooler/) and run the tests again. 
+
+
 ## Setting up a new dropbox storage
-The jobs for qlue are stored on a dropbox. If you would like to set it up you have to follow these steps (help to improve this description is welcome):
+The jobs for `qlued` are stored on a dropbox. If you would like to set it up you have to follow these steps (help to improve this description is welcome):
 
 - Make sure that you have a Dropbox account.
 - Create an app in [app console](https://www.dropbox.com/developers/apps).

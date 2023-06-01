@@ -1,10 +1,12 @@
 # qlued
 
+![Mozilla HTTP Observatory Grade](https://img.shields.io/mozilla-observatory/grade/qlued.alqor.io?publish&style=plastic)
+
 This project handles user and device registration for quantum hardware simulators. It off-loads the need to implement this from the back-end developer and therefore brings specialized academic simulators closer to user. Its API is directly compatible with `qiskit-cold-atoms`. If you would just like to test it feel free to register on the running test case  provided by [Alqor](https://qlued.alqor.io). But we strongly would like to encourage others to set up their own instances and give it a try.
 
 ## Setup and installation
 
-Have a look [here](docs/guides/local_installation.md) for a more detailed description.
+Have a look [here](https://alqor-ug.github.io/qlued/guides/local_installation/) for a more detailed description.
 
 
 ## Contributing
