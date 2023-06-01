@@ -21,6 +21,7 @@ nav:
   - "Tutorials for v2":
       - Rydberg: notebooks/rydberg_api_showcase_v2.ipynb
       - Fermions: notebooks/fermions_api_showcase_v2.ipynb
+      - Qiskit-Cold-Atoms: notebooks/rydberg_qiskit_dynamics.ipynb
 
   - "Tutorials":
       - Rydberg: notebooks/rydberg_api_showcase_v1.ipynb
