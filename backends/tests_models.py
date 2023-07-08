@@ -239,7 +239,7 @@ class BackendCreationTest(TestCase):
         self.assertEqual(multiqudit_backend.max_experiments, 1000)
 
 
-class MongoDbModelCreationTest(TestCase):
+class StorageProviderDbCreationTest(TestCase):
     """
     Test if it is possible to create a dropbox storage
     """
@@ -254,7 +254,7 @@ class MongoDbModelCreationTest(TestCase):
 
     def test_mongo_storage_db_creation(self):
         """
-        Test that we can properly create tokens.
+        Test that we can properly create a storage provide with mongodb.
         """
         mongodb_username = config("MONGODB_USERNAME")
         mongodb_password = config("MONGODB_PASSWORD")
@@ -294,5 +294,40 @@ class MongoDbModelCreationTest(TestCase):
                 name="mongodb_test",
                 owner=self.user,
                 description="MongoDB storage provider for tests",
+                login=login_dict,
+            )
+
+    def test_drobox_creation(self):
+        """
+        Test that we can properly create a storage provide with Dropbox.
+        """
+        app_key = config("APP_KEY")
+        app_secret = config("APP_SECRET")
+        refresh_token = config("REFRESH_TOKEN")
+
+        login_dict = {
+            "app_key": app_key,
+            "app_secret": app_secret,
+            "refresh_token": refresh_token,
+        }
+
+        # create the storage entry in the models
+        dropbox_entry = StorageProviderDb.objects.create(
+            storage_type="dropbox",
+            name="dropbox_test",
+            owner=self.user,
+            description="Dropbox storage provider for tests",
+            login=login_dict,
+        )
+        dropbox_entry.full_clean()
+        self.assertEqual(dropbox_entry.owner, self.user)
+
+        # make sure that we cannot create a second storageprovide with the same name
+        with self.assertRaises(IntegrityError):
+            _ = StorageProviderDb.objects.create(
+                storage_type="dropbox",
+                name="dropbox_test",
+                owner=self.user,
+                description="Dropbox storage provider for tests",
                 login=login_dict,
             )
