@@ -33,6 +33,44 @@ class Token(models.Model):
     is_active = models.BooleanField(default=False)
 
 
+class StorageProviderDb(models.Model):
+    """
+    This class allows users to access storage providers in the same way as they would access other systems.
+    So it contains all the necessary information to access the storage provider and open a connection.
+
+    Args:
+        storage_type: The type of storage provider.
+        name: The name of the storage provider. Has to be unique.
+        owner: Which user owns this storage provider.
+        description: An optional description of the storage provider.
+        login: The login information for the storage provider.
+    """
+
+    # the storage_type. It can be "dropbox" or "mongodb".
+    storage_type = models.CharField(
+        max_length=20,
+        choices=(
+            ("dropbox", "Dropbox"),
+            ("mongodb", "MongoDB"),
+        ),
+    )
+
+    # the name of the storage provider. Has to be unique.
+    name = models.CharField(max_length=50, unique=True)
+
+    # the owner of the storage provider.
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+
+    # an optional description of the storage provider.
+    description = models.CharField(max_length=500, null=True)
+
+    # the login information for the storage provider. This is a json string.
+    login = models.JSONField()
+
+
 class Backend(models.Model):
     """
     The backend class, which allows us to safe the properties of the backends etc.
