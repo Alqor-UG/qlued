@@ -5,6 +5,7 @@ The models that define our sql tables for the app.
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 
 
 class User(AbstractUser):
@@ -46,13 +47,15 @@ class StorageProviderDb(models.Model):
         login: The login information for the storage provider.
     """
 
+    STORAGE_TYPE_CHOICES = (
+        ("dropbox", "Dropbox"),
+        ("mongodb", "MongoDB"),
+    )
+
     # the storage_type. It can be "dropbox" or "mongodb".
     storage_type = models.CharField(
         max_length=20,
-        choices=(
-            ("dropbox", "Dropbox"),
-            ("mongodb", "MongoDB"),
-        ),
+        choices=STORAGE_TYPE_CHOICES,
     )
 
     # the name of the storage provider. Has to be unique.
@@ -69,6 +72,16 @@ class StorageProviderDb(models.Model):
 
     # the login information for the storage provider. This is a json string.
     login = models.JSONField()
+
+    def clean(self):
+        if self.storage_type not in dict(self.STORAGE_TYPE_CHOICES):
+            raise ValidationError(
+                {
+                    "storage_type": "Value '{}' is not a valid choice.".format(
+                        self.storage_type
+                    )
+                }
+            )
 
 
 class Backend(models.Model):
