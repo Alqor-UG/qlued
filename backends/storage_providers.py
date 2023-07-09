@@ -715,13 +715,39 @@ def get_storage_provider(backend_name: str) -> StorageProvider:
         ValueError: If the storage provider is not supported
     """
 
+    # we have to import it here to avoid circular imports
     from .models import StorageProviderDb
 
-    # get the name of the storage provider as the first part of the backend name before the _
-    storage_provider_name = backend_name.split("_")[0]
-    print(storage_provider_name)
+    # we often identify the backend by its short name. Let us use the assumption that this means that we
+    # work with a default database. This is part of bug #152
+    if len(backend_name.split("_")) == 1:
+        # we should change this default name to something more sensible in the config file
+        # TODO: change the default name to something more sensible
+        storage_provider_name = "alqor"
+    else:
+        storage_provider_name = backend_name.split("_")[0]
+
     storage_provider_entry = StorageProviderDb.objects.get(name=storage_provider_name)
-    print(storage_provider_name)
+
+    return get_storage_provider_from_entry(storage_provider_entry)
+
+
+def get_storage_provider_from_entry(
+    storage_provider_entry,
+) -> StorageProvider:
+    """
+    Get the storage provider that is used for the backend.
+
+    Args:
+        storage_provider_entry: The entry from the Django database
+
+    Returns:
+        The storage provider that is used for the backend
+
+    Raises:
+        ValueError: If the storage provider is not supported
+    """
+
     if storage_provider_entry.storage_type == "mongodb":
         return MongodbProvider(storage_provider_entry.login)
     elif storage_provider_entry.storage_type == "dropbox":

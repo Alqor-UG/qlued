@@ -14,9 +14,9 @@ from .schemas import (
     JobSchemaWithTokenIn,
     JobResponseSchema,
 )
-from .apps import BackendsConfig as ac
-from .models import Token
-from .storage_providers import get_storage_provider
+
+from .models import Token, StorageProviderDb
+from .storage_providers import get_storage_provider, get_storage_provider_from_entry
 
 api = NinjaAPI(version="2.0.0")
 
@@ -266,12 +266,20 @@ def list_backends(request):
     Returns the list of backends, excluding any device called "dummy_" as they are test systems.
     """
     # pylint: disable=W0613, E1101
-    storage_provider = getattr(ac, "storage")
-    backend_names = storage_provider.get_backends()
+
     backend_list = []
-    for backend in backend_names:
-        # for testing we created dummy devices. We should ignore them in any other cases.
-        if not "dummy_" in backend:
-            config_dict = storage_provider.get_backend_dict(backend)
-            backend_list.append(config_dict)
+
+    # obtain all the available storage providers from the database
+    storage_provider_entries = StorageProviderDb.objects.all()
+
+    # now loop through them and obtain the backends
+    for storage_provider_entry in storage_provider_entries:
+        storage_provider = get_storage_provider_from_entry(storage_provider_entry)
+
+        backend_names = storage_provider.get_backends()
+        for backend in backend_names:
+            # for testing we created dummy devices. We should ignore them in any other cases.
+            if not "dummy_" in backend:
+                config_dict = storage_provider.get_backend_dict(backend, version="v2")
+                backend_list.append(config_dict)
     return backend_list
