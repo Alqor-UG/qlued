@@ -23,6 +23,9 @@ from bson.objectid import ObjectId
 from decouple import config
 
 
+from pydantic import BaseModel
+
+
 class StorageProvider(ABC):
     """
     The template for accessing any storage providers like dropbox, amazon S3 etc.
@@ -122,6 +125,12 @@ class StorageProvider(ABC):
         """
 
 
+class DropboxLoginInformation(BaseModel):
+    app_key: str
+    app_secret: str
+    refresh_token: str
+
+
 class DropboxProvider(StorageProvider):
     """
     The access to the dropbox. <https://blogs.dropbox.com/developers/2014/05/generate-an-access-token-for-your-own-account/>
@@ -133,7 +142,12 @@ class DropboxProvider(StorageProvider):
 
         Args:
             login_dict: The dictionary that contains the login information
+
+        Raises:
+            ValidationError: If the login_dict does not contain the correct keys
         """
+        DropboxLoginInformation(**login_dict)
+
         self.app_key = login_dict["app_key"]
         self.app_secret = login_dict["app_secret"]
         self.refresh_token = login_dict["refresh_token"]

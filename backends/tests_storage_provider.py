@@ -3,6 +3,7 @@ The tests for the storage provider
 """
 import uuid
 
+from pydantic import ValidationError
 from django.test import TestCase
 from .storage_providers import DropboxProvider
 
@@ -61,6 +62,15 @@ class DropboxProvideTest(TestCase):
         dropbox_entry = StorageProviderDb.objects.get(name="dropbox_test")
         dropbox_provider = DropboxProvider(dropbox_entry.login)
         self.assertIsNotNone(dropbox_provider)
+
+        # test that we cannot create a dropbox object a poor login dict structure
+        poor_login_dict = {
+            "app_key_t": "test",
+            "app_secret": "test",
+            "refresh_token": "test",
+        }
+        with self.assertRaises(ValidationError):
+            DropboxProvider(poor_login_dict)
 
     def test_upload_etc(self):
         """
