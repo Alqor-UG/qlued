@@ -126,6 +126,10 @@ class StorageProvider(ABC):
 
 
 class DropboxLoginInformation(BaseModel):
+    """
+    The login information for the dropbox
+    """
+
     app_key: str
     app_secret: str
     refresh_token: str
@@ -420,18 +424,35 @@ class DropboxProvider(StorageProvider):
         return result_dict
 
 
+class MongodbLoginInformation(BaseModel):
+    """
+    The login information for MongoDB
+    """
+
+    mongodb_username: str
+    mongodb_password: str
+    mongodb_database_url: str
+
+
 class MongodbProvider(StorageProvider):
     """
     The access to the mongodb
     """
 
-    def __init__(self) -> None:
+    def __init__(self, login_dict: dict) -> None:
         """
         Set up the neccessary keys and create the client through which all the connections will run.
+
+        Args:
+            login_dict: The login dict that contains the neccessary information to connect to the mongodb
+
+        Raises:
+            ValidationError: If the login_dict is not valid
         """
-        mongodb_username = config("MONGODB_USERNAME")
-        mongodb_password = config("MONGODB_PASSWORD")
-        mongodb_database_url = config("MONGODB_DATABASE_URL")
+        MongodbLoginInformation(**login_dict)
+        mongodb_username = login_dict["mongodb_username"]
+        mongodb_password = login_dict["mongodb_password"]
+        mongodb_database_url = login_dict["mongodb_database_url"]
 
         uri = f"mongodb+srv://{mongodb_username}:{mongodb_password}@{mongodb_database_url}"
         uri = uri + "/?retryWrites=true&w=majority"

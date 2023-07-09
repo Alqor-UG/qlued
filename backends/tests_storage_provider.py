@@ -33,7 +33,7 @@ class DropboxProvideTest(TestCase):
         user.save()
         self.user = user
 
-        # create a storage provider in the database
+        # put together the login information
         app_key = config("APP_KEY")
         app_secret = config("APP_SECRET")
         refresh_token = config("REFRESH_TOKEN")
