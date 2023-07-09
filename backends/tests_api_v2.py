@@ -14,7 +14,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 from .apps import BackendsConfig as ac
 
-from .models import Token
+from .models import Token, StorageProviderDb
 
 User = get_user_model()
 
@@ -32,6 +32,29 @@ class BackendConfigTest(TestCase):
         user = User.objects.create(username=self.username)
         user.set_password(self.password)
         user.save()
+
+        # put together the login information
+        # put together the login information
+        mongodb_username = config("MONGODB_USERNAME")
+        mongodb_password = config("MONGODB_PASSWORD")
+        mongodb_database_url = config("MONGODB_DATABASE_URL")
+
+        login_dict = {
+            "mongodb_username": mongodb_username,
+            "mongodb_password": mongodb_password,
+            "mongodb_database_url": mongodb_database_url,
+        }
+
+        # create the storage entry in the models
+        mongodb_entry = StorageProviderDb.objects.create(
+            storage_type="mongodb",
+            name="alqor",
+            owner=user,
+            description="MongoDB storage provider for tests",
+            login=login_dict,
+        )
+        mongodb_entry.full_clean()
+        mongodb_entry.save()
 
     def test_fermions_get_config_ninja(self):
         """

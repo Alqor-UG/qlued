@@ -16,6 +16,7 @@ from .schemas import (
 )
 from .apps import BackendsConfig as ac
 from .models import Token
+from .storage_providers import get_storage_provider
 
 api = NinjaAPI(version="2.0.0")
 
@@ -29,10 +30,15 @@ api = NinjaAPI(version="2.0.0")
 def get_config(request, backend_name: str):
     """
     Returns the list of backends.
+
+    Args:
+        request: The request object.
+        backend_name: The name of the backend. The first part is the name of the storage provider.
     """
     # pylint: disable=W0613
-    storage_provider = getattr(ac, "storage")
-    return storage_provider.get_backend_dict(backend_name)
+
+    storage_provider = get_storage_provider(backend_name)
+    return storage_provider.get_backend_dict(backend_name, version="v2")
 
 
 @api.post(
@@ -66,7 +72,7 @@ def post_job(request, data: JobSchemaWithTokenIn, backend_name: str):
 
     username = token.user.username
     # now it is time to look for the backend
-    storage_provider = getattr(ac, "storage")
+    storage_provider = get_storage_provider(backend_name)
     backend_names = storage_provider.get_backends()
     if not backend_name in backend_names:
         job_response_dict["status"] = "ERROR"
@@ -85,7 +91,7 @@ def post_job(request, data: JobSchemaWithTokenIn, backend_name: str):
         ] = "The encoding of your json seems not work out!"
         return 406, job_response_dict
     try:
-        storage_provider = getattr(ac, "storage")
+        storage_provider = get_storage_provider(backend_name)
 
         # upload the job to the backend via the storage provider
         job_id = storage_provider.upload_job(
@@ -134,7 +140,7 @@ def get_job_status(request, backend_name: str, job_id: str, token: str):
         return 401, job_response_dict
 
     username = token_object.user.username
-    storage_provider = getattr(ac, "storage")
+    storage_provider = get_storage_provider(backend_name)
     backend_names = storage_provider.get_backends()
     if not backend_name in backend_names:
         job_response_dict["status"] = "ERROR"
@@ -156,7 +162,7 @@ def get_job_status(request, backend_name: str, job_id: str, token: str):
     try:
         # now we download the status json from the backend
         # this is currently very much backend specific
-        storage_provider = getattr(ac, "storage")
+        storage_provider = get_storage_provider(backend_name)
 
         job_response_dict = storage_provider.get_status(
             backend_name=backend_name, username=username, job_id=job_id
@@ -202,7 +208,7 @@ def get_job_result(request, backend_name: str, job_id: str, token: str):
 
     username = token_object.user.username
 
-    storage_provider = getattr(ac, "storage")
+    storage_provider = get_storage_provider(backend_name)
     backend_names = storage_provider.get_backends()
     if not backend_name in backend_names:
         status_msg_dict["status"] = "ERROR"

@@ -126,6 +126,3 @@ class Backend(models.Model):
     WIRE_ORDER_CHOICES = (("interleaved", "interleaved"), ("sequential", "sequential"))
     wire_order = models.CharField(max_length=15, choices=WIRE_ORDER_CHOICES)
     num_species = models.PositiveIntegerField(default=1)
-
-
-# Create your models here.

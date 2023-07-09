@@ -21,8 +21,6 @@ from bson.objectid import ObjectId
 
 # get the environment variables
 from decouple import config
-
-
 from pydantic import BaseModel
 
 
@@ -701,3 +699,31 @@ class MongodbProvider(StorageProvider):
         result_json_dir = "results/" + backend_name
         result_dict = self.get_file_content(storage_path=result_json_dir, job_id=job_id)
         return result_dict
+
+
+def get_storage_provider(backend_name: str) -> StorageProvider:
+    """
+    Get the storage provider that is used for the backend.
+
+    Args:
+        backend_name: The name of the backend
+
+    Returns:
+        The storage provider that is used for the backend
+
+    Raises:
+        ValueError: If the storage provider is not supported
+    """
+
+    from .models import StorageProviderDb
+
+    # get the name of the storage provider as the first part of the backend name before the _
+    storage_provider_name = backend_name.split("_")[0]
+    print(storage_provider_name)
+    storage_provider_entry = StorageProviderDb.objects.get(name=storage_provider_name)
+    print(storage_provider_name)
+    if storage_provider_entry.storage_type == "mongodb":
+        return MongodbProvider(storage_provider_entry.login)
+    elif storage_provider_entry.storage_type == "dropbox":
+        return DropboxProvider(storage_provider_entry.login)
+    raise ValueError("The storage provider is not supported.")
