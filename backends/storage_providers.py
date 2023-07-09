@@ -124,19 +124,19 @@ class StorageProvider(ABC):
 
 class DropboxProvider(StorageProvider):
     """
-    The access to the dropbox
+    The access to the dropbox. <https://blogs.dropbox.com/developers/2014/05/generate-an-access-token-for-your-own-account/>
     """
 
-    # Add OAuth2 access token here.
-    # You can generate one for yourself in the App Console.
-    # <https://blogs.dropbox.com/developers/2014/05/generate-an-access-token-for-your-own-account/>
-    def __init__(self) -> None:
+    def __init__(self, login_dict: dict) -> None:
         """
         Set up the neccessary keys.
+
+        Args:
+            login_dict: The dictionary that contains the login information
         """
-        self.app_key = config("APP_KEY")
-        self.app_secret = config("APP_SECRET")
-        self.refresh_token = config("REFRESH_TOKEN")
+        self.app_key = login_dict["app_key"]
+        self.app_secret = login_dict["app_secret"]
+        self.refresh_token = login_dict["refresh_token"]
 
     def upload(self, content_dict: dict, storage_path: str, job_id: str) -> None:
         """
