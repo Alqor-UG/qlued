@@ -11,7 +11,7 @@ django-allauth==0.54.0
 django-csp==3.7
 django-ninja==0.22.1
 django-stubs[compatible-mypy]==4.2.3
-dropbox==11.36.0
+dropbox==11.36.2
 dj-database-url==1.2.0
 dnspython==2.3.0
 ghp-import==2.1.0
