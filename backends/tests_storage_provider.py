@@ -1,16 +1,17 @@
 """
 The tests for the storage provider
 """
+
 import uuid
-
 from pydantic import ValidationError
-from django.test import TestCase
-from .storage_providers import DropboxProvider
-
-
-from django.contrib.auth import get_user_model
 from decouple import config
+
+from django.test import TestCase
+from django.contrib.auth import get_user_model
+
+
 from .models import StorageProviderDb
+from .storage_providers import DropboxProvider
 
 User = get_user_model()
 
@@ -138,7 +139,7 @@ class DropboxProvideTest(TestCase):
         """
         Test that we can handle the necessary functions for the jobs and status.
         """
-
+        # pylint: disable=too-many-locals
         # create a dropbox object
         dropbox_entry = StorageProviderDb.objects.get(name="dropbox_test")
         storage_provider = DropboxProvider(dropbox_entry.login)

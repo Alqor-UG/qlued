@@ -36,8 +36,9 @@ class Token(models.Model):
 
 class StorageProviderDb(models.Model):
     """
-    This class allows users to access storage providers in the same way as they would access other systems.
-    So it contains all the necessary information to access the storage provider and open a connection.
+    This class allows users to access storage providers in the same way as they
+    would access other systems. So it contains all the necessary information to access
+    the storage provider and open a connection.
 
     Args:
         storage_type: The type of storage provider.
@@ -76,11 +77,7 @@ class StorageProviderDb(models.Model):
     def clean(self):
         if self.storage_type not in dict(self.STORAGE_TYPE_CHOICES):
             raise ValidationError(
-                {
-                    "storage_type": "Value '{}' is not a valid choice.".format(
-                        self.storage_type
-                    )
-                }
+                {"storage_type": f"Value '{self.storage_type}' is not a valid choice."}
             )
 
 

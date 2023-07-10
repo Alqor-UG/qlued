@@ -13,12 +13,10 @@ from django.contrib.auth import authenticate
 from dropbox.exceptions import ApiError, AuthError
 
 from .schemas import BackendSchemaOut, JobSchemaIn, JobResponseSchema
-
 from .storage_providers import get_storage_provider, get_storage_provider_from_entry
+from .models import StorageProviderDb
 
 api = NinjaAPI(version="1.0.0")
-
-from .models import StorageProviderDb
 
 
 @api.get(

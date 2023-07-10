@@ -135,7 +135,8 @@ class DropboxLoginInformation(BaseModel):
 
 class DropboxProvider(StorageProvider):
     """
-    The access to the dropbox. <https://blogs.dropbox.com/developers/2014/05/generate-an-access-token-for-your-own-account/>
+    The access to the dropbox.
+    <https://blogs.dropbox.com/developers/2014/05/generate-an-access-token-for-your-own-account/>
     """
 
     def __init__(self, login_dict: dict) -> None:
@@ -442,7 +443,8 @@ class MongodbProvider(StorageProvider):
         Set up the neccessary keys and create the client through which all the connections will run.
 
         Args:
-            login_dict: The login dict that contains the neccessary information to connect to the mongodb
+            login_dict: The login dict that contains the neccessary
+                        information to connect to the mongodb
 
         Raises:
             ValidationError: If the login_dict is not valid
@@ -716,14 +718,13 @@ def get_storage_provider(backend_name: str) -> StorageProvider:
     """
 
     # we have to import it here to avoid circular imports
+    # pylint: disable=import-outside-toplevel
     from .models import StorageProviderDb
 
-    # we often identify the backend by its short name. Let us use the assumption that this means that we
-    # work with a default database. This is part of bug #152
+    # we often identify the backend by its short name. Let us use the assumption that this
+    # means that we work with a default database. This is part of bug #152
     if len(backend_name.split("_")) == 1:
-        # we should change this default name to something more sensible in the config file
-        # TODO: change the default name to something more sensible
-        storage_provider_name = "alqor"
+        storage_provider_name = config("DEFAULT_STORAGE", "alqor")
     else:
         storage_provider_name = backend_name.split("_")[0]
 
@@ -748,6 +749,7 @@ def get_storage_provider_from_entry(
         ValueError: If the storage provider is not supported
     """
 
+    # pylint: disable=R1705
     if storage_provider_entry.storage_type == "mongodb":
         return MongodbProvider(storage_provider_entry.login)
     elif storage_provider_entry.storage_type == "dropbox":
