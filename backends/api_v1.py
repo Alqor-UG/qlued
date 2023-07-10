@@ -13,9 +13,12 @@ from django.contrib.auth import authenticate
 from dropbox.exceptions import ApiError, AuthError
 
 from .schemas import BackendSchemaOut, JobSchemaIn, JobResponseSchema
-from .apps import BackendsConfig as ac
+
+from .storage_providers import get_storage_provider, get_storage_provider_from_entry
 
 api = NinjaAPI(version="1.0.0")
+
+from .models import StorageProviderDb
 
 
 @api.get(
@@ -29,7 +32,7 @@ def get_config(request, backend_name: str):
     Returns the list of backends.
     """
     # pylint: disable=W0613
-    storage_provider = getattr(ac, "storage")
+    storage_provider = get_storage_provider(backend_name)
     return storage_provider.get_backend_dict(backend_name, version="v1")
 
 
@@ -60,7 +63,7 @@ def post_job(request, data: JobSchemaIn, backend_name: str):
         job_response_dict["error_message"] = "Invalid credentials!"
         job_response_dict["detail"] = "Invalid credentials!"
         return 401, job_response_dict
-    storage_provider = getattr(ac, "storage")
+    storage_provider = get_storage_provider(backend_name)
     backend_names = storage_provider.get_backends()
     if not backend_name in backend_names:
         job_response_dict["status"] = "ERROR"
@@ -79,7 +82,8 @@ def post_job(request, data: JobSchemaIn, backend_name: str):
         return 406, job_response_dict
     try:
         # upload the job json to the backend through storage provider
-        storage_provider = getattr(ac, "storage")
+        storage_provider = get_storage_provider(backend_name)
+
         job_id = storage_provider.upload_job(
             job_dict=job_dict, backend_name=backend_name, username=username
         )
@@ -127,7 +131,8 @@ def get_job_status(
         job_response_dict["error_message"] = "Invalid credentials!"
         job_response_dict["detail"] = "Invalid credentials!"
         return 401, job_response_dict
-    storage_provider = getattr(ac, "storage")
+
+    storage_provider = get_storage_provider(backend_name)
     backend_names = storage_provider.get_backends()
     if not backend_name in backend_names:
         job_response_dict["status"] = "ERROR"
@@ -148,7 +153,7 @@ def get_job_status(
         return 406, job_response_dict
     try:
         # get the status json from the backend through storage provider
-        storage_provider = getattr(ac, "storage")
+        storage_provider = get_storage_provider(backend_name)
         job_response_dict = storage_provider.get_status(
             backend_name=backend_name, username=username, job_id=job_id
         )
@@ -192,7 +197,7 @@ def get_job_result(
         status_msg_dict["error_message"] = "Invalid credentials!"
         status_msg_dict["detail"] = "Invalid credentials!"
         return 401, status_msg_dict
-    storage_provider = getattr(ac, "storage")
+    storage_provider = get_storage_provider(backend_name)
     backend_names = storage_provider.get_backends()
     if not backend_name in backend_names:
         status_msg_dict["status"] = "ERROR"
@@ -253,12 +258,18 @@ def list_backends(request):
     Returns the list of backends, excluding any device called "dummy_" as they are test systems.
     """
     # pylint: disable=W0613, E1101
-    storage_provider = getattr(ac, "storage")
-    backend_names = storage_provider.get_backends()
     backend_list = []
-    for backend in backend_names:
-        # for testing we created dummy devices. We should ignore them in any other cases.
-        if not "dummy_" in backend:
-            config_dict = storage_provider.get_backend_dict(backend)
-            backend_list.append(config_dict)
+    # obtain all the available storage providers from the database
+    storage_provider_entries = StorageProviderDb.objects.all()
+
+    # now loop through them and obtain the backends
+    for storage_provider_entry in storage_provider_entries:
+        storage_provider = get_storage_provider_from_entry(storage_provider_entry)
+
+        backend_names = storage_provider.get_backends()
+        for backend in backend_names:
+            # for testing we created dummy devices. We should ignore them in any other cases.
+            if not "dummy_" in backend:
+                config_dict = storage_provider.get_backend_dict(backend, version="v1")
+                backend_list.append(config_dict)
     return backend_list
