@@ -31,6 +31,11 @@ def get_config(request, backend_name: str):
     Returns the list of backends.
     """
     # pylint: disable=W0613
+
+    # we have to split the name into several parts by `_`. If there is only one part, then we
+    # assume that the user has given the short name of the backend. If there are more parts, then
+    # we assume that the user has given the full name of the backend.
+
     storage_provider = getattr(ac, "storage")
     return storage_provider.get_backend_dict(backend_name)
 
