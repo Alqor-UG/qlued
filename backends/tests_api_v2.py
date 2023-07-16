@@ -65,6 +65,18 @@ class BackendConfigTest(TestCase):
             if gate["name"] == "fint":
                 self.assertEqual(gate["coupling_map"], [[0, 1, 2, 3, 4, 5, 6, 7]])
 
+        # test also with its full name
+
+        url = reverse_lazy(
+            "api-2.0.0:get_config",
+            kwargs={"backend_name": "alqor_singlequdit_simulator"},
+        )
+        req = self.client.get(url)
+        data = json.loads(req.content)
+        self.assertEqual(req.status_code, 200)
+        self.assertEqual(data["backend_name"], "alqor_singlequdit_simulator")
+        self.assertEqual(data["display_name"], "singlequdit")
+
     def test_get_backends_ninja(self):
         """
         Test that we are able to obtain the config of all the backends.

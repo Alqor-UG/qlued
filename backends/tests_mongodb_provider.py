@@ -4,7 +4,7 @@ The tests for the storage provider
 import uuid
 
 from django.test import TestCase
-from .storage_providers import MongodbProvider
+from .storage_providers import MongodbProvider, get_short_backend_name
 
 
 class MongodbProviderTest(TestCase):
@@ -154,3 +154,20 @@ class MongodbProviderTest(TestCase):
         database = self.storage_provider.client["results"]
         collection = database[backend_name]
         collection.drop()
+
+    def test_backend_name(self):
+        """
+        Test that we separate out properly the backend names
+        """
+        short_test_name = "tests"
+        short_name = get_short_backend_name(short_test_name)
+
+        self.assertEqual(short_test_name, short_name)
+
+        test_name = "alqor_tests_simulator"
+        short_name = get_short_backend_name(test_name)
+        self.assertEqual(short_test_name, short_name)
+
+        test_name = "alqor_tests_simulator_crap"
+        short_name = get_short_backend_name(test_name)
+        self.assertEqual("", short_name)
