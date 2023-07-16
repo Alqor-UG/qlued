@@ -124,7 +124,7 @@ if IS_HEROKU and "DATABASE_URL" in os.environ:
 
     # Enable test database if found in CI environment.
     if "CI" in os.environ:
-        DATABASES["default"]["TEST"] = DATABASES["default"]
+        DATABASES["default"]["TEST"] = DATABASES["default"]  # type: ignore[assignment]
 
 
 # Media files

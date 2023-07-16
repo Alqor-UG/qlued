@@ -81,5 +81,4 @@ jobs:
           black --check .
       - name: Run mypy
         run: |
-          mypy backends/storage_providers.py
-          mypy backends/tests_storage_provider.py
+          mypy backends

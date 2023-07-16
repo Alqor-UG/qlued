@@ -126,14 +126,14 @@ def get_job_status(request, backend_name: str, job_id: str, token: str):
     }
     # first we need to validate the token and make sure that the user is allowed to look for the job
     try:
-        token = Token.objects.get(key=token)
+        token_object = Token.objects.get(key=token)
     except Token.DoesNotExist:
         job_response_dict["status"] = "ERROR"
         job_response_dict["error_message"] = "Invalid credentials!"
         job_response_dict["detail"] = "Invalid credentials!"
         return 401, job_response_dict
 
-    username = token.user.username
+    username = token_object.user.username
     storage_provider = getattr(ac, "storage")
     backend_names = storage_provider.get_backends()
     if not backend_name in backend_names:
@@ -193,14 +193,14 @@ def get_job_result(request, backend_name: str, job_id: str, token: str):
     }
 
     try:
-        token = Token.objects.get(key=token)
+        token_object = Token.objects.get(key=token)
     except Token.DoesNotExist:
         status_msg_dict["status"] = "ERROR"
         status_msg_dict["error_message"] = "Invalid credentials!"
         status_msg_dict["detail"] = "Invalid credentials!"
         return 401, status_msg_dict
 
-    username = token.user.username
+    username = token_object.user.username
 
     storage_provider = getattr(ac, "storage")
     backend_names = storage_provider.get_backends()
