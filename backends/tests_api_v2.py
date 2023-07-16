@@ -69,13 +69,13 @@ class BackendConfigTest(TestCase):
 
         url = reverse_lazy(
             "api-2.0.0:get_config",
-            kwargs={"backend_name": "alqor_sinqlequbit_simulator"},
+            kwargs={"backend_name": "alqor_singlequdit_simulator"},
         )
         req = self.client.get(url)
         data = json.loads(req.content)
         self.assertEqual(req.status_code, 200)
-        self.assertEqual(data["backend_name"], "alqor_sinqlequbit_simulator")
-        self.assertEqual(data["display_name"], "sinqlequbit")
+        self.assertEqual(data["backend_name"], "alqor_singlequdit_simulator")
+        self.assertEqual(data["display_name"], "singlequdit")
 
     def test_get_backends_ninja(self):
         """
