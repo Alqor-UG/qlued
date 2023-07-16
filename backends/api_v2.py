@@ -94,7 +94,7 @@ def post_job(request, data: JobSchemaWithTokenIn, backend_name: str):
     # now it is time to look for the backend
     storage_provider = getattr(ac, "storage")
     backend_names = storage_provider.get_backends()
-    if not short_backend in backend_names:
+    if short_backend not in backend_names:
         job_response_dict["status"] = "ERROR"
         job_response_dict["detail"] = "Unknown back-end!"
         job_response_dict["error_message"] = "Unknown back-end!"
@@ -163,7 +163,7 @@ def get_job_status(request, backend_name: str, job_id: str, token: str):
     storage_provider = getattr(ac, "storage")
     backend_names = storage_provider.get_backends()
     short_backend = get_short_backend_name(backend_name)
-    if not short_backend in backend_names:
+    if short_backend not in backend_names:
         job_response_dict["status"] = "ERROR"
         job_response_dict["detail"] = "Unknown back-end!"
         job_response_dict["error_message"] = "Unknown back-end!"
@@ -231,7 +231,7 @@ def get_job_result(request, backend_name: str, job_id: str, token: str):
     short_backend = get_short_backend_name(backend_name)
     storage_provider = getattr(ac, "storage")
     backend_names = storage_provider.get_backends()
-    if not short_backend in backend_names:
+    if short_backend not in backend_names:
         status_msg_dict["status"] = "ERROR"
         status_msg_dict["detail"] = "Unknown back-end!"
         status_msg_dict["error_message"] = "Unknown back-end!"
