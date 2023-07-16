@@ -134,9 +134,23 @@ class MongodbProviderTest(TestCase):
         job_dir = "jobs/queued/" + backend_name
         self.storage_provider.delete_file(job_dir, job_id)
 
+        # remove the obsolete collection from the storage
+        database = self.storage_provider.client["jobs"]
+        collection = database[f"queued.{backend_name}"]
+        collection.drop()
+
         # remove the obsolete status from the storage
         status_dir = "status/" + backend_name
         self.storage_provider.delete_file(status_dir, job_id)
 
+        # remove the obsolete collection from the storage
+        database = self.storage_provider.client["status"]
+        collection = database[backend_name]
+        collection.drop()
+
         # remove the obsolete result from the storage
         self.storage_provider.delete_file(result_json_dir, job_id)
+        # remove the obsolete collection from the storage
+        database = self.storage_provider.client["results"]
+        collection = database[backend_name]
+        collection.drop()
