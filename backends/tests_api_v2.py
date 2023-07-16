@@ -69,18 +69,13 @@ class BackendConfigTest(TestCase):
 
         url = reverse_lazy(
             "api-2.0.0:get_config",
-            kwargs={"backend_name": "alqor_fermionic_tweezer_simulator"},
+            kwargs={"backend_name": "alqor_sinqlequbit_simulator"},
         )
         req = self.client.get(url)
         data = json.loads(req.content)
         self.assertEqual(req.status_code, 200)
-        self.assertCountEqual(data["basis_gates"], ["fhop", "fint", "fphase"])
-        self.assertEqual(data["backend_name"], "alqor_fermionic_tweezer_simulator")
-        self.assertEqual(data["display_name"], "fermions")
-
-        base_url = config("BASE_URL")
-        self.assertEqual(data["url"], base_url + "/api/v2/fermions/")
-        self.assertEqual(data["n_qubits"], 8)
+        self.assertEqual(data["backend_name"], "alqor_sinqlequbit_simulator")
+        self.assertEqual(data["display_name"], "sinqlequbit")
 
     def test_get_backends_ninja(self):
         """

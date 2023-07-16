@@ -22,13 +22,20 @@ api = NinjaAPI(version="2.0.0")
 
 @api.get(
     "{backend_name}/get_config",
-    response=BackendSchemaOut,
+    response={200: BackendSchemaOut, codes_4xx: JobResponseSchema},
     tags=["Backend"],
     url_name="get_config",
 )
 def get_config(request, backend_name: str):
     """
     Returns the list of backends.
+
+    Args:
+        request: The request object.
+        backend_name: The name of the backend.
+
+    Raises:
+        404: If the backend is not found.
     """
     # pylint: disable=W0613
 
@@ -36,8 +43,24 @@ def get_config(request, backend_name: str):
     # assume that the user has given the short name of the backend. If there are more parts, then
     # we assume that the user has given the full name of the backend.
 
+    if len(backend_name.split("_")) == 1:
+        short_backend = backend_name
+    elif len(backend_name.split("_")) == 3:
+        # the first name is the name of the storage (this will become active with #148).
+        _ = backend_name.split("_")[0]
+        short_backend = backend_name.split("_")[1]
+        _ = backend_name.split("_")[2]
+    else:
+        job_response_dict = {
+            "job_id": "None",
+            "status": "ERROR",
+            "detail": "Unknown back-end! The string should have 1 or three parts separated by `_`!",
+            "error_message": "Unknown back-end!",
+        }
+        return 404, job_response_dict
+
     storage_provider = getattr(ac, "storage")
-    return storage_provider.get_backend_dict(backend_name)
+    return storage_provider.get_backend_dict(short_backend)
 
 
 @api.post(
