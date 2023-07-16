@@ -666,3 +666,26 @@ class MongodbProvider(StorageProvider):
         result_json_dir = "results/" + backend_name
         result_dict = self.get_file_content(storage_path=result_json_dir, job_id=job_id)
         return result_dict
+
+
+def get_short_backend_name(backend_name: str) -> str:
+    """
+    Get the short name of the backend. If the name has only one part, it returns the name.
+    If the name has multiple parts, it returns the middle part.
+
+    Args:
+        backend_name: The name of the backend
+
+    Returns:
+        The short name of the backend
+    """
+    if len(backend_name.split("_")) == 1:
+        short_backend = backend_name
+    elif len(backend_name.split("_")) == 3:
+        # the first name is the name of the storage (this will become active with #148).
+        _ = backend_name.split("_")[0]
+        short_backend = backend_name.split("_")[1]
+        _ = backend_name.split("_")[2]
+    else:
+        short_backend = ""
+    return short_backend
