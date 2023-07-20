@@ -29,6 +29,7 @@ nav:
 
 plugins:
   - mkdocs-jupyter
+  - mike
 
 repo_url: https://github.com/alqor-ug/qlued
 edit_uri: edit/main/docs/
