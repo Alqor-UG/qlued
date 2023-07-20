@@ -14,7 +14,7 @@ Here, we will explain the first and the second step. The third step is explained
 
 !!! note
 
-    This guide is only relevant for developers that would like to create a service that is similiar to [https://qlued.alqor.io](qlued.alqor.io). Should you be an end-user that simply would like to better understand how to use the service please go directly to one of the tutorials.
+    This guide is only relevant for developers that would like to create a service that is similiar to [https://qlued.alqor.io](https://qlued.alqor.io). Should you be an end-user that simply would like to better understand how to use the service please go directly to one of the tutorials.
 
 ## First steps
 
