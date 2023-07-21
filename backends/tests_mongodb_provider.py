@@ -9,7 +9,7 @@ from pydantic import ValidationError
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from .storage_providers import MongodbProvider
+from .storage_providers import MongodbProvider, get_short_backend_name
 from .models import StorageProviderDb
 
 User = get_user_model()
@@ -200,9 +200,40 @@ class MongodbProviderTest(TestCase):
         job_dir = "jobs/queued/" + backend_name
         storage_provider.delete_file(job_dir, job_id)
 
+        # remove the obsolete collection from the storage
+        database = storage_provider.client["jobs"]
+        collection = database[f"queued.{backend_name}"]
+        collection.drop()
+
         # remove the obsolete status from the storage
         status_dir = "status/" + backend_name
         storage_provider.delete_file(status_dir, job_id)
 
+        # remove the obsolete collection from the storage
+        database = storage_provider.client["status"]
+        collection = database[backend_name]
+        collection.drop()
+
         # remove the obsolete result from the storage
         storage_provider.delete_file(result_json_dir, job_id)
+        # remove the obsolete collection from the storage
+        database = storage_provider.client["results"]
+        collection = database[backend_name]
+        collection.drop()
+
+    def test_backend_name(self):
+        """
+        Test that we separate out properly the backend names
+        """
+        short_test_name = "tests"
+        short_name = get_short_backend_name(short_test_name)
+
+        self.assertEqual(short_test_name, short_name)
+
+        test_name = "alqor_tests_simulator"
+        short_name = get_short_backend_name(test_name)
+        self.assertEqual(short_test_name, short_name)
+
+        test_name = "alqor_tests_simulator_crap"
+        short_name = get_short_backend_name(test_name)
+        self.assertEqual("", short_name)

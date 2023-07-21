@@ -706,12 +706,7 @@ class MongodbProvider(StorageProvider):
 def get_storage_provider(backend_name: str) -> StorageProvider:
     """
     Get the storage provider that is used for the backend.
-
-    Args:
-        backend_name: The name of the backend
-
-    Returns:
-        The storage provider that is used for the backend
+    The storage provider that is used for the backend
 
     Raises:
         ValueError: If the storage provider is not supported
@@ -755,3 +750,25 @@ def get_storage_provider_from_entry(
     elif storage_provider_entry.storage_type == "dropbox":
         return DropboxProvider(storage_provider_entry.login)
     raise ValueError("The storage provider is not supported.")
+
+
+def get_short_backend_name(backend_name: str) -> str:
+    """
+    Get the short name of the backend. If the name has only one part, it returns the name.
+    If the name has multiple parts, it returns the middle part.
+    Args:
+        backend_name: The name of the backend
+
+    Returns:
+        The short name of the backend
+    """
+    if len(backend_name.split("_")) == 1:
+        short_backend = backend_name
+    elif len(backend_name.split("_")) == 3:
+        # the first name is the name of the storage (this will become active with #148).
+        _ = backend_name.split("_")[0]
+        short_backend = backend_name.split("_")[1]
+        _ = backend_name.split("_")[2]
+    else:
+        short_backend = ""
+    return short_backend
