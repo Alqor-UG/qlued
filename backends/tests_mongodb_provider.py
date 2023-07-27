@@ -137,6 +137,8 @@ class MongodbProviderTest(TestCase):
         """
         Test that we can handle the necessary functions for the jobs and status.
         """
+        # disable too many local variables
+        # pylint: disable=R0914
 
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="mongodb_test")
