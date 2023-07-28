@@ -14,9 +14,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
-
-from backends.apps import BackendsConfig as ac
-from backends.models import Token
+from backends.models import Token, StorageProviderDb
+from backends.storage_providers import get_storage_provider_from_entry
 
 from .forms import SignUpForm
 from .models import Impressum
@@ -52,14 +51,21 @@ def devices(request):
     """The about that contains all the available backend devices."""
     template = loader.get_template("frontend/backends.html")
 
-    storage_provider = getattr(ac, "storage")
-    backend_names = storage_provider.get_backends()
+    # pylint: disable=W0613, E1101
     backend_list = []
-    for backend in backend_names:
-        # for testing we created dummy devices. We should ignore them in any other cases.
-        if not "dummy_" in backend:
-            config_dict = storage_provider.get_backend_dict(backend)
-            backend_list.append(config_dict)
+    # obtain all the available storage providers from the database
+    storage_provider_entries = StorageProviderDb.objects.all()
+
+    # now loop through them and obtain the backends
+    for storage_provider_entry in storage_provider_entries:
+        storage_provider = get_storage_provider_from_entry(storage_provider_entry)
+
+        backend_names = storage_provider.get_backends()
+        for backend in backend_names:
+            # for testing we created dummy devices. We should ignore them in any other cases.
+            if not "dummy_" in backend:
+                config_dict = storage_provider.get_backend_dict(backend, version="v1")
+                backend_list.append(config_dict)
     base_url = config("BASE_URL", default="http://www.example.com")
     context = {"backend_list": backend_list, "base_url": base_url}
     return HttpResponse(template.render(context, request))
