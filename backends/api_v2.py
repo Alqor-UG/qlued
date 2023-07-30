@@ -14,8 +14,9 @@ from .schemas import (
     JobSchemaWithTokenIn,
     JobResponseSchema,
 )
-from .apps import BackendsConfig as ac
-from .models import Token
+
+from .models import Token, StorageProviderDb
+from .storage_providers import get_storage_provider, get_storage_provider_from_entry
 
 from .storage_providers import get_short_backend_name
 
@@ -55,8 +56,8 @@ def get_config(request, backend_name: str):
         }
         return 404, job_response_dict
 
-    storage_provider = getattr(ac, "storage")
-    return storage_provider.get_backend_dict(short_backend)
+    storage_provider = get_storage_provider(backend_name)
+    return storage_provider.get_backend_dict(short_backend, version="v2")
 
 
 @api.post(
@@ -92,7 +93,7 @@ def post_job(request, data: JobSchemaWithTokenIn, backend_name: str):
     # get the proper backend name
     short_backend = get_short_backend_name(backend_name)
     # now it is time to look for the backend
-    storage_provider = getattr(ac, "storage")
+    storage_provider = get_storage_provider(backend_name)
     backend_names = storage_provider.get_backends()
     if short_backend not in backend_names:
         job_response_dict["status"] = "ERROR"
@@ -111,7 +112,7 @@ def post_job(request, data: JobSchemaWithTokenIn, backend_name: str):
         ] = "The encoding of your json seems not work out!"
         return 406, job_response_dict
     try:
-        storage_provider = getattr(ac, "storage")
+        storage_provider = get_storage_provider(backend_name)
 
         # upload the job to the backend via the storage provider
         job_id = storage_provider.upload_job(
@@ -160,7 +161,7 @@ def get_job_status(request, backend_name: str, job_id: str, token: str):
         return 401, job_response_dict
 
     username = token_object.user.username
-    storage_provider = getattr(ac, "storage")
+    storage_provider = get_storage_provider(backend_name)
     backend_names = storage_provider.get_backends()
     short_backend = get_short_backend_name(backend_name)
     if short_backend not in backend_names:
@@ -183,7 +184,7 @@ def get_job_status(request, backend_name: str, job_id: str, token: str):
     try:
         # now we download the status json from the backend
         # this is currently very much backend specific
-        storage_provider = getattr(ac, "storage")
+        storage_provider = get_storage_provider(backend_name)
 
         job_response_dict = storage_provider.get_status(
             backend_name=short_backend, username=username, job_id=job_id
@@ -229,7 +230,7 @@ def get_job_result(request, backend_name: str, job_id: str, token: str):
 
     username = token_object.user.username
     short_backend = get_short_backend_name(backend_name)
-    storage_provider = getattr(ac, "storage")
+    storage_provider = get_storage_provider(backend_name)
     backend_names = storage_provider.get_backends()
     if short_backend not in backend_names:
         status_msg_dict["status"] = "ERROR"
@@ -287,12 +288,20 @@ def list_backends(request):
     Returns the list of backends, excluding any device called "dummy_" as they are test systems.
     """
     # pylint: disable=W0613, E1101
-    storage_provider = getattr(ac, "storage")
-    backend_names = storage_provider.get_backends()
+
     backend_list = []
-    for backend in backend_names:
-        # for testing we created dummy devices. We should ignore them in any other cases.
-        if not "dummy_" in backend:
-            config_dict = storage_provider.get_backend_dict(backend)
-            backend_list.append(config_dict)
+
+    # obtain all the available storage providers from the database
+    storage_provider_entries = StorageProviderDb.objects.all()
+
+    # now loop through them and obtain the backends
+    for storage_provider_entry in storage_provider_entries:
+        storage_provider = get_storage_provider_from_entry(storage_provider_entry)
+
+        backend_names = storage_provider.get_backends()
+        for backend in backend_names:
+            # for testing we created dummy devices. We should ignore them in any other cases.
+            if not "dummy_" in backend:
+                config_dict = storage_provider.get_backend_dict(backend, version="v2")
+                backend_list.append(config_dict)
     return backend_list

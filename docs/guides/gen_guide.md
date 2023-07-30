@@ -67,14 +67,11 @@ So for example if the ``server_domain=https://qlued.alqor.io/api/v2``, and we wa
 https://qlued.alqor.io/api/v2/fermions/post_job/
 ``
 
-!!! note
-
-    A automatically generated documentation of the API can be found [here](https://qlued.alqor.io/api/v2/docs).
 
 
 ### The API
 
-Now we explain different view functions and their purpose :
+A automatically generated documentation of the API can be found [here](https://qlued.alqor.io/api/v2/docs). Here, we explain different view functions and their purpose in slightly more detail:
 
 * **The `get_config` view** : This function returns a JSON dictionary containing the backend capabilities and details. At the moment this is relevant only for the Qiskit plugin as the pennylane plugin does not make use of it.
 * **The `post_job` view** : This function extracts the JSON dictionary describing a potential experiment from a HTTP request. The extracted job_JSON is dumped onto **Dropbox** for further processing. It then responds with another JSON dictionary which has a ``job_id`` key. This job_id is important to query the server for results of the experiment later on. A typical JSON response from the server has the following schema:
@@ -88,7 +85,7 @@ We will frequently use the term status dictionary and result dictionary. These a
 
 Since we use MongoDB or Dropbox to store JSONs, the view functions call functions written in a file called ``storage_providers.py`` which in turn calls  API functions for reading and writing. Note that we currently provide storage with MongoDB by default or Dropbox. However, it can be **replaced** with any other storage service (like Amazon S3, Microsoft azure storage, Google cloud storage etc.) which allows a user to read and write content using a python API. For this one would need to implement four basic functions for accessing the cloud storage provider. The details of these four functions are given in ``storage_providers.py`` with an example implementation for Dropbox. A new storage service can have its own class inheriting from the base class (just like the Dropbox class) and override the base functions.
 
-## The Dropbox storage
+## The storage
 
 !!! note
 

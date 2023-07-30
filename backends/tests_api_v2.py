@@ -12,9 +12,9 @@ from decouple import config
 from django.test import TestCase
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
-from .apps import BackendsConfig as ac
 
-from .models import Token
+from .models import Token, StorageProviderDb
+from .storage_providers import MongodbProvider
 
 User = get_user_model()
 
@@ -32,6 +32,28 @@ class BackendConfigTest(TestCase):
         user = User.objects.create(username=self.username)
         user.set_password(self.password)
         user.save()
+
+        # put together the login information
+        mongodb_username = config("MONGODB_USERNAME")
+        mongodb_password = config("MONGODB_PASSWORD")
+        mongodb_database_url = config("MONGODB_DATABASE_URL")
+
+        login_dict = {
+            "mongodb_username": mongodb_username,
+            "mongodb_password": mongodb_password,
+            "mongodb_database_url": mongodb_database_url,
+        }
+
+        # create the storage entry in the models
+        mongodb_entry = StorageProviderDb.objects.create(
+            storage_type="mongodb",
+            name="alqor",
+            owner=user,
+            description="MongoDB storage provider for tests",
+            login=login_dict,
+        )
+        mongodb_entry.full_clean()
+        mongodb_entry.save()
 
     def test_fermions_get_config_ninja(self):
         """
@@ -110,7 +132,22 @@ class JobSubmissionTest(TestCase):
         )
 
         # get the storage
-        self.storage_provider = getattr(ac, "storage")
+        login_dict = {
+            "mongodb_username": config("MONGODB_USERNAME"),
+            "mongodb_password": config("MONGODB_PASSWORD"),
+            "mongodb_database_url": config("MONGODB_DATABASE_URL"),
+        }
+
+        # create the storage entry in the models
+        mongodb_entry = StorageProviderDb.objects.create(
+            storage_type="mongodb",
+            name="alqor",
+            owner=user,
+            description="MongoDB storage provider for tests",
+            login=login_dict,
+        )
+        mongodb_entry.full_clean()
+        mongodb_entry.save()
 
     def test_post_job_ninja(self):
         """
@@ -194,22 +231,26 @@ class JobSubmissionTest(TestCase):
         data = json.loads(req.content)
         self.assertEqual(data["job_id"], req_id)
 
+        # create a mongodb object
+        mongodb_entry = StorageProviderDb.objects.get(name="alqor")
+        storage_provider = MongodbProvider(mongodb_entry.login)
+
         # verify if the storageprovider is of the type DropboxProvider or MongodbProvider
-        if self.storage_provider.__class__.__name__ == "DropboxProvider":
+        if storage_provider.__class__.__name__ == "DropboxProvider":
             # clean up the file
             storage_path = "Backend_files/Queued_Jobs/fermions"
             job_id = f"job-{data['job_id']}"
-            self.storage_provider.delete_file(storage_path, job_id)
+            storage_provider.delete_file(storage_path, job_id)
 
             storage_path = f"/Backend_files/Status/fermions/{self.username}"
             job_id = f"status-{data['job_id']}"
-            self.storage_provider.delete_file(storage_path, job_id)
-        elif self.storage_provider.__class__.__name__ == "MongodbProvider":
+            storage_provider.delete_file(storage_path, job_id)
+        elif storage_provider.__class__.__name__ == "MongodbProvider":
             storage_path = "jobs/queued/fermions"
-            self.storage_provider.delete_file(storage_path, data["job_id"])
+            storage_provider.delete_file(storage_path, data["job_id"])
 
             storage_path = "status/fermions"
-            self.storage_provider.delete_file(storage_path, data["job_id"])
+            storage_provider.delete_file(storage_path, data["job_id"])
 
     def test_get_job_result_ninja(self):
         """

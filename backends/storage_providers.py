@@ -21,6 +21,7 @@ from bson.objectid import ObjectId
 
 # get the environment variables
 from decouple import config
+from pydantic import BaseModel
 
 
 class StorageProvider(ABC):
@@ -122,21 +123,37 @@ class StorageProvider(ABC):
         """
 
 
-class DropboxProvider(StorageProvider):
+class DropboxLoginInformation(BaseModel):
     """
-    The access to the dropbox
+    The login information for the dropbox
     """
 
-    # Add OAuth2 access token here.
-    # You can generate one for yourself in the App Console.
-    # <https://blogs.dropbox.com/developers/2014/05/generate-an-access-token-for-your-own-account/>
-    def __init__(self) -> None:
+    app_key: str
+    app_secret: str
+    refresh_token: str
+
+
+class DropboxProvider(StorageProvider):
+    """
+    The access to the dropbox.
+    <https://blogs.dropbox.com/developers/2014/05/generate-an-access-token-for-your-own-account/>
+    """
+
+    def __init__(self, login_dict: dict) -> None:
         """
         Set up the neccessary keys.
+
+        Args:
+            login_dict: The dictionary that contains the login information
+
+        Raises:
+            ValidationError: If the login_dict does not contain the correct keys
         """
-        self.app_key = config("APP_KEY")
-        self.app_secret = config("APP_SECRET")
-        self.refresh_token = config("REFRESH_TOKEN")
+        DropboxLoginInformation(**login_dict)
+
+        self.app_key = login_dict["app_key"]
+        self.app_secret = login_dict["app_secret"]
+        self.refresh_token = login_dict["refresh_token"]
 
     def upload(self, content_dict: dict, storage_path: str, job_id: str) -> None:
         """
@@ -406,18 +423,36 @@ class DropboxProvider(StorageProvider):
         return result_dict
 
 
+class MongodbLoginInformation(BaseModel):
+    """
+    The login information for MongoDB
+    """
+
+    mongodb_username: str
+    mongodb_password: str
+    mongodb_database_url: str
+
+
 class MongodbProvider(StorageProvider):
     """
     The access to the mongodb
     """
 
-    def __init__(self) -> None:
+    def __init__(self, login_dict: dict) -> None:
         """
         Set up the neccessary keys and create the client through which all the connections will run.
+
+        Args:
+            login_dict: The login dict that contains the neccessary
+                        information to connect to the mongodb
+
+        Raises:
+            ValidationError: If the login_dict is not valid
         """
-        mongodb_username = config("MONGODB_USERNAME")
-        mongodb_password = config("MONGODB_PASSWORD")
-        mongodb_database_url = config("MONGODB_DATABASE_URL")
+        MongodbLoginInformation(**login_dict)
+        mongodb_username = login_dict["mongodb_username"]
+        mongodb_password = login_dict["mongodb_password"]
+        mongodb_database_url = login_dict["mongodb_database_url"]
 
         uri = f"mongodb+srv://{mongodb_username}:{mongodb_password}@{mongodb_database_url}"
         uri = uri + "/?retryWrites=true&w=majority"
@@ -668,11 +703,59 @@ class MongodbProvider(StorageProvider):
         return result_dict
 
 
+def get_storage_provider(backend_name: str) -> StorageProvider:
+    """
+    Get the storage provider that is used for the backend.
+    The storage provider that is used for the backend
+
+    Raises:
+        ValueError: If the storage provider is not supported
+    """
+
+    # we have to import it here to avoid circular imports
+    # pylint: disable=import-outside-toplevel
+    from .models import StorageProviderDb
+
+    # we often identify the backend by its short name. Let us use the assumption that this
+    # means that we work with a default database. This is part of bug #152
+    if len(backend_name.split("_")) == 1:
+        storage_provider_name = config("DEFAULT_STORAGE", "alqor")
+    else:
+        storage_provider_name = backend_name.split("_")[0]
+
+    storage_provider_entry = StorageProviderDb.objects.get(name=storage_provider_name)
+
+    return get_storage_provider_from_entry(storage_provider_entry)
+
+
+def get_storage_provider_from_entry(
+    storage_provider_entry,
+) -> StorageProvider:
+    """
+    Get the storage provider that is used for the backend.
+
+    Args:
+        storage_provider_entry: The entry from the Django database
+
+    Returns:
+        The storage provider that is used for the backend
+
+    Raises:
+        ValueError: If the storage provider is not supported
+    """
+
+    # pylint: disable=R1705
+    if storage_provider_entry.storage_type == "mongodb":
+        return MongodbProvider(storage_provider_entry.login)
+    elif storage_provider_entry.storage_type == "dropbox":
+        return DropboxProvider(storage_provider_entry.login)
+    raise ValueError("The storage provider is not supported.")
+
+
 def get_short_backend_name(backend_name: str) -> str:
     """
     Get the short name of the backend. If the name has only one part, it returns the name.
     If the name has multiple parts, it returns the middle part.
-
     Args:
         backend_name: The name of the backend
 

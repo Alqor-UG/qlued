@@ -1,5 +1,5 @@
 [MASTER]
 ignore=migrations
-
+extension-pkg-whitelist=pydantic
 [MESSAGES CONTROL]
 disable=R0801

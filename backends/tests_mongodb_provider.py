@@ -3,8 +3,16 @@ The tests for the storage provider
 """
 import uuid
 
+from decouple import config
+from pydantic import ValidationError
+
+from django.contrib.auth import get_user_model
 from django.test import TestCase
+
 from .storage_providers import MongodbProvider, get_short_backend_name
+from .models import StorageProviderDb
+
+User = get_user_model()
 
 
 class MongodbProviderTest(TestCase):
@@ -17,36 +25,89 @@ class MongodbProviderTest(TestCase):
         set up the test.
         """
         # load the credentials from the environment through decouple
-        self.storage_provider = MongodbProvider()
+
+        # create a user
+        self.username = config("USERNAME_TEST")
+        self.password = config("PASSWORD_TEST")
+        user = User.objects.create(username=self.username)
+        user.set_password(self.password)
+        user.save()
+        self.user = user
+
+        # put together the login information
+        mongodb_username = config("MONGODB_USERNAME")
+        mongodb_password = config("MONGODB_PASSWORD")
+        mongodb_database_url = config("MONGODB_DATABASE_URL")
+
+        login_dict = {
+            "mongodb_username": mongodb_username,
+            "mongodb_password": mongodb_password,
+            "mongodb_database_url": mongodb_database_url,
+        }
+
+        # create the storage entry in the models
+        mongodb_entry = StorageProviderDb.objects.create(
+            storage_type="mongodb",
+            name="mongodb_test",
+            owner=self.user,
+            description="MongoDB storage provider for tests",
+            login=login_dict,
+        )
+        mongodb_entry.full_clean()
+        mongodb_entry.save()
+
+    def test_mongodb_object(self):
+        """
+        Test that we can create a MongoDB object.
+        """
+        mongodb_entry = StorageProviderDb.objects.get(name="mongodb_test")
+        mongodb_provider = MongodbProvider(mongodb_entry.login)
+        self.assertIsNotNone(mongodb_provider)
+
+        # test that we cannot create a dropbox object a poor login dict structure
+        poor_login_dict = {
+            "app_key_t": "test",
+            "app_secret": "test",
+            "refresh_token": "test",
+        }
+        with self.assertRaises(ValidationError):
+            MongodbProvider(poor_login_dict)
 
     def test_upload_etc(self):
         """
         Test that it is possible to upload a file.
         """
 
+        # create a mongodb object
+        mongodb_entry = StorageProviderDb.objects.get(name="mongodb_test")
+        storage_provider = MongodbProvider(mongodb_entry.login)
+
         # upload a file and get it back
         test_content = {"experiment_0": "Nothing happened here."}
         storage_path = "test/subcollection"
 
         job_id = uuid.uuid4().hex[:24]
-        self.storage_provider.upload(test_content, storage_path, job_id)
-        test_result = self.storage_provider.get_file_content(storage_path, job_id)
+        storage_provider.upload(test_content, storage_path, job_id)
+        test_result = storage_provider.get_file_content(storage_path, job_id)
 
         self.assertDictEqual(test_content, test_result)
 
         # move it and get it back
         second_path = "test/subcollection_2"
-        self.storage_provider.move_file(storage_path, second_path, job_id)
-        test_result = self.storage_provider.get_file_content(second_path, job_id)
+        storage_provider.move_file(storage_path, second_path, job_id)
+        test_result = storage_provider.get_file_content(second_path, job_id)
         self.assertDictEqual(test_content, test_result)
 
         # clean up our mess
-        self.storage_provider.delete_file(second_path, job_id)
+        storage_provider.delete_file(second_path, job_id)
 
     def test_configs(self):
         """
         Test that we are able to obtain a list of backends.
         """
+        # create a mongodb object
+        mongodb_entry = StorageProviderDb.objects.get(name="mongodb_test")
+        storage_provider = MongodbProvider(mongodb_entry.login)
 
         # create a dummy config
         dummy_id = uuid.uuid4().hex[:5]
@@ -61,21 +122,28 @@ class MongodbProviderTest(TestCase):
 
         config_path = "backends/configs"
         mongo_id = uuid.uuid4().hex[:24]
-        self.storage_provider.upload(dummy_dict, config_path, job_id=mongo_id)
+        storage_provider.upload(dummy_dict, config_path, job_id=mongo_id)
 
         # can we get the backend in the list ?
-        backends = self.storage_provider.get_backends()
+        backends = storage_provider.get_backends()
         self.assertTrue(f"dummy_{dummy_id}" in backends)
 
         # can we get the config of the backend ?
-        backend_dict = self.storage_provider.get_backend_dict(backend_name)
+        backend_dict = storage_provider.get_backend_dict(backend_name)
         self.assertEqual(backend_dict["backend_name"], dummy_dict["name"])
-        self.storage_provider.delete_file(config_path, mongo_id)
+        storage_provider.delete_file(config_path, mongo_id)
 
     def test_jobs(self):
         """
         Test that we can handle the necessary functions for the jobs and status.
         """
+        # disable too many local variables
+        # pylint: disable=R0914
+
+        # create a mongodb object
+        mongodb_entry = StorageProviderDb.objects.get(name="mongodb_test")
+        storage_provider = MongodbProvider(mongodb_entry.login)
+
         # let us first test the we can upload a dummy job
         job_payload = {
             "experiment_0": {
@@ -94,20 +162,20 @@ class MongodbProviderTest(TestCase):
         backend_name = "dummy" + uuid.uuid4().hex[:5]
         username = "dummy_user"
 
-        job_id = self.storage_provider.upload_job(
+        job_id = storage_provider.upload_job(
             job_dict=job_payload, backend_name=backend_name, username=username
         )
         self.assertTrue(len(job_id) > 1)
 
         # now also test that we can upload the status
-        job_response_dict = self.storage_provider.upload_status(
+        job_response_dict = storage_provider.upload_status(
             backend_name=backend_name,
             username=username,
             job_id=job_id,
         )
         self.assertTrue(len(job_response_dict["job_id"]) > 1)
         # now test that we can get the job status
-        job_status = self.storage_provider.get_status(
+        job_status = storage_provider.get_status(
             backend_name=backend_name,
             username=username,
             job_id=job_id,
@@ -119,10 +187,10 @@ class MongodbProviderTest(TestCase):
         # first upload a dummy result
         dummy_result = {"result": "dummy"}
         result_json_dir = "results/" + backend_name
-        self.storage_provider.upload(dummy_result, result_json_dir, job_id)
+        storage_provider.upload(dummy_result, result_json_dir, job_id)
 
         # now get the result
-        result = self.storage_provider.get_result(
+        result = storage_provider.get_result(
             backend_name=backend_name,
             username=username,
             job_id=job_id,
@@ -132,26 +200,26 @@ class MongodbProviderTest(TestCase):
 
         # remove the obsolete job from the storage
         job_dir = "jobs/queued/" + backend_name
-        self.storage_provider.delete_file(job_dir, job_id)
+        storage_provider.delete_file(job_dir, job_id)
 
         # remove the obsolete collection from the storage
-        database = self.storage_provider.client["jobs"]
+        database = storage_provider.client["jobs"]
         collection = database[f"queued.{backend_name}"]
         collection.drop()
 
         # remove the obsolete status from the storage
         status_dir = "status/" + backend_name
-        self.storage_provider.delete_file(status_dir, job_id)
+        storage_provider.delete_file(status_dir, job_id)
 
         # remove the obsolete collection from the storage
-        database = self.storage_provider.client["status"]
+        database = storage_provider.client["status"]
         collection = database[backend_name]
         collection.drop()
 
         # remove the obsolete result from the storage
-        self.storage_provider.delete_file(result_json_dir, job_id)
+        storage_provider.delete_file(result_json_dir, job_id)
         # remove the obsolete collection from the storage
-        database = self.storage_provider.client["results"]
+        database = storage_provider.client["results"]
         collection = database[backend_name]
         collection.drop()
 
