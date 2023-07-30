@@ -9,17 +9,17 @@
       
       
       
-        <link rel="prev" href="../heroku/">
+        <link rel="prev" href="../local_installation/">
       
       
-        <link rel="next" href="../storage_providers/">
+        <link rel="next" href="../local_testing/">
       
       <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.5">
     
     
       
-        <title>Deploy your own instance - Qlued</title>
+        <title>Storage providers - Qlued</title>
       
     
     
@@ -67,7 +67,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#set-up-of-your-own-instance" class="md-skip">
+        <a href="#storage-providers" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Deploy your own instance
+              Storage providers
             
           </span>
         </div>
@@ -282,6 +282,20 @@
               
   
   
+  
+    <li class="md-nav__item">
+      <a href="../local_installation/" class="md-nav__link">
+        Deploy your own instance
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
     
   
   
@@ -294,12 +308,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Deploy your own instance
+          Storage providers
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Deploy your own instance
+        Storage providers
       </a>
       
         
@@ -318,23 +332,63 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#first-steps" class="md-nav__link">
-    First steps
+  <a href="#some-general-remarks" class="md-nav__link">
+    Some general remarks
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#getting-the-server-started-locally" class="md-nav__link">
-    Getting the server started locally
+  <a href="#setting-up-a-new-mongodb-storage" class="md-nav__link">
+    Setting up a new MongoDB storage
   </a>
+  
+    <nav class="md-nav" aria-label="Setting up a new MongoDB storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-the-mongodb-to-the-admin-interface" class="md-nav__link">
+    Adding the MongoDB to the admin interface
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-with-mongodb" class="md-nav__link">
+    Deploy with MongoDB
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#setting-up-a-new-storage" class="md-nav__link">
-    Setting up a new storage
+  <a href="#setting-up-a-new-dropbox-storage" class="md-nav__link">
+    Setting up a new dropbox storage
   </a>
+  
+    <nav class="md-nav" aria-label="Setting up a new dropbox storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#obtain-the-refresh-token" class="md-nav__link">
+    Obtain the refresh token
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-the-dropbox-to-the-admin-interface" class="md-nav__link">
+    Adding the Dropbox to the admin interface
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -349,20 +403,6 @@
   
 </nav>
       
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../storage_providers/" class="md-nav__link">
-        Storage providers
-      </a>
     </li>
   
 
@@ -573,23 +613,63 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#first-steps" class="md-nav__link">
-    First steps
+  <a href="#some-general-remarks" class="md-nav__link">
+    Some general remarks
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#getting-the-server-started-locally" class="md-nav__link">
-    Getting the server started locally
+  <a href="#setting-up-a-new-mongodb-storage" class="md-nav__link">
+    Setting up a new MongoDB storage
   </a>
+  
+    <nav class="md-nav" aria-label="Setting up a new MongoDB storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-the-mongodb-to-the-admin-interface" class="md-nav__link">
+    Adding the MongoDB to the admin interface
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-with-mongodb" class="md-nav__link">
+    Deploy with MongoDB
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#setting-up-a-new-storage" class="md-nav__link">
-    Setting up a new storage
+  <a href="#setting-up-a-new-dropbox-storage" class="md-nav__link">
+    Setting up a new dropbox storage
   </a>
+  
+    <nav class="md-nav" aria-label="Setting up a new dropbox storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#obtain-the-refresh-token" class="md-nav__link">
+    Obtain the refresh token
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-the-dropbox-to-the-admin-interface" class="md-nav__link">
+    Adding the Dropbox to the admin interface
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -618,65 +698,118 @@
   
 
 
-<h1 id="set-up-of-your-own-instance">Set up of your own instance</h1>
-<p>In this part we explain how can set up your own instance. This will involve three major steps:</p>
-<ol>
-<li>Setting up the server</li>
-<li>Setting up the storage via MongoDB or Dropbox.</li>
-<li>Setting up the backend for example via <a href="https://github.com/Alqor-UG/sqooler">sqooler</a>.</li>
-</ol>
-<p>Here, we will explain the first and the second step. The third step is explained in the installation guide of <a href="https://alqor-ug.github.io/sqooler/">sqooler</a>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This guide is only relevant for developers that would like to create a service that is similiar to <a href="https://qlued.alqor.io">https://qlued.alqor.io</a>. Should you be an end-user that simply would like to better understand how to use the service please go directly to one of the tutorials.</p>
-</div>
-<h2 id="first-steps">First steps</h2>
-<p>The whole system is set up on <a href="https://www.djangoproject.com/">django</a> and hence should be operated within the python framework.</p>
-<p>First, create a local environment. You can then install the requirements via <code>pip install -r requirements-dev.txt</code>.</p>
-<p>Second, we need to enable the storage of the settings, which we manage with <a href="https://pypi.org/project/python-decouple/">python-decouple</a>. To do so, create a <code>.env</code> file in the root directory. 
-<div class="highlight"><pre><span></span><code>project
-│   README.md
-│   manage.py
-|   .env
-|   ...    
-│
-└───.github
-│   │   ...
-|
-└───backends
-│   │   ...
-|
-│   ...
-</code></pre></div></p>
-<p>An example content of this file would be:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># settings for the local Django server</span>
-<span class="n">USERNAME_TEST</span><span class="o">=</span><span class="n">john_test</span> 
-<span class="n">PASSWORD_TEST</span><span class="o">=</span><span class="n">dogs_and_cats</span>
-<span class="n">SECRET_KEY</span><span class="o">=&lt;</span><span class="n">YOUR</span><span class="o">-</span><span class="n">SECRET</span><span class="o">-</span><span class="n">KEY</span><span class="o">&gt;</span>
-
-<span class="c1"># URL from which you would like to serve </span>
-<span class="n">BASE_URL</span><span class="o">=&lt;</span><span class="n">YOUR</span><span class="o">-</span><span class="n">URL</span><span class="o">&gt;</span>
-</code></pre></div>
-<p>Make sure that you set an appropiate <code>SECRET_KEY</code>, <code>USERNAME_TEST</code> and <code>PASSWORD_TEST</code> of the django environment. 
-Next, you have to set the <code>BASE_URL</code> to the URL from which you would like to serve the service.</p>
-<h2 id="getting-the-server-started-locally">Getting the server started locally</h2>
+<h1 id="storage-providers">Storage providers</h1>
+<p>We use external storage providers like Dropbox or MongoDB to store all our JSONs. All the source code is stored in <code>backends/storage_providers.py</code>. Below, we will summarize how the storage providers are supposed to work and how they can be set up.</p>
+<h2 id="some-general-remarks">Some general remarks</h2>
+<p>This approach has several benefits:</p>
 <ul>
-<li>Create a simple local database for the back-end with <code>python manage.py migrate</code>.</li>
-<li>Create the superuser via <code>python manage.py createsuperuser</code>.</li>
-<li>You should now be able to run <code>python manage.py runserver</code>.</li>
-<li>Once you have done that you can access the admin interface via <code>http://localhost:8000/admin/</code> and login with the credentials you just created.</li>
+<li>We immediately implement asynchronous job management. Basically the server dumps the job coming from the remote client onto the storage provider. Then whenever the Spooler belonging to a backend is free, it will act on the next job which is appropriate for that particular backend.</li>
+<li>The storage_provider also serves as a database storage for various JSONs, like job_JSON, result_JSON, status_JSON etc. </li>
+<li>It allows us to unify the workflow for both simulator and real machine. Basically it does not matter what the backend is, the workflow is the identical. Different backends only differ in their Spoolers.</li>
 </ul>
+<p>Now lets give an example about the work flow. Lets say a remote client named <code>user_1</code> submits a job to the singlequdit backend. This means <code>user_1</code> sent a  post request to the following URL:</p>
+<p><code>https://qlued.alqor.io/api/v2/singlequdit/post_job/</code></p>
+<p>The server will immediately save the JSON to the storage_provider via <code>upload_job</code>. At the same time the server will reply to the user with a job_id response which might look something like :</p>
+<p><code>{'job_id': '20210906_203730-singlequdit-user_1-1088f','status': 'INITIALIZING','detail': 'Got your json.'}</code></p>
+<p>This dictionary is also saved as a status JSON via <code>upload_status</code>. </p>
+<p>On the spooler side, it will query the server for the next job it should work on. Also let us suppose the spooler is querying about the next job for <code>singlequdit</code> backend. The server looks for the file list in the directory <code>Backend_files/Queued_Jobs/singlequdit/</code>. It will choose the first created file from that list. Lets say this is the file <code>job-20210906_203730-singlequdit-user_1-1088f.json</code>. Now the server will move this file from <code>Backend_files/Queued_Jobs/singlequdit/job-20210906_203730-singlequdit-user_1-1088f.json</code> to <code>Backend_files/Running_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json</code> and respond to the spooler with a <code>job_msg_dict</code> which looks like</p>
+<p><code>{"job_id": "20210906_203730-singlequdit-user_1-1088f", "job_json": Backend_files/Running_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json"}</code></p>
+<p>From this, the Spooler knows exactly where the job JSON file is stored on Dropbox. It fetches the job JSON and starts to process it.</p>
+<p>For processing the job, the spooler begins by sanity-checking the JSON for correct schema. If the job_JSON fails this check the file is moved to  <code>Backend_files/Deleted_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json</code>. The status JSON is also updated by the spooler to:</p>
+<p><code>{'job_id': '20210906_203730-singlequdit-user_1-1088f','status': 'ERROR','detail': 'Got your json.; Failed json sanity check. File will be deleted. Error message : blah..blah'}</code></p>
+<p>From the dictionary, the user is automatically informed about the details of why the error happened.</p>
+<p>If however, the job_JSON passes sanity checking, then it is executed. The spooler goes through the instruction list and creates the appropriate circuit and calculates the end result. Then it generates the given number of shots and formats everything into the result dictionary. The schema of the result dictionary is given at [1][eggerdj_github]. Then the Spooler will upload the result JSON to the appropiate place (see the <code>sqooler</code> instructions for more detail). It will also move the job JSON <code>running_jobs</code> to <code>finished_jobs</code>. Finally the spooler will update the status JSON to:</p>
+<p><code>{'job_id': '20210906_203730-singlequdit-user_1-1088f','status': 'DONE','detail': 'Got your json.; Passed json sanity check; Compilation done. Shots sent to solver.'}</code></p>
+<h2 id="setting-up-a-new-mongodb-storage">Setting up a new MongoDB storage</h2>
+<p><code>qlued</code> allows you to use <a href="https://www.mongodb.com/">MongoDB</a> storage <sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>. Several options for hosting a mongoDB database are available. If you would like to deploy the system, we recommend to use <a href="https://www.mongodb.com/cloud/atlas">MongoDB Atlas</a>. However, it is also possible to set up a local MongoDB database. In the following, we will explain how to set up a MongoDB Atlas database (help to improve this description is welcome):</p>
+<ul>
+<li>Create an account on <a href="https://www.mongodb.com/cloud/atlas">MongoDB Atlas</a>.</li>
+<li>Create a new project.</li>
+<li>Create a new cluster.</li>
+<li>Create a new user.</li>
+<li>Obtain the url of the database through connect -&gt; driver -&gt; python and there copy the url.</li>
+</ul>
+<h3 id="adding-the-mongodb-to-the-admin-interface">Adding the MongoDB to the admin interface</h3>
+<p>Now you are ready to add the storage to <code>qlued</code>. To do so, make sure that you have access to the admin interface of your instance. If you are not sure, we have a guide on how to deploy the service via heroku <a href="../heroku/">here</a> or create a local instance as described <a href="../local_installation/">here</a>. Follow the steps below:</p>
+<ul>
+<li>Log in to the Django admin interface.</li>
+<li>Under backends you should see a <code>Storage Provider dbs</code> section. Click on it.</li>
+<li>Click on <code>Add Storage Provider db</code>.</li>
+<li>As Storage Type choose <code>MongoDB</code>.</li>
+<li>Use the name of your choice.</li>
+<li>Assign an owner.</li>
+<li>Provide a description.</li>
+</ul>
+<p>Finally, you have to add the login information. For the moment this is a json dict. So fill in the following dict:</p>
+<div class="highlight"><pre><span></span><code>{&quot;mongodb_username&quot;: &quot;&lt;YOUR-USERNAME&gt;&quot;, 
+&quot;mongodb_password&quot;: &quot;&lt;YOUR-PASSWORD&gt;&quot;, 
+&quot;mongodb_database_url&quot;: &quot;&lt;YOUR-DATABASE-URL&gt;&quot;}
+</code></pre></div>
+<ul>
+<li>Save the storage provider.</li>
+</ul>
+<h3 id="deploy-with-mongodb">Deploy with MongoDB</h3>
+<p>Your are done and the backends that have been added to the storage should be visible under the devices section of the frontend.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>You can decide on different storages for the jobs. We provide you with the following options:
-- MongoDB
-- Dropbox
-Both can be set through the import in the <code>backends/app</code> file.</p>
+<p>If you did not set up the <code>sqooler</code> you are going to get several errors. This is due to the fact that <code>sqooler</code> will define the backend configurations. So try to install it as described <a href="https://alqor-ug.github.io/sqooler/">here</a> and run the tests again. </p>
 </div>
-<h2 id="setting-up-a-new-storage">Setting up a new storage</h2>
-<p>Finally, you have to set up the appropiate storage. This might be a Dropbox or a MongoDB provider right now. The appropiate steps are described <a href="../storage_providers/">here</a>.</p>
+<h2 id="setting-up-a-new-dropbox-storage">Setting up a new dropbox storage</h2>
+<p>Dropbox is the second option as a <code>StorageProvider</code>. This is more direct as a file system, however it has some severe performance handicaps compared to MongoDB. Now we describe how the Dropbox folder structure is organized. It is shown in following picture:
+<img alt="" src="../dropbox.png" /> If one plans to replace Dropbox with other storage service, then one needs to implement a folder/naming structure similar to above.</p>
+<p>If you would like to set it up you have to follow these steps (help to improve this description is welcome):</p>
+<ul>
+<li>Make sure that you have a Dropbox account.</li>
+<li>Create an app in <a href="https://www.dropbox.com/developers/apps">app console</a>.</li>
+<li>Give the app the permissions <code>files.content.write</code> as well as <code>files.content.read</code>.</li>
+</ul>
+<h3 id="obtain-the-refresh-token">Obtain the refresh token</h3>
+<p>Next we explain you how to  obtain the <code>REFRESH_TOKEN</code>. This is initially based on <a href="https://www.dropboxforum.com/t5/Dropbox-API-Support-Feedback/Get-refresh-token-from-access-token/td-p/596739">this guide</a>.</p>
+<ol>
+<li>Make your OAuth app authorization URL like this: (plug in your app key in place of "APPKEYHERE"):
+<div class="highlight"><pre><span></span><code>https://www.dropbox.com/oauth2/authorize?client_id=APPKEYHERE&amp;response_type=code&amp;token_access_type=offline
+</code></pre></div></li>
+<li>Browse to that page in your browser while signed in to your account and click "Allow" to authorize it.</li>
+<li>Copy the resulting authorization code.</li>
+<li>Exchange the authorization code for an access token and refresh token like this, e.g., using curl on the command line: (plug in the authorization code from step 3 in place of "AUTHORIZATIONCODEHERE", the app key in place of "APPKEYHERE", and the app secret in place of "APPSECRETHERE").
+<div class="highlight"><pre><span></span><code>curl https://api.dropbox.com/oauth2/token \
+    -d code=AUTHORIZATIONCODEHERE \
+    -d grant_type=authorization_code \
+    -u APPKEYHERE:APPSECRETHERE​
+</code></pre></div>
+The response will contain a short-lived access token and refresh token that you can then use as needed.</li>
+</ol>
+<h3 id="adding-the-dropbox-to-the-admin-interface">Adding the Dropbox to the admin interface</h3>
+<p>Now you are ready to add the storage to <code>qlued</code>. To do so, make sure that you have access to the admin interface of your instance. If you are not sure, we have a guide on how to deploy the service via heroku <a href="../heroku/">here</a> or create a local instance as described <a href="../local_installation/">here</a>. Follow the steps below:</p>
+<ul>
+<li>Log in to the Django admin interface.</li>
+<li>Under backends you should see a <code>Storage Provider dbs</code> section. Click on it.</li>
+<li>Click on <code>Add Storage Provider db</code>.</li>
+<li>As Storage Type choose <code>MongoDB</code>.</li>
+<li>Use the name of your choice.</li>
+<li>Assign an owner.</li>
+<li>Provide a description.</li>
+</ul>
+<p>Finally, you have to add the login information. For the moment this is a json dict. So fill in the following dict:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;app_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-APP-KEY&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;app_secret&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-APP-SECRET&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;refresh_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-REFRESH-SECRET&gt;&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>Save the storage provider.</li>
+</ul>
 <h2 id="done">Done</h2>
 <p>This ends the set up of the server. You can now run the first tutorials as explained <a href="notebooks/rydberg_api_showcase_v2">here</a></p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>The full logic is encoded in the <code>MongodbProvider</code> class within <code>backends/storage_providers</code>.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
 
 
 
@@ -750,7 +883,7 @@ Both can be set through the import in the <code>backends/app</code> file.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../heroku/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Deployment via heroku" rel="prev">
+          <a href="../local_installation/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Deploy your own instance" rel="prev">
             <div class="md-footer__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
             </div>
@@ -759,20 +892,20 @@ Both can be set through the import in the <code>backends/app</code> file.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Deployment via heroku
+                Deploy your own instance
               </div>
             </div>
           </a>
         
         
           
-          <a href="../storage_providers/" class="md-footer__link md-footer__link--next" aria-label="Next: Storage providers" rel="next">
+          <a href="../local_testing/" class="md-footer__link md-footer__link--next" aria-label="Next: Testing" rel="next">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Storage providers
+                Testing
               </div>
             </div>
             <div class="md-footer__button md-icon">

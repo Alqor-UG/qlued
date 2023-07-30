@@ -324,8 +324,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-dropbox-storage" class="md-nav__link">
-    The Dropbox storage
+  <a href="#the-storage" class="md-nav__link">
+    The storage
   </a>
   
 </li>
@@ -386,8 +386,50 @@
   
   
     <li class="md-nav__item">
+      <a href="../heroku/" class="md-nav__link">
+        Deployment via heroku
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../local_installation/" class="md-nav__link">
-        Own instance
+        Deploy your own instance
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage_providers/" class="md-nav__link">
+        Storage providers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../local_testing/" class="md-nav__link">
+        Testing
       </a>
     </li>
   
@@ -633,8 +675,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-dropbox-storage" class="md-nav__link">
-    The Dropbox storage
+  <a href="#the-storage" class="md-nav__link">
+    The storage
   </a>
   
 </li>
@@ -729,12 +771,8 @@
 <p><code>server_domain/requested_backend/appropriate_view_name</code></p>
 <p>So for example if the <code>server_domain=https://qlued.alqor.io/api/v2</code>, and we want to use <code>post_job</code> view for the <code>fermions</code> backend i.e.  <code>requested_backend=fermions</code> and <code>appropriate_view_name=post_job</code>. The complete URL will look like :</p>
 <p><code>https://qlued.alqor.io/api/v2/fermions/post_job/</code></p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>A automatically generated documentation of the API can be found <a href="https://qlued.alqor.io/api/v2/docs">here</a>.</p>
-</div>
 <h3 id="the-api">The API</h3>
-<p>Now we explain different view functions and their purpose :</p>
+<p>A automatically generated documentation of the API can be found <a href="https://qlued.alqor.io/api/v2/docs">here</a>. Here, we explain different view functions and their purpose in slightly more detail:</p>
 <ul>
 <li><strong>The <code>get_config</code> view</strong> : This function returns a JSON dictionary containing the backend capabilities and details. At the moment this is relevant only for the Qiskit plugin as the pennylane plugin does not make use of it.</li>
 <li><strong>The <code>post_job</code> view</strong> : This function extracts the JSON dictionary describing a potential experiment from a HTTP request. The extracted job_JSON is dumped onto <strong>Dropbox</strong> for further processing. It then responds with another JSON dictionary which has a <code>job_id</code> key. This job_id is important to query the server for results of the experiment later on. A typical JSON response from the server has the following schema:
@@ -744,7 +782,7 @@
 </ul>
 <p>We will frequently use the term status dictionary and result dictionary. These are just text files which host the appropriate JSON data. These files are stored on the Dropbox like job_JSON. When a view reads these text files, it coverts the data in them to a python dictionary and sends it to the client or modifies the dictionary further before saving it back to the text file.</p>
 <p>Since we use MongoDB or Dropbox to store JSONs, the view functions call functions written in a file called <code>storage_providers.py</code> which in turn calls  API functions for reading and writing. Note that we currently provide storage with MongoDB by default or Dropbox. However, it can be <strong>replaced</strong> with any other storage service (like Amazon S3, Microsoft azure storage, Google cloud storage etc.) which allows a user to read and write content using a python API. For this one would need to implement four basic functions for accessing the cloud storage provider. The details of these four functions are given in <code>storage_providers.py</code> with an example implementation for Dropbox. A new storage service can have its own class inheriting from the base class (just like the Dropbox class) and override the base functions.</p>
-<h2 id="the-dropbox-storage">The Dropbox storage</h2>
+<h2 id="the-storage">The storage</h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Beware, we have recently updated the default storage to mongoDb. The following description is outdated. However, the main idea is still the same. We will update the description soon.</p>
