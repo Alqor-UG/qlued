@@ -16,7 +16,10 @@ nav:
   - "Guides":
       - guides/gen_guide.md
       - guides/user_guide.md
-      - "Own instance": guides/local_installation.md
+      - guides/heroku.md
+      - "Deploy your own instance": guides/local_installation.md
+      - guides/storage_providers.md
+      - "Testing": guides/local_testing.md
       - guides/oauth.md
   - "Tutorials for v2":
       - Rydberg: notebooks/rydberg_api_showcase_v2.ipynb
@@ -42,6 +45,7 @@ markdown_extensions:
   - attr_list
   - md_in_html
   - admonition
+  - footnotes
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.emoji:
