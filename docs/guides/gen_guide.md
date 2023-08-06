@@ -91,53 +91,7 @@ Since we use MongoDB or Dropbox to store JSONs, the view functions call function
 
     Beware, we have recently updated the default storage to mongoDb. The following description is outdated. However, the main idea is still the same. We will update the description soon.
 
-We use Dropbox to store all our JSONS. This approach has several benefits:
 
-* We immediately implement asynchronous job management. Basically the Heroku server dumps the job coming from the remote client onto Dropbox. Then whenever the Spooler belonging to a backend is free, it will query to ``get_next_job_in_queue`` view and act on the next job which is appropriate for that particular backend.
-* Dropbox also serves as a database storage for various JSONs, like job_JSON, result_JSON, status_JSON etc. It gives us 2 GB free storage which is a lot considering price of commercial database alternatives.
-* It allows us to unify the workflow for both simulator and real machine. Basically it does not matter what the backend is, the workflow is the identical. Different backends only differ in their Spoolers.
-
-Now we describe how the Dropbox folder structure is organized. It is shown in following picture:
-![](dropbox.png)
-
-If one plans to replace Dropbox with other storage service, then one needs to implement a folder/naming structure similar to above.
-
-Now lets give an example about the work flow. Lets say a remote client named ``user_1`` submits a job to the singlequdit backend. This means ``user_1`` sent a  post request to the following URL:
-
-``
-https://qlued.alqor.io/api/v2/singlequdit/post_job/
-``
-
-The server will immediately save the JSON to **Dropbox** at ``Backend_files/Queued_Jobs/singlequdit/job-20210906_203730-singlequdit-user_1-1088f.json``. The JSON file name has special meaning as will be explained later. The file is stored here temporarily before spooler processes it. At the same time the server will reply to the user with a job_id response which might look something like :
-
-``
-{'job_id': '20210906_203730-singlequdit-user_1-1088f','status': 'INITIALIZING','detail': 'Got your json.'}
-``
-
-
-This dictionary is also saved as a status JSON at ``Backend_files/Status/singlequdit/user_1/status-20210906_203730-singlequdit-test-1088f.json``. Note the name is quite similar to the job JSON except a ``status-`` prefix.
-
-The ``job_id`` key-value has lot of information. It has the UTC date and time of creation of the job ``20210906_203730`` which means it was created on 6 September 2021 at 20:37:30 PM UTC time. The job_id also has the user name who created this job i.e. ``user_1`` and the backend where this job is supposed to be executed i.e. ``singlequdit``. At the end the job has some random alpha-numeric string of 5 characters.
-
-On the spooler side, it will query the server for the next job it should work on. Also let us suppose the spooler is querying about the next job for ``singlequdit`` backend. The server looks for the file list in the directory ``Backend_files/Queued_Jobs/singlequdit/``. It will choose the first created file from that list. Lets say this is the file ``job-20210906_203730-singlequdit-user_1-1088f.json``. Now the server will move this file from ``Backend_files/Queued_Jobs/singlequdit/job-20210906_203730-singlequdit-user_1-1088f.json`` to ``Backend_files/Running_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json`` and respond to the spooler with a ``job_msg_dict`` which looks like
-
-``{"job_id": "20210906_203730-singlequdit-user_1-1088f", "job_json": Backend_files/Running_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json"}``
-
-From this, the Spooler knows exactly where the job JSON file is stored on Dropbox. It fetches the job JSON and starts to process it.
-
-For processing the job, the spooler begins by sanity-checking the JSON for correct schema. If the job_JSON fails this check the file is moved to  `` Backend_files/Deleted_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json ``. The status JSON is also updated by the spooler to:
-
-``
-{'job_id': '20210906_203730-singlequdit-user_1-1088f','status': 'ERROR','detail': 'Got your json.; Failed json sanity check. File will be deleted. Error message : blah..blah'}
-``
-
-From the dictionary, the user is automatically informed about the details of why the error happened.
-
-If however, the job_JSON passes sanity checking, then it is executed. The spooler goes through the instruction list and creates the appropriate circuit and calculates the end result. Then it generates the given number of shots and formats everything into the result dictionary. The schema of the result dictionary is given at [1][eggerdj_github]. Then the Spooler will upload the result JSON to ``Backend_files/Result/singlequdit/user_1/result-20210906_203730-singlequdit-user_1-1088f.json``. It will also move the job JSON from ``Backend_files/Running_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json`` to  ``Backend_files/Finished_Jobs/singlequdit/user_1/job-20210906_203730-singlequdit-user_1-1088f.json``. Finally the spooler will update the status JSON to:
-
-``
-{'job_id': '20210906_203730-singlequdit-user_1-1088f','status': 'DONE','detail': 'Got your json.; Passed json sanity check; Compilation done. Shots sent to solver.'}
-``
 
 This completes the execution of the job and the results are now available.
 
