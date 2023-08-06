@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 from backends.models import Token, StorageProviderDb
 from backends.storage_providers import get_storage_provider_from_entry
 
-from .forms import SignUpForm
+from .forms import SignUpForm, StorageProviderForm
 from .models import Impressum
 
 

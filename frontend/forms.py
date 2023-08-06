@@ -6,6 +6,24 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import RegexValidator
 from django import forms
+from django.forms import ModelForm
+from backends.models import StorageProviderDb
+
+
+class StorageProviderForm(ModelForm):
+    """
+    Form that is used to register new storage providers for the backends.
+    """
+
+    class Meta:
+        model = StorageProviderDb
+        fields = [
+            "storage_type",
+            "name",
+            "owner",
+            "description",
+            "login",
+        ]
 
 
 # pylint: disable=R0901
