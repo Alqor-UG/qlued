@@ -160,6 +160,7 @@ def add_storage_provider(request):
     if request.method == "POST":
         form = StorageProviderForm(request.POST)
         if form.is_valid():
+            # TODO: set the owner of the storage provider to the current user.
             form.save()
             return HttpResponseRedirect(reverse("profile"))
     else:
