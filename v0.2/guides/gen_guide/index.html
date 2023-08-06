@@ -476,16 +476,30 @@
       
       
         <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-          Tutorials for v2
+          Tutorials
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_4">
           <span class="md-nav__icon md-icon"></span>
-          Tutorials for v2
+          Tutorials
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/rydberg_qiskit_dynamics/" class="md-nav__link">
+        Running the system through qiskit-cold-atom
+      </a>
+    </li>
+  
+
+            
           
             
               
@@ -508,85 +522,6 @@
   
     <li class="md-nav__item">
       <a href="../../notebooks/fermions_api_showcase_v2/" class="md-nav__link">
-        Fermion back-end workflow demonstration
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../notebooks/rydberg_qiskit_dynamics/" class="md-nav__link">
-        Running the system through qiskit-cold-atom
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-      
-      
-        
-      
-      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-      
-      
-      
-        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-          Tutorials
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-        <label class="md-nav__title" for="__nav_5">
-          <span class="md-nav__icon md-icon"></span>
-          Tutorials
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../notebooks/rydberg_api_showcase_v1/" class="md-nav__link">
-        Rydberg back-end workflow demonstration
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../notebooks/fermions_api_showcase/" class="md-nav__link">
         Fermion back-end workflow demonstration
       </a>
     </li>
@@ -787,29 +722,6 @@
 <p class="admonition-title">Note</p>
 <p>Beware, we have recently updated the default storage to mongoDb. The following description is outdated. However, the main idea is still the same. We will update the description soon.</p>
 </div>
-<p>We use Dropbox to store all our JSONS. This approach has several benefits:</p>
-<ul>
-<li>We immediately implement asynchronous job management. Basically the Heroku server dumps the job coming from the remote client onto Dropbox. Then whenever the Spooler belonging to a backend is free, it will query to <code>get_next_job_in_queue</code> view and act on the next job which is appropriate for that particular backend.</li>
-<li>Dropbox also serves as a database storage for various JSONs, like job_JSON, result_JSON, status_JSON etc. It gives us 2 GB free storage which is a lot considering price of commercial database alternatives.</li>
-<li>It allows us to unify the workflow for both simulator and real machine. Basically it does not matter what the backend is, the workflow is the identical. Different backends only differ in their Spoolers.</li>
-</ul>
-<p>Now we describe how the Dropbox folder structure is organized. It is shown in following picture:
-<img alt="" src="../dropbox.png" /></p>
-<p>If one plans to replace Dropbox with other storage service, then one needs to implement a folder/naming structure similar to above.</p>
-<p>Now lets give an example about the work flow. Lets say a remote client named <code>user_1</code> submits a job to the singlequdit backend. This means <code>user_1</code> sent a  post request to the following URL:</p>
-<p><code>https://qlued.alqor.io/api/v2/singlequdit/post_job/</code></p>
-<p>The server will immediately save the JSON to <strong>Dropbox</strong> at <code>Backend_files/Queued_Jobs/singlequdit/job-20210906_203730-singlequdit-user_1-1088f.json</code>. The JSON file name has special meaning as will be explained later. The file is stored here temporarily before spooler processes it. At the same time the server will reply to the user with a job_id response which might look something like :</p>
-<p><code>{'job_id': '20210906_203730-singlequdit-user_1-1088f','status': 'INITIALIZING','detail': 'Got your json.'}</code></p>
-<p>This dictionary is also saved as a status JSON at <code>Backend_files/Status/singlequdit/user_1/status-20210906_203730-singlequdit-test-1088f.json</code>. Note the name is quite similar to the job JSON except a <code>status-</code> prefix.</p>
-<p>The <code>job_id</code> key-value has lot of information. It has the UTC date and time of creation of the job <code>20210906_203730</code> which means it was created on 6 September 2021 at 20:37:30 PM UTC time. The job_id also has the user name who created this job i.e. <code>user_1</code> and the backend where this job is supposed to be executed i.e. <code>singlequdit</code>. At the end the job has some random alpha-numeric string of 5 characters.</p>
-<p>On the spooler side, it will query the server for the next job it should work on. Also let us suppose the spooler is querying about the next job for <code>singlequdit</code> backend. The server looks for the file list in the directory <code>Backend_files/Queued_Jobs/singlequdit/</code>. It will choose the first created file from that list. Lets say this is the file <code>job-20210906_203730-singlequdit-user_1-1088f.json</code>. Now the server will move this file from <code>Backend_files/Queued_Jobs/singlequdit/job-20210906_203730-singlequdit-user_1-1088f.json</code> to <code>Backend_files/Running_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json</code> and respond to the spooler with a <code>job_msg_dict</code> which looks like</p>
-<p><code>{"job_id": "20210906_203730-singlequdit-user_1-1088f", "job_json": Backend_files/Running_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json"}</code></p>
-<p>From this, the Spooler knows exactly where the job JSON file is stored on Dropbox. It fetches the job JSON and starts to process it.</p>
-<p>For processing the job, the spooler begins by sanity-checking the JSON for correct schema. If the job_JSON fails this check the file is moved to  <code>Backend_files/Deleted_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json</code>. The status JSON is also updated by the spooler to:</p>
-<p><code>{'job_id': '20210906_203730-singlequdit-user_1-1088f','status': 'ERROR','detail': 'Got your json.; Failed json sanity check. File will be deleted. Error message : blah..blah'}</code></p>
-<p>From the dictionary, the user is automatically informed about the details of why the error happened.</p>
-<p>If however, the job_JSON passes sanity checking, then it is executed. The spooler goes through the instruction list and creates the appropriate circuit and calculates the end result. Then it generates the given number of shots and formats everything into the result dictionary. The schema of the result dictionary is given at <a href="https://github.com/eggerdj/backends/" title="Qiskit_json">1</a>. Then the Spooler will upload the result JSON to <code>Backend_files/Result/singlequdit/user_1/result-20210906_203730-singlequdit-user_1-1088f.json</code>. It will also move the job JSON from <code>Backend_files/Running_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json</code> to  <code>Backend_files/Finished_Jobs/singlequdit/user_1/job-20210906_203730-singlequdit-user_1-1088f.json</code>. Finally the spooler will update the status JSON to:</p>
-<p><code>{'job_id': '20210906_203730-singlequdit-user_1-1088f','status': 'DONE','detail': 'Got your json.; Passed json sanity check; Compilation done. Shots sent to solver.'}</code></p>
 <p>This completes the execution of the job and the results are now available.</p>
 <h2 id="the-backends">The backends</h2>
 <p>The backend can be a real cold atom machine or a simulator running on a computer. In summary, the backend runs a spooler which is responsible for executing job_JSONs and updating status_JSONs and result_JSONs. However different backends have different Spoolers. The Spoolers of different simulator backends have similar structure. The experiment backends have slightly different implementation of spoolers. This is because simulators and real machine operate in different conditions. We first describe the simulator backend and then the experiment one.</p>
