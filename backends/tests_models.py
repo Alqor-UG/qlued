@@ -268,7 +268,7 @@ class StorageProviderDbCreationTest(TestCase):
         # create the storage entry in the models
         mongo_entry = StorageProviderDb.objects.create(
             storage_type="mongodb",
-            name="mongodb_test",
+            name="mongodbtest",
             owner=self.user,
             description="MongoDB storage provider for tests",
             login=login_dict,
@@ -279,7 +279,29 @@ class StorageProviderDbCreationTest(TestCase):
         # make sure that we cannot some random storage type
         mongo_stupid = StorageProviderDb.objects.create(
             storage_type="mongodb_random",
-            name="mongodb_test_2",
+            name="mongodbtest2",
+            owner=self.user,
+            description="MongoDB storage provider for tests",
+            login=login_dict,
+        )
+        with self.assertRaises(ValidationError):
+            mongo_stupid.full_clean()
+
+        # make sure that the name cannot contain underscores
+        mongo_stupid = StorageProviderDb.objects.create(
+            storage_type="mongodb",
+            name="mongodb_test_3",
+            owner=self.user,
+            description="MongoDB storage provider for tests",
+            login=login_dict,
+        )
+        with self.assertRaises(ValidationError):
+            mongo_stupid.full_clean()
+
+        # make sure that the name cannot contain spaces
+        mongo_stupid = StorageProviderDb.objects.create(
+            storage_type="mongodb",
+            name="mongodb test",
             owner=self.user,
             description="MongoDB storage provider for tests",
             login=login_dict,
@@ -291,7 +313,7 @@ class StorageProviderDbCreationTest(TestCase):
         with self.assertRaises(IntegrityError):
             _ = StorageProviderDb.objects.create(
                 storage_type="mongodb",
-                name="mongodb_test",
+                name="mongodbtest",
                 owner=self.user,
                 description="MongoDB storage provider for tests",
                 login=login_dict,
@@ -314,7 +336,7 @@ class StorageProviderDbCreationTest(TestCase):
         # create the storage entry in the models
         dropbox_entry = StorageProviderDb.objects.create(
             storage_type="dropbox",
-            name="dropbox_test",
+            name="dropboxtest",
             owner=self.user,
             description="Dropbox storage provider for tests",
             login=login_dict,
@@ -326,7 +348,7 @@ class StorageProviderDbCreationTest(TestCase):
         with self.assertRaises(IntegrityError):
             _ = StorageProviderDb.objects.create(
                 storage_type="dropbox",
-                name="dropbox_test",
+                name="dropboxtest",
                 owner=self.user,
                 description="Dropbox storage provider for tests",
                 login=login_dict,

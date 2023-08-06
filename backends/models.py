@@ -79,6 +79,13 @@ class StorageProviderDb(models.Model):
             raise ValidationError(
                 {"storage_type": f"Value '{self.storage_type}' is not a valid choice."}
             )
+        # make sure that the name does not contain any spaces or underscores.
+        if " " in self.name or "_" in self.name:
+            raise ValidationError(
+                {
+                    "name": "The name of the storage provider cannot contain spaces or underscores."
+                }
+            )
 
 
 class Backend(models.Model):
