@@ -145,3 +145,23 @@ def change_password(request):
             return HttpResponse("Password changed!")
         return HttpResponse("Invalid credentials!", status=401)
     return HttpResponse("Only POST request allowed!", 405)
+
+
+@login_required
+def add_storage_provider(request):
+    """Function that allows the user to register a new storage provider.
+
+    Args:
+        request: the request to be handled.
+
+    Returns:
+        HttpResponse
+    """
+    if request.method == "POST":
+        form = StorageProviderForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("profile"))
+    else:
+        form = StorageProviderForm()
+    return render(request, "frontend/add_storage_provider.html", {"form": form})

@@ -20,7 +20,6 @@ class StorageProviderForm(ModelForm):
         fields = [
             "storage_type",
             "name",
-            "owner",
             "description",
             "login",
         ]
