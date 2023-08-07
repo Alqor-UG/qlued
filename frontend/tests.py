@@ -101,14 +101,43 @@ class AddStorageProviderTest(TestCase):
 
         self.client.login(username=self.username, password=self.password)
         url = reverse("add_storage_provider")
+        login_dict = {
+            "app_key": "app_key",
+            "app_secret": "app_secret",
+            "refresh_token": "refresh_token",
+        }
         data = {
             "storage_type": "wrong",
             "name": "test",
             "description": "test",
-            "login": "test",
-            "password": "test",
+            "login": json.dumps(login_dict),
         }
         r = self.client.post(url, data)
         self.assertEqual(r.status_code, 200)
         with self.assertRaises(ObjectDoesNotExist):
             StorageProviderDb.objects.get(name="test")
+
+    def test_add_storage_provider_poor_name(self):
+        """
+        is it possible to add a storage provider with poor name ?
+        """
+
+        self.client.login(username=self.username, password=self.password)
+        url = reverse("add_storage_provider")
+
+        poor_name = "test test"
+        login_dict = {
+            "app_key": "app_key",
+            "app_secret": "app_secret",
+            "refresh_token": "refresh_token",
+        }
+        data = {
+            "storage_type": "dropbox",
+            "name": poor_name,
+            "description": "test",
+            "login": json.dumps(login_dict),
+        }
+        r = self.client.post(url, data)
+        self.assertEqual(r.status_code, 302)
+        with self.assertRaises(ObjectDoesNotExist):
+            StorageProviderDb.objects.get(name=poor_name)
