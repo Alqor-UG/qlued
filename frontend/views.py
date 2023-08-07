@@ -2,6 +2,7 @@
 """
 from datetime import datetime
 import uuid
+import json
 
 import pytz
 from decouple import config
@@ -160,8 +161,22 @@ def add_storage_provider(request):
     if request.method == "POST":
         form = StorageProviderForm(request.POST)
         if form.is_valid():
-            # TODO: set the owner of the storage provider to the current user.
-            form.save()
+            storage_type = request.POST["storage_type"]
+            name = request.POST["name"]
+            description = request.POST["description"]
+            login_string = request.POST["login"]
+
+            # the current user is the owner of the storage provider
+            owner = request.user
+            storage_provider = StorageProviderDb(
+                storage_type=storage_type,
+                name=name,
+                owner=owner,
+                description=description,
+                login=json.loads(login_string),
+            )
+            storage_provider.full_clean()
+            storage_provider.save()
             return HttpResponseRedirect(reverse("profile"))
     else:
         form = StorageProviderForm()
