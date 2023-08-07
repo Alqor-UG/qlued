@@ -124,37 +124,20 @@ class AddStorageProviderTest(TestCase):
 
         self.client.login(username=self.username, password=self.password)
         url = reverse("add_storage_provider")
-
-        poor_name = "test test"
-        login_dict = {
-            "app_key": "app_key",
-            "app_secret": "app_secret",
-            "refresh_token": "refresh_token",
-        }
-        data = {
-            "storage_type": "dropbox",
-            "name": poor_name,
-            "description": "test",
-            "login": json.dumps(login_dict),
-        }
-        r = self.client.post(url, data)
-        self.assertEqual(r.status_code, 200)
-        with self.assertRaises(ObjectDoesNotExist):
-            StorageProviderDb.objects.get(name=poor_name)
-
-        poor_name = "test_test"
-        login_dict = {
-            "app_key": "app_key",
-            "app_secret": "app_secret",
-            "refresh_token": "refresh_token",
-        }
-        data = {
-            "storage_type": "dropbox",
-            "name": poor_name,
-            "description": "test",
-            "login": json.dumps(login_dict),
-        }
-        r = self.client.post(url, data)
-        self.assertEqual(r.status_code, 200)
-        with self.assertRaises(ObjectDoesNotExist):
-            StorageProviderDb.objects.get(name=poor_name)
+        poor_names = ["test test", "test_test"]
+        for poor_name in poor_names:
+            login_dict = {
+                "app_key": "app_key",
+                "app_secret": "app_secret",
+                "refresh_token": "refresh_token",
+            }
+            data = {
+                "storage_type": "dropbox",
+                "name": poor_name,
+                "description": "test",
+                "login": json.dumps(login_dict),
+            }
+            r = self.client.post(url, data)
+            self.assertEqual(r.status_code, 200)
+            with self.assertRaises(ObjectDoesNotExist):
+                StorageProviderDb.objects.get(name=poor_name)
