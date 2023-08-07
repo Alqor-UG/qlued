@@ -48,7 +48,7 @@ class MongodbProviderTest(TestCase):
         # create the storage entry in the models
         mongodb_entry = StorageProviderDb.objects.create(
             storage_type="mongodb",
-            name="mongodb_test",
+            name="mongodbtest",
             owner=self.user,
             description="MongoDB storage provider for tests",
             login=login_dict,
@@ -60,7 +60,7 @@ class MongodbProviderTest(TestCase):
         """
         Test that we can create a MongoDB object.
         """
-        mongodb_entry = StorageProviderDb.objects.get(name="mongodb_test")
+        mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
         mongodb_provider = MongodbProvider(mongodb_entry.login)
         self.assertIsNotNone(mongodb_provider)
 
@@ -79,7 +79,7 @@ class MongodbProviderTest(TestCase):
         """
 
         # create a mongodb object
-        mongodb_entry = StorageProviderDb.objects.get(name="mongodb_test")
+        mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
         storage_provider = MongodbProvider(mongodb_entry.login)
 
         # upload a file and get it back
@@ -106,7 +106,7 @@ class MongodbProviderTest(TestCase):
         Test that we are able to obtain a list of backends.
         """
         # create a mongodb object
-        mongodb_entry = StorageProviderDb.objects.get(name="mongodb_test")
+        mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
         storage_provider = MongodbProvider(mongodb_entry.login)
 
         # create a dummy config
@@ -141,7 +141,7 @@ class MongodbProviderTest(TestCase):
         # pylint: disable=R0914
 
         # create a mongodb object
-        mongodb_entry = StorageProviderDb.objects.get(name="mongodb_test")
+        mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
         storage_provider = MongodbProvider(mongodb_entry.login)
 
         # let us first test the we can upload a dummy job

@@ -48,7 +48,7 @@ class DropboxProvideTest(TestCase):
         # create the storage entry in the models
         dropbox_entry = StorageProviderDb.objects.create(
             storage_type="dropbox",
-            name="dropbox_test",
+            name="dropboxtest",
             owner=self.user,
             description="Dropbox storage provider for tests",
             login=login_dict,
@@ -60,7 +60,7 @@ class DropboxProvideTest(TestCase):
         """
         Test that we can create a dropbox object.
         """
-        dropbox_entry = StorageProviderDb.objects.get(name="dropbox_test")
+        dropbox_entry = StorageProviderDb.objects.get(name="dropboxtest")
         dropbox_provider = DropboxProvider(dropbox_entry.login)
         self.assertIsNotNone(dropbox_provider)
 
@@ -79,7 +79,7 @@ class DropboxProvideTest(TestCase):
         """
 
         # create a dropbox object
-        dropbox_entry = StorageProviderDb.objects.get(name="dropbox_test")
+        dropbox_entry = StorageProviderDb.objects.get(name="dropboxtest")
         storage_provider = DropboxProvider(dropbox_entry.login)
 
         # upload a file and get it back
@@ -111,7 +111,7 @@ class DropboxProvideTest(TestCase):
         """
 
         # create a dropbox object
-        dropbox_entry = StorageProviderDb.objects.get(name="dropbox_test")
+        dropbox_entry = StorageProviderDb.objects.get(name="dropboxtest")
         storage_provider = DropboxProvider(dropbox_entry.login)
 
         # create a dummy config
@@ -141,7 +141,7 @@ class DropboxProvideTest(TestCase):
         """
         # pylint: disable=too-many-locals
         # create a dropbox object
-        dropbox_entry = StorageProviderDb.objects.get(name="dropbox_test")
+        dropbox_entry = StorageProviderDb.objects.get(name="dropboxtest")
         storage_provider = DropboxProvider(dropbox_entry.login)
 
         # let us first test the we can upload a dummy job
