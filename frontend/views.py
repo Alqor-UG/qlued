@@ -88,7 +88,7 @@ def profile(request):
     Given the user an appropiate profile page
     """
     current_user = request.user
-
+    # the use needs to have its token
     try:
         token = Token.objects.get(user=current_user)
     except Token.DoesNotExist:
@@ -101,8 +101,17 @@ def profile(request):
             is_active=True,
         )
         token.save()
+
+    # we also need to find all the StorageProviderDb entries that belong to the user
+    storage_provider_entries = StorageProviderDb.objects.filter(owner=current_user)
+    print(storage_provider_entries)
+    for storage_provider_entry in storage_provider_entries:
+        print(storage_provider_entry.name)
     template = loader.get_template("frontend/user.html")
-    context = {"token_key": token.key}
+    context = {
+        "token_key": token.key,
+        "storage_provider_entries": storage_provider_entries,
+    }
     return HttpResponse(template.render(context, request))
 
 

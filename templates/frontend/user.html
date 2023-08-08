@@ -10,13 +10,27 @@
       <p>This is your user profile with the main information needed to get started.</p>
     </div>
     <div class="row justify-content-center">
-      <h2>Login information</h2>
-        <h3>What is needed for <code>v2</code> of the API </h3>
+        <h2>What is needed for API access </h2>
         <p>In the current version, the access is token based. You will need to use the credentials: <code> username='{{user.username}}' token='{{token_key}}'</code></p>
     </div>
-      
     <div class="row justify-content-center">
-      <h2>Documention</h2>
+      <div class="col">
+        <h2>Storage providers </h2>
+        <p>In this section, you can see all the storage providers that you created and you can add new ones</p>
+        {% if storage_provider_entries %}
+            <ul>
+                {% for entry in storage_provider_entries %}
+                    <li><b>{{ entry.name }}</b> is of type {{ entry.storage_type }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <a role="button" href="{% url 'add_storage_provider' %}" class="btn btn-primary btn-lg">Add a storage provider.</a>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col">
+    <hr>
+      <h2>Further documention</h2>
       <p>We provide different ways to consume the API. The most direct way is to simply access it directly, but you might also access it through
         SDKs like QISKIT or Pennylane.</p>
       <h3>Working with the API directly</h3>
@@ -36,6 +50,7 @@
       <p>
         At the beginning, we also performed some tries with Pennylane. However, the development <a href="https://github.com/synqs/pennylane-ls/" target=_blank">on the github</a> was stopped as far as we know. If you would like to have a look into the early tries, please see and have fun.
       </p>
+      </div>
     </div>
   </div>
 {% endblock %}
