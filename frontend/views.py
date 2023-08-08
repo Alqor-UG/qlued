@@ -2,6 +2,7 @@
 """
 from datetime import datetime
 import uuid
+import json
 
 import pytz
 from decouple import config
@@ -17,7 +18,7 @@ from django.contrib.auth.decorators import login_required
 from backends.models import Token, StorageProviderDb
 from backends.storage_providers import get_storage_provider_from_entry
 
-from .forms import SignUpForm
+from .forms import SignUpForm, StorageProviderForm
 from .models import Impressum
 
 
@@ -87,7 +88,7 @@ def profile(request):
     Given the user an appropiate profile page
     """
     current_user = request.user
-
+    # the use needs to have its token
     try:
         token = Token.objects.get(user=current_user)
     except Token.DoesNotExist:
@@ -100,8 +101,17 @@ def profile(request):
             is_active=True,
         )
         token.save()
+
+    # we also need to find all the StorageProviderDb entries that belong to the user
+    storage_provider_entries = StorageProviderDb.objects.filter(owner=current_user)
+    print(storage_provider_entries)
+    for storage_provider_entry in storage_provider_entries:
+        print(storage_provider_entry.name)
     template = loader.get_template("frontend/user.html")
-    context = {"token_key": token.key}
+    context = {
+        "token_key": token.key,
+        "storage_provider_entries": storage_provider_entries,
+    }
     return HttpResponse(template.render(context, request))
 
 
@@ -145,3 +155,38 @@ def change_password(request):
             return HttpResponse("Password changed!")
         return HttpResponse("Invalid credentials!", status=401)
     return HttpResponse("Only POST request allowed!", 405)
+
+
+@login_required
+def add_storage_provider(request):
+    """Function that allows the user to register a new storage provider.
+
+    Args:
+        request: the request to be handled.
+
+    Returns:
+        HttpResponse
+    """
+    if request.method == "POST":
+        form = StorageProviderForm(request.POST)
+        if form.is_valid():
+            storage_type = request.POST["storage_type"]
+            name = request.POST["name"]
+            description = request.POST["description"]
+            login_string = request.POST["login"]
+
+            # the current user is the owner of the storage provider
+            owner = request.user
+            storage_provider = StorageProviderDb(
+                storage_type=storage_type,
+                name=name,
+                owner=owner,
+                description=description,
+                login=json.loads(login_string),
+            )
+            storage_provider.full_clean()
+            storage_provider.save()
+            return HttpResponseRedirect(reverse("profile"))
+    else:
+        form = StorageProviderForm()
+    return render(request, "frontend/add_storage_provider.html", {"form": form})
