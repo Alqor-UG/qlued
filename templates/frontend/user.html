@@ -18,11 +18,27 @@
         <h2>Storage providers </h2>
         <p>In this section, you can see all the storage providers that you created and you can add new ones</p>
         {% if storage_provider_entries %}
-            <ul>
+            <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
                 {% for entry in storage_provider_entries %}
-                    <li><b>{{ entry.name }}</b> is of type {{ entry.storage_type }}</li>
+                    <tr>
+                        <td>{{ entry.name }}</td>
+                        <td>{{ entry.storage_type }}</td>
+                        <td>
+                            <a href="{% url 'edit_storage_provider' entry.id %}" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="{% url 'delete_storage_provider' entry.id %}" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
                 {% endfor %}
-            </ul>
+            </tbody>
+            </table>
         {% endif %}
         <a role="button" href="{% url 'add_storage_provider' %}" class="btn btn-primary btn-lg">Add a storage provider.</a>
       </div>

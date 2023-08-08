@@ -27,6 +27,16 @@ urlpatterns = [
     path(
         "add_storage_provider", views.add_storage_provider, name="add_storage_provider"
     ),
+    path(
+        "delete_storage_provider/<int:storage_id>/",
+        views.delete_storage_provider,
+        name="delete_storage_provider",
+    ),
+    path(
+        "edit_storage_provider/<int:storage_id>/",
+        views.edit_storage_provider,
+        name="edit_storage_provider",
+    ),
     path("signup", views.signup, name="signup"),
     path("login", auth_views.LoginView.as_view(), name="login"),
     path("logout", auth_views.LogoutView.as_view(), name="logout"),
