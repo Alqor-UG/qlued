@@ -5,15 +5,9 @@
 
   <div class="container">
 
-    <h1>New storage provider</h1>
-    <ul>
-        <li>This is the place where you can add a new storage provider.</li>
-        <li>This is only needed if you are an admin that wants to have full control over his own storage.</li>
-        <li>If you are a user, you can simply use the storage providers that are already available. You can find them <a href="{% url 'devices' %}">here</a>.</li>
-    </ul>
+    <h1>Edit storage provider</h1>
+    <p>This is the place where you can edit your existing storage provider.</p>
     
-    
-    <h2>Fill out the following</h2>
     <div class="row justify-content-center">
         <form method="post">
         {% csrf_token %}
@@ -46,7 +40,7 @@
         {% endif %}
         <p><label for="{{ form.description.id_for_label }}" 
           title="The required login information in form of a json dictionary">Login information:</label>
-        {{ form.login }}</p>
+        {{ form.login|safe }}</p>
         {% if form.login.errors %}
             <ul>
                 {% for error in form.login.errors %}
@@ -54,18 +48,19 @@
                 {% endfor %}
             </ul>
         {% endif %}
-        <input type="submit" value="Submit" class="btn btn-primary btn-lg">
+        <input type="submit" value="Update"  class="btn btn-primary btn-lg">
     </form>
     </div>
     <h2>Some instructions</h2>
-    The documentation for the storage providers and their role can be found over <a href="https://alqor-ug.github.io/qlued/v0.2/guides/storage_providers/">here</a>. At this stage we will only describe
-    the most important steps to fill out the form. 
+    <p>The documentation for the storage providers and their role can be found over <a href="https://alqor-ug.github.io/qlued/v0.2/guides/storage_providers/">here</a>. At this stage we will only describe
+    the most important steps to fill out the form. </p>
     <ul>
         <li>The <b>Storage type</b> defines if you are storing your data within a <em>Dropbox</em> or<em>MongoDB</em>.</li>
         <li>The <b>name</b> is the identifier of the storage. <b>The name</b> should be short, has to <b>be unique, without whitespace and without underscores</b>.</li>
         <li>The <b>description</b> explains the user what kind of storage provider he is using here.So make it simple and not too long.</li>
         <li>The <b>login information</b> is the crucial information that allows <em>qlued</em> to have access to the storage provider. It is a <em>json</em> dictionary with the required keys. More information on the required keys is <a href="https://alqor-ug.github.io/qlued/v0.2/guides/storage_providers/">here</a>.</li>
     </ul>
+
     <h3>Login dictionary for MongoDB</h3>
     If you would like to add a MongoDB as a storage provider, the login information should look like this:
     <code>

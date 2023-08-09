@@ -92,7 +92,6 @@ class AddStorageProviderTest(TestCase):
         dropbox_entry = StorageProviderDb.objects.get(name="test")
         self.assertEqual(dropbox_entry.storage_type, "dropbox")
         self.assertEqual(dropbox_entry.owner.username, self.username)
-        print(dropbox_entry.login["app_key"])
 
     def test_add_storage_provider_wrong_type(self):
         """
@@ -141,3 +140,68 @@ class AddStorageProviderTest(TestCase):
             self.assertEqual(r.status_code, 200)
             with self.assertRaises(ObjectDoesNotExist):
                 StorageProviderDb.objects.get(name=poor_name)
+
+    def test_edit_storage_provider(self):
+        """
+        Test that we can nicely edit a storage provider
+        """
+
+        self.client.login(username=self.username, password=self.password)
+        url = reverse("add_storage_provider")
+
+        login_dict = {
+            "app_key": "app_key",
+            "app_secret": "app_secret",
+            "refresh_token": "refresh_token",
+        }
+        data = {
+            "storage_type": "dropbox",
+            "name": "test",
+            "description": "test",
+            "login": json.dumps(login_dict),
+        }
+        r = self.client.post(url, data)
+        self.assertEqual(r.status_code, 302)
+
+        # now it is also time to test that the storage provider was added properly
+        dropbox_entry = StorageProviderDb.objects.get(name="test")
+        data = {
+            "storage_type": "dropbox",
+            "name": "test",
+            "description": "another test",
+            "login": json.dumps(login_dict),
+        }
+        url = reverse("edit_storage_provider", args=[dropbox_entry.pk])
+        r = self.client.post(url, data)
+        self.assertEqual(r.status_code, 302)
+        dropbox_entry = StorageProviderDb.objects.get(name="test")
+        self.assertEqual(dropbox_entry.description, "another test")
+
+    def test_delete_storage_provider(self):
+        """
+        Can we also remove a storage provider ?
+        """
+        self.client.login(username=self.username, password=self.password)
+        url = reverse("add_storage_provider")
+
+        login_dict = {
+            "app_key": "app_key",
+            "app_secret": "app_secret",
+            "refresh_token": "refresh_token",
+        }
+        data = {
+            "storage_type": "dropbox",
+            "name": "test",
+            "description": "test",
+            "login": json.dumps(login_dict),
+        }
+        r = self.client.post(url, data)
+        self.assertEqual(r.status_code, 302)
+
+        # now remove the storage provider
+        dropbox_entry = StorageProviderDb.objects.get(name="test")
+        url = reverse("delete_storage_provider", args=[dropbox_entry.pk])
+        r = self.client.post(url, data)
+        self.assertEqual(r.status_code, 302)
+        with self.assertRaises(ObjectDoesNotExist):
+            StorageProviderDb.objects.get(name="test")

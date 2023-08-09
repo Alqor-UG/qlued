@@ -190,3 +190,92 @@ def add_storage_provider(request):
     else:
         form = StorageProviderForm()
     return render(request, "frontend/add_storage_provider.html", {"form": form})
+
+
+@login_required
+def edit_storage_provider(request, storage_id):
+    """Function that allows the owner to edit an existing storage provider.
+
+    Args:
+        request: the request to be handled.
+        storage_id: the id of the storage provider to be edited.
+
+    Returns:
+        HttpResponse
+    """
+    if request.method == "POST":
+        try:
+            storage_provider = StorageProviderDb.objects.get(id=storage_id)
+        except ObjectDoesNotExist:
+            return HttpResponse("Storage provider does not exist!", status=404)
+        # check if the user is the owner of the storage provider
+        if storage_provider.owner != request.user:
+            return HttpResponse(
+                "You are not the owner of the storage provider!", status=401
+            )
+        form = StorageProviderForm(request.POST, instance=storage_provider)
+        if form.is_valid():
+            storage_provider.storage_type = request.POST["storage_type"]
+            storage_provider.name = request.POST["name"]
+            storage_provider.description = request.POST["description"]
+            storage_provider.login = json.loads(request.POST["login"])
+            storage_provider.full_clean()
+            storage_provider.save()
+            return HttpResponseRedirect(reverse("profile"))
+    else:
+        try:
+            storage_provider = StorageProviderDb.objects.get(id=storage_id)
+        except ObjectDoesNotExist:
+            return HttpResponse("Storage provider does not exist!", status=404)
+        # check if the user is the owner of the storage provider
+        if storage_provider.owner != request.user:
+            return HttpResponse(
+                "You are not the owner of the storage provider!", status=401
+            )
+        form = StorageProviderForm(
+            initial={
+                "storage_type": storage_provider.storage_type,
+                "name": storage_provider.name,
+                "description": storage_provider.description,
+                "login": storage_provider.login,
+            }
+        )
+    return render(
+        request,
+        "frontend/edit_storage_provider.html",
+        {"form": form, "storage_id": storage_id},
+    )
+
+
+@login_required
+def delete_storage_provider(request, storage_id):
+    """Function that allows the owner to remove a storage provider.
+
+    Args:
+        request: the request to be handled.
+        storage_id: the id of the storage provider to be deleted.
+    """
+    if request.method in ("POST", "GET"):
+        try:
+            storage_provider = StorageProviderDb.objects.get(id=storage_id)
+        except ObjectDoesNotExist:
+            return HttpResponse("Storage provider does not exist!", status=404)
+        # check if the user is the owner of the storage provider
+        if storage_provider.owner != request.user:
+            return HttpResponse(
+                "You are not the owner of the storage provider!", status=401
+            )
+    else:
+        return HttpResponse("Only POST and GET request allowed!", 405)
+
+    # delete the storage provider from the database if the user confirmed the deletion
+    if request.method == "POST":
+        storage_provider.delete()
+        return HttpResponseRedirect(reverse("profile"))
+
+    # show the user a confirmation page
+    return render(
+        request,
+        "frontend/delete_storage_provider.html",
+        {"storage_provider": storage_provider},
+    )
