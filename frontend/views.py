@@ -247,17 +247,15 @@ def edit_storage_provider(request, storage_id):
     )
 
 
+@login_required
 def delete_storage_provider(request, storage_id):
     """Function that allows the owner to remove a storage provider.
 
     Args:
         request: the request to be handled.
         storage_id: the id of the storage provider to be deleted.
-
-    Returns:
-        HttpResponse
     """
-    if request.method == "POST" or request.method == "GET":
+    if request.method in ("POST", "GET"):
         try:
             storage_provider = StorageProviderDb.objects.get(id=storage_id)
         except ObjectDoesNotExist:
@@ -274,10 +272,10 @@ def delete_storage_provider(request, storage_id):
     if request.method == "POST":
         storage_provider.delete()
         return HttpResponseRedirect(reverse("profile"))
+
     # show the user a confirmation page
-    if request.method == "GET":
-        return render(
-            request,
-            "frontend/delete_storage_provider.html",
-            {"storage_provider": storage_provider},
-        )
+    return render(
+        request,
+        "frontend/delete_storage_provider.html",
+        {"storage_provider": storage_provider},
+    )
