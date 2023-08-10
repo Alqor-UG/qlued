@@ -118,7 +118,6 @@ class LocalProviderTest(TestCase):
         dummy_dict["display_name"] = backend_name
 
         config_path = "backends/configs"
-        mongo_id = uuid.uuid4().hex[:24]
         storage_provider.upload(dummy_dict, config_path, job_id=backend_name)
 
         # can we get the backend in the list ?

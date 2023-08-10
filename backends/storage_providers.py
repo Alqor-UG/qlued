@@ -27,6 +27,9 @@ from bson.objectid import ObjectId
 from decouple import config
 from pydantic import BaseModel
 
+# At some point we might start to split up the file
+# pylint: disable=C0302
+
 
 class StorageProvider(ABC):
     """
@@ -756,7 +759,7 @@ class LocalProvider(StorageProvider):
         # create the full path
         full_json_path = folder_path + "/" + job_id + ".json"
 
-        with open(full_json_path, "w") as json_file:
+        with open(full_json_path, "w", encoding="utf-8") as json_file:
             json.dump(content_dict, json_file)
 
     def get_file_content(self, storage_path: str, job_id: str) -> dict:
@@ -773,7 +776,7 @@ class LocalProvider(StorageProvider):
         # create the full path
         full_json_path = self.base_path + "/" + storage_path + "/" + job_id + ".json"
 
-        with open(full_json_path, "r") as json_file:
+        with open(full_json_path, "r", encoding="utf-8") as json_file:
             loaded_data_dict = json.load(json_file)
         return loaded_data_dict
 
@@ -830,7 +833,7 @@ class LocalProvider(StorageProvider):
 
         for file_name in json_files:
             full_json_path = config_path + "/" + file_name
-            with open(full_json_path, "r") as json_file:
+            with open(full_json_path, "r", encoding="utf-8") as json_file:
                 config_dict = json.load(json_file)
                 backend_names.append(config_dict["display_name"])
         return backend_names
@@ -851,7 +854,7 @@ class LocalProvider(StorageProvider):
         config_path = self.base_path + "/backends/configs"
 
         full_json_path = config_path + "/" + backend_name + ".json"
-        with open(full_json_path, "r") as json_file:
+        with open(full_json_path, "r", encoding="utf-8") as json_file:
             backend_config_dict = json.load(json_file)
 
         if not backend_config_dict:
