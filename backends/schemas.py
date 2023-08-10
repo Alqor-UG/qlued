@@ -1,5 +1,5 @@
 """
-The schemas that define our communication with the api_v1.
+The schemas that define our communication with the api.
 """
 
 

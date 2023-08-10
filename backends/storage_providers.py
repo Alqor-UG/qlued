@@ -7,6 +7,10 @@ import sys
 from typing import List
 import json
 
+# necessary for the local provider
+import shutil
+import os
+
 # necessary for the dropbox provider
 import datetime
 import uuid
@@ -22,6 +26,9 @@ from bson.objectid import ObjectId
 # get the environment variables
 from decouple import config
 from pydantic import BaseModel
+
+# At some point we might start to split up the file
+# pylint: disable=C0302
 
 
 class StorageProvider(ABC):
@@ -599,6 +606,260 @@ class MongodbProvider(StorageProvider):
             return {}
 
         backend_config_dict.pop("_id")
+        # for comaptibility with qiskit
+        backend_config_dict["basis_gates"] = []
+        for gate in backend_config_dict["gates"]:
+            backend_config_dict["basis_gates"].append(gate["name"])
+
+        backend_config_dict["backend_name"] = backend_config_dict["name"]
+        backend_config_dict["display_name"] = backend_name
+        backend_config_dict["n_qubits"] = backend_config_dict["num_wires"]
+        backend_config_dict["backend_version"] = backend_config_dict["version"]
+
+        backend_config_dict["conditional"] = False
+        backend_config_dict["local"] = False
+        backend_config_dict["open_pulse"] = False
+        backend_config_dict["memory"] = True
+        backend_config_dict["coupling_map"] = "linear"
+
+        # and the url
+        base_url = config("BASE_URL")
+        backend_config_dict["url"] = f"{base_url}/api/{version}/{backend_name}/"
+        return backend_config_dict
+
+    def upload_job(self, job_dict: dict, backend_name: str, username: str) -> str:
+        """
+        Upload the job to the storage provider.
+
+        Args:
+            job_dict: the full job dict
+            backend_name: the name of the backend
+            username: the name of the user that submitted the job
+
+        Returns:
+            The job id of the uploaded job.
+        """
+
+        storage_path = "jobs/queued/" + backend_name
+        job_id = (uuid.uuid4().hex)[:24]
+
+        self.upload(content_dict=job_dict, storage_path=storage_path, job_id=job_id)
+        return job_id
+
+    def upload_status(self, backend_name: str, username: str, job_id: str) -> dict:
+        """
+        This function uploads a status file to the backend and creates the status dict.
+
+        Args:
+            backend_name: The name of the backend to which we want to upload the job
+            username: The username of the user that is uploading the job
+            job_id: The job_id of the job that we want to upload the status for
+
+        Returns:
+            The status dict of the job
+        """
+        storage_path = "status/" + backend_name
+        status_dict = {
+            "job_id": job_id,
+            "status": "INITIALIZING",
+            "detail": "Got your json.",
+            "error_message": "None",
+        }
+
+        # should we also upload the username into the dict ?
+
+        # now upload the status dict
+        self.upload(
+            content_dict=status_dict,
+            storage_path=storage_path,
+            job_id=job_id,
+        )
+        return status_dict
+
+    def get_status(self, backend_name: str, username: str, job_id: str) -> dict:
+        """
+        This function gets the status file from the backend and returns the status dict.
+
+        Args:
+            backend_name: The name of the backend to which we want to upload the job
+            username: The username of the user that is uploading the job
+            job_id: The job_id of the job that we want to upload the status for
+
+        Returns:
+            The status dict of the job
+        """
+        status_json_dir = "status/" + backend_name
+
+        status_dict = self.get_file_content(storage_path=status_json_dir, job_id=job_id)
+        return status_dict
+
+    def get_result(self, backend_name: str, username: str, job_id: str) -> dict:
+        """
+        This function gets the result file from the backend and returns the result dict.
+
+        Args:
+            backend_name: The name of the backend to which we want to upload the job
+            username: The username of the user that is uploading the job
+            job_id: The job_id of the job that we want to upload the status for
+
+        Returns:
+            The result dict of the job
+        """
+        result_json_dir = "results/" + backend_name
+        result_dict = self.get_file_content(storage_path=result_json_dir, job_id=job_id)
+        return result_dict
+
+
+class LocalLoginInformation(BaseModel):
+    """
+    The login information for a local storage provider.
+
+    base_path: The base path of the storage provider on your local file system.
+    """
+
+    base_path: str
+
+
+class LocalProvider(StorageProvider):
+    """
+    Create a file storage that works on the local machine.
+    """
+
+    def __init__(self, login_dict: dict) -> None:
+        """
+        Set up the neccessary keys and create the client through which all the connections will run.
+
+        Args:
+            login_dict: The login dict that contains the neccessary
+                        information to connect to the mongodb
+
+        Raises:
+            ValidationError: If the login_dict is not valid
+        """
+        LocalLoginInformation(**login_dict)
+        self.base_path = login_dict["base_path"]
+
+    def upload(self, content_dict: dict, storage_path: str, job_id: str) -> None:
+        """
+        Upload the file to the storage
+
+        content_dict: the content that should be uploaded
+        storage_path: the access path
+        job_id: the id of the file we are about to create
+        """
+
+        # strip trailing and leading slashes from the storage_path
+        storage_path = storage_path.strip("/")
+
+        # json folder
+        folder_path = self.base_path + "/" + storage_path
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+        # create the full path
+        full_json_path = folder_path + "/" + job_id + ".json"
+
+        with open(full_json_path, "w", encoding="utf-8") as json_file:
+            json.dump(content_dict, json_file)
+
+    def get_file_content(self, storage_path: str, job_id: str) -> dict:
+        """
+        Get the file content from the storage
+
+        storage_path: the path towards the file, excluding the filename / id
+        job_id: the id of the file we are about to look up
+        """
+
+        # strip trailing and leading slashes from the storage_path
+        storage_path = storage_path.strip("/")
+
+        # create the full path
+        full_json_path = self.base_path + "/" + storage_path + "/" + job_id + ".json"
+
+        with open(full_json_path, "r", encoding="utf-8") as json_file:
+            loaded_data_dict = json.load(json_file)
+        return loaded_data_dict
+
+    def move_file(self, start_path: str, final_path: str, job_id: str) -> None:
+        """
+        Move the file from start_path to final_path
+
+        start_path: the path where the file is currently stored, but excluding the file name
+        final_path: the path where the file should be stored, but excluding the file name
+        job_id: the name of the file. Is a json file
+
+        Returns:
+            None
+        """
+
+        start_path = start_path.strip("/")
+
+        source_file = self.base_path + "/" + start_path + "/" + job_id + ".json"
+        final_path = self.base_path + "/" + final_path + "/"
+        if not os.path.exists(final_path):
+            os.makedirs(final_path)
+
+        # Move the file
+        shutil.move(source_file, final_path)
+
+    def delete_file(self, storage_path: str, job_id: str) -> None:
+        """
+        Remove the file from the mongodb database
+
+        Args:
+            storage_path: the path where the file is currently stored, but excluding the file name
+            job_id: the name of the file
+
+        Returns:
+            None
+        """
+        storage_path = storage_path.strip("/")
+        source_file = self.base_path + "/" + storage_path + "/" + job_id + ".json"
+        os.remove(source_file)
+
+    def get_backends(self) -> List[str]:
+        """
+        Get a list of all the backends that the provider offers.
+        """
+        # path of the configs
+        config_path = self.base_path + "/backends/configs"
+        backend_names: list[str] = []
+        # now get all the files in config_path
+
+        # Get a list of all items in the folder
+        all_items = os.listdir(config_path)
+        # Filter out only the JSON files
+        json_files = [item for item in all_items if item.endswith(".json")]
+
+        for file_name in json_files:
+            full_json_path = config_path + "/" + file_name
+            with open(full_json_path, "r", encoding="utf-8") as json_file:
+                config_dict = json.load(json_file)
+                backend_names.append(config_dict["display_name"])
+        return backend_names
+
+    def get_backend_dict(self, backend_name: str, version: str = "v2") -> dict:
+        """
+        The configuration dictionary of the backend such that it can be sent out to the API to
+        the common user. We make sure that it is compatible with QISKIT within this function.
+
+        Args:
+            backend_name: The identifier of the backend
+            version: the version of the API you are using
+
+        Returns:
+            The full schema of the backend.
+        """
+        # path of the configs
+        config_path = self.base_path + "/backends/configs"
+
+        full_json_path = config_path + "/" + backend_name + ".json"
+        with open(full_json_path, "r", encoding="utf-8") as json_file:
+            backend_config_dict = json.load(json_file)
+
+        if not backend_config_dict:
+            return {}
+
         # for comaptibility with qiskit
         backend_config_dict["basis_gates"] = []
         for gate in backend_config_dict["gates"]:

@@ -1,7 +1,8 @@
 """
-The tests for the mongodb storage provider
+The tests for the local storage provider
 """
 import uuid
+import os
 
 from decouple import config
 from pydantic import ValidationError
@@ -9,13 +10,13 @@ from pydantic import ValidationError
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from .storage_providers import MongodbProvider, get_short_backend_name
+from .storage_providers import LocalProvider, get_short_backend_name
 from .models import StorageProviderDb
 
 User = get_user_model()
 
 
-class MongodbProviderTest(TestCase):
+class LocalProviderTest(TestCase):
     """
     The class that contains all the tests for the dropbox provider.
     """
@@ -35,33 +36,29 @@ class MongodbProviderTest(TestCase):
         self.user = user
 
         # put together the login information
-        mongodb_username = config("MONGODB_USERNAME")
-        mongodb_password = config("MONGODB_PASSWORD")
-        mongodb_database_url = config("MONGODB_DATABASE_URL")
+        base_path = "storage"
 
         login_dict = {
-            "mongodb_username": mongodb_username,
-            "mongodb_password": mongodb_password,
-            "mongodb_database_url": mongodb_database_url,
+            "base_path": base_path,
         }
 
         # create the storage entry in the models
-        mongodb_entry = StorageProviderDb.objects.create(
-            storage_type="mongodb",
-            name="mongodbtest",
+        local_entry = StorageProviderDb.objects.create(
+            storage_type="local",
+            name="localtest",
             owner=self.user,
-            description="MongoDB storage provider for tests",
+            description="Local storage provider for tests",
             login=login_dict,
         )
-        mongodb_entry.full_clean()
-        mongodb_entry.save()
+        local_entry.full_clean()
+        local_entry.save()
 
-    def test_mongodb_object(self):
+    def test_localdb_object(self):
         """
         Test that we can create a MongoDB object.
         """
-        mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
-        mongodb_provider = MongodbProvider(mongodb_entry.login)
+        mongodb_entry = StorageProviderDb.objects.get(name="localtest")
+        mongodb_provider = LocalProvider(mongodb_entry.login)
         self.assertIsNotNone(mongodb_provider)
 
         # test that we cannot create a dropbox object a poor login dict structure
@@ -71,7 +68,7 @@ class MongodbProviderTest(TestCase):
             "refresh_token": "test",
         }
         with self.assertRaises(ValidationError):
-            MongodbProvider(poor_login_dict)
+            LocalProvider(poor_login_dict)
 
     def test_upload_etc(self):
         """
@@ -79,8 +76,8 @@ class MongodbProviderTest(TestCase):
         """
 
         # create a mongodb object
-        mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
-        storage_provider = MongodbProvider(mongodb_entry.login)
+        mongodb_entry = StorageProviderDb.objects.get(name="localtest")
+        storage_provider = LocalProvider(mongodb_entry.login)
 
         # upload a file and get it back
         test_content = {"experiment_0": "Nothing happened here."}
@@ -106,8 +103,8 @@ class MongodbProviderTest(TestCase):
         Test that we are able to obtain a list of backends.
         """
         # create a mongodb object
-        mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
-        storage_provider = MongodbProvider(mongodb_entry.login)
+        mongodb_entry = StorageProviderDb.objects.get(name="localtest")
+        storage_provider = LocalProvider(mongodb_entry.login)
 
         # create a dummy config
         dummy_id = uuid.uuid4().hex[:5]
@@ -121,8 +118,7 @@ class MongodbProviderTest(TestCase):
         dummy_dict["display_name"] = backend_name
 
         config_path = "backends/configs"
-        mongo_id = uuid.uuid4().hex[:24]
-        storage_provider.upload(dummy_dict, config_path, job_id=mongo_id)
+        storage_provider.upload(dummy_dict, config_path, job_id=backend_name)
 
         # can we get the backend in the list ?
         backends = storage_provider.get_backends()
@@ -131,7 +127,7 @@ class MongodbProviderTest(TestCase):
         # can we get the config of the backend ?
         backend_dict = storage_provider.get_backend_dict(backend_name)
         self.assertEqual(backend_dict["backend_name"], dummy_dict["name"])
-        storage_provider.delete_file(config_path, mongo_id)
+        storage_provider.delete_file(config_path, backend_name)
 
     def test_jobs(self):
         """
@@ -141,8 +137,8 @@ class MongodbProviderTest(TestCase):
         # pylint: disable=R0914
 
         # create a mongodb object
-        mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
-        storage_provider = MongodbProvider(mongodb_entry.login)
+        mongodb_entry = StorageProviderDb.objects.get(name="localtest")
+        storage_provider = LocalProvider(mongodb_entry.login)
 
         # let us first test the we can upload a dummy job
         job_payload = {
@@ -203,25 +199,22 @@ class MongodbProviderTest(TestCase):
         storage_provider.delete_file(job_dir, job_id)
 
         # remove the obsolete collection from the storage
-        database = storage_provider.client["jobs"]
-        collection = database[f"queued.{backend_name}"]
-        collection.drop()
+        full_path = os.path.join(storage_provider.base_path, job_dir)
+        os.rmdir(full_path)
 
         # remove the obsolete status from the storage
         status_dir = "status/" + backend_name
         storage_provider.delete_file(status_dir, job_id)
 
         # remove the obsolete collection from the storage
-        database = storage_provider.client["status"]
-        collection = database[backend_name]
-        collection.drop()
+        full_path = os.path.join(storage_provider.base_path, status_dir)
+        os.rmdir(full_path)
 
         # remove the obsolete result from the storage
         storage_provider.delete_file(result_json_dir, job_id)
         # remove the obsolete collection from the storage
-        database = storage_provider.client["results"]
-        collection = database[backend_name]
-        collection.drop()
+        full_path = os.path.join(storage_provider.base_path, result_json_dir)
+        os.rmdir(full_path)
 
     def test_backend_name(self):
         """

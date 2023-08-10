@@ -51,6 +51,7 @@ class StorageProviderDb(models.Model):
     STORAGE_TYPE_CHOICES = (
         ("dropbox", "Dropbox"),
         ("mongodb", "MongoDB"),
+        ("local", "Local"),
     )
 
     # the storage_type. It can be "dropbox" or "mongodb".
