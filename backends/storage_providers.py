@@ -820,10 +820,16 @@ class LocalProvider(StorageProvider):
         """
         # path of the configs
         config_path = self.base_path + "/backends/configs"
-
         backend_names: list[str] = []
         # now get all the files in config_path
-        for full_json_path in os.listdir(config_path):
+
+        # Get a list of all items in the folder
+        all_items = os.listdir(config_path)
+        # Filter out only the JSON files
+        json_files = [item for item in all_items if item.endswith(".json")]
+
+        for file_name in json_files:
+            full_json_path = config_path + "/" + file_name
             with open(full_json_path, "r") as json_file:
                 config_dict = json.load(json_file)
                 backend_names.append(config_dict["display_name"])
@@ -851,7 +857,6 @@ class LocalProvider(StorageProvider):
         if not backend_config_dict:
             return {}
 
-        backend_config_dict.pop("_id")
         # for comaptibility with qiskit
         backend_config_dict["basis_gates"] = []
         for gate in backend_config_dict["gates"]:

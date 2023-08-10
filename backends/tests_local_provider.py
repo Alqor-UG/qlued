@@ -2,6 +2,7 @@
 The tests for the local storage provider
 """
 import uuid
+import os
 
 from decouple import config
 from pydantic import ValidationError
@@ -118,7 +119,7 @@ class LocalProviderTest(TestCase):
 
         config_path = "backends/configs"
         mongo_id = uuid.uuid4().hex[:24]
-        storage_provider.upload(dummy_dict, config_path, job_id=mongo_id)
+        storage_provider.upload(dummy_dict, config_path, job_id=backend_name)
 
         # can we get the backend in the list ?
         backends = storage_provider.get_backends()
@@ -127,7 +128,7 @@ class LocalProviderTest(TestCase):
         # can we get the config of the backend ?
         backend_dict = storage_provider.get_backend_dict(backend_name)
         self.assertEqual(backend_dict["backend_name"], dummy_dict["name"])
-        storage_provider.delete_file(config_path, mongo_id)
+        storage_provider.delete_file(config_path, backend_name)
 
     def test_jobs(self):
         """
@@ -199,25 +200,22 @@ class LocalProviderTest(TestCase):
         storage_provider.delete_file(job_dir, job_id)
 
         # remove the obsolete collection from the storage
-        database = storage_provider.client["jobs"]
-        collection = database[f"queued.{backend_name}"]
-        collection.drop()
+        full_path = os.path.join(storage_provider.base_path, job_dir)
+        os.rmdir(full_path)
 
         # remove the obsolete status from the storage
         status_dir = "status/" + backend_name
         storage_provider.delete_file(status_dir, job_id)
 
         # remove the obsolete collection from the storage
-        database = storage_provider.client["status"]
-        collection = database[backend_name]
-        collection.drop()
+        full_path = os.path.join(storage_provider.base_path, status_dir)
+        os.rmdir(full_path)
 
         # remove the obsolete result from the storage
         storage_provider.delete_file(result_json_dir, job_id)
         # remove the obsolete collection from the storage
-        database = storage_provider.client["results"]
-        collection = database[backend_name]
-        collection.drop()
+        full_path = os.path.join(storage_provider.base_path, result_json_dir)
+        os.rmdir(full_path)
 
     def test_backend_name(self):
         """
