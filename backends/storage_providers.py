@@ -1010,6 +1010,8 @@ def get_storage_provider_from_entry(
         return MongodbProvider(storage_provider_entry.login)
     elif storage_provider_entry.storage_type == "dropbox":
         return DropboxProvider(storage_provider_entry.login)
+    elif storage_provider_entry.storage_type == "local":
+        return LocalProvider(storage_provider_entry.login)
     raise ValueError("The storage provider is not supported.")
 
 
