@@ -393,6 +393,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#setting-up-a-local-storage" class="md-nav__link">
+    Setting up a local storage
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#done" class="md-nav__link">
     Done
   </a>
@@ -609,6 +616,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#setting-up-a-local-storage" class="md-nav__link">
+    Setting up a local storage
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#done" class="md-nav__link">
     Done
   </a>
@@ -636,25 +650,44 @@
 <h1 id="storage-providers">Storage providers</h1>
 <p>We use external storage providers like Dropbox or MongoDB to store all our JSONs. All the source code is stored in <code>backends/storage_providers.py</code>. Below, we will summarize how the storage providers are supposed to work and how they can be set up.</p>
 <h2 id="some-general-remarks">Some general remarks</h2>
-<p>This approach has several benefits:</p>
+<p>To store the jobs with an external storage provider has several benefits:</p>
 <ul>
-<li>We immediately implement asynchronous job management. Basically the server dumps the job coming from the remote client onto the storage provider. Then whenever the Spooler belonging to a backend is free, it will act on the next job which is appropriate for that particular backend.</li>
+<li>We immediately implement asynchronous job management. Basically the server dumps the job coming from the remote client onto the storage provider. Then whenever the spooler belonging to a backend is free, it will act on the next job which is appropriate for that particular backend.</li>
 <li>The storage_provider also serves as a database storage for various JSONs, like job_JSON, result_JSON, status_JSON etc. </li>
 <li>It allows us to unify the workflow for both simulator and real machine. Basically it does not matter what the backend is, the workflow is the identical. Different backends only differ in their Spoolers.</li>
 </ul>
 <p>Now lets give an example about the work flow. Lets say a remote client named <code>user_1</code> submits a job to the singlequdit backend. This means <code>user_1</code> sent a  post request to the following URL:</p>
 <p><code>https://qlued.alqor.io/api/v2/singlequdit/post_job/</code></p>
 <p>The server will immediately save the JSON to the storage_provider via <code>upload_job</code>. At the same time the server will reply to the user with a job_id response which might look something like :</p>
-<p><code>{'job_id': '20210906_203730-singlequdit-user_1-1088f','status': 'INITIALIZING','detail': 'Got your json.'}</code></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;job_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;20210906_203730-singlequdit-user_1-1088f&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INITIALIZING&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Got your json.&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
 <p>This dictionary is also saved as a status JSON via <code>upload_status</code>. </p>
 <p>On the spooler side, it will query the server for the next job it should work on. Also let us suppose the spooler is querying about the next job for <code>singlequdit</code> backend. The server looks for the file list in the directory <code>Backend_files/Queued_Jobs/singlequdit/</code>. It will choose the first created file from that list. Lets say this is the file <code>job-20210906_203730-singlequdit-user_1-1088f.json</code>. Now the server will move this file from <code>Backend_files/Queued_Jobs/singlequdit/job-20210906_203730-singlequdit-user_1-1088f.json</code> to <code>Backend_files/Running_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json</code> and respond to the spooler with a <code>job_msg_dict</code> which looks like</p>
-<p><code>{"job_id": "20210906_203730-singlequdit-user_1-1088f", "job_json": Backend_files/Running_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json"}</code></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;job_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;20210906_203730-singlequdit-user_1-1088f&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="nt">&quot;job_json&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Backend_files/Running_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
 <p>From this, the Spooler knows exactly where the job JSON file is stored on Dropbox. It fetches the job JSON and starts to process it.</p>
 <p>For processing the job, the spooler begins by sanity-checking the JSON for correct schema. If the job_JSON fails this check the file is moved to  <code>Backend_files/Deleted_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json</code>. The status JSON is also updated by the spooler to:</p>
-<p><code>{'job_id': '20210906_203730-singlequdit-user_1-1088f','status': 'ERROR','detail': 'Got your json.; Failed json sanity check. File will be deleted. Error message : blah..blah'}</code></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;job_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;20210906_203730-singlequdit-user_1-1088f&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Got your json.; Failed json sanity check. File will be deleted. Error message : blah..blah&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
 <p>From the dictionary, the user is automatically informed about the details of why the error happened.</p>
 <p>If however, the job_JSON passes sanity checking, then it is executed. The spooler goes through the instruction list and creates the appropriate circuit and calculates the end result. Then it generates the given number of shots and formats everything into the result dictionary. The schema of the result dictionary is given at [1][eggerdj_github]. Then the Spooler will upload the result JSON to the appropiate place (see the <code>sqooler</code> instructions for more detail). It will also move the job JSON <code>running_jobs</code> to <code>finished_jobs</code>. Finally the spooler will update the status JSON to:</p>
-<p><code>{'job_id': '20210906_203730-singlequdit-user_1-1088f','status': 'DONE','detail': 'Got your json.; Passed json sanity check; Compilation done. Shots sent to solver.'}</code></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;job_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;20210906_203730-singlequdit-user_1-1088f&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DONE&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Got your json.; Passed json sanity check; Compilation done. Shots sent to solver.&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
 <h2 id="setting-up-a-new-mongodb-storage">Setting up a new MongoDB storage</h2>
 <p><code>qlued</code> allows you to use <a href="https://www.mongodb.com/">MongoDB</a> storage <sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>. Several options for hosting a mongoDB database are available. If you would like to deploy the system, we recommend to use <a href="https://www.mongodb.com/cloud/atlas">MongoDB Atlas</a>. However, it is also possible to set up a local MongoDB database. In the following, we will explain how to set up a MongoDB Atlas database (help to improve this description is welcome):</p>
 <ul>
@@ -676,9 +709,9 @@
 <li>Provide a description.</li>
 </ul>
 <p>Finally, you have to add the login information. For the moment this is a json dict. So fill in the following dict:</p>
-<div class="highlight"><pre><span></span><code>{&quot;mongodb_username&quot;: &quot;&lt;YOUR-USERNAME&gt;&quot;, 
-&quot;mongodb_password&quot;: &quot;&lt;YOUR-PASSWORD&gt;&quot;, 
-&quot;mongodb_database_url&quot;: &quot;&lt;YOUR-DATABASE-URL&gt;&quot;}
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;mongodb_username&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-USERNAME&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="nt">&quot;mongodb_password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-PASSWORD&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="nt">&quot;mongodb_database_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-DATABASE-URL&gt;&quot;</span><span class="p">}</span>
 </code></pre></div>
 <ul>
 <li>Save the storage provider.</li>
@@ -735,6 +768,21 @@ The response will contain a short-lived access token and refresh token that you 
 <ul>
 <li>Save the storage provider.</li>
 </ul>
+<h2 id="setting-up-a-local-storage">Setting up a local storage</h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This local storage is not usable for production. It is only for testing purposes at the moment.</p>
+</div>
+<p>Local storages are a third option as a <code>StorageProvider</code>. This is directly dumping the jobs onto your file system and is therefore super fast, direct and simple to maintain<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>. However, it comes with severe limitations:</p>
+<ul>
+<li>Currently, we have not connected it to <code>sqooler</code>. So it is really just for testing.</li>
+<li>Given that the files are stored on the hard drive that also runs the server it is directly exposed to the internet. This makes it substantially more easy for external attackers to wreck your hardware. </li>
+</ul>
+<p>Finally, you have to add the login information. For the moment this is a json dict. So fill in the following dict:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;base_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-BASEPATH&gt;&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
 <h2 id="done">Done</h2>
 <p>This ends the set up of the server. You can now run the first tutorials as explained <a href="notebooks/rydberg_api_showcase_v2">here</a></p>
 <div class="footnote">
@@ -742,6 +790,9 @@ The response will contain a short-lived access token and refresh token that you 
 <ol>
 <li id="fn:1">
 <p>The full logic is encoded in the <code>MongodbProvider</code> class within <code>backends/storage_providers</code>.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>No need to install some servers, register etc.&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
