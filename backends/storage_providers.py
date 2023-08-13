@@ -824,7 +824,10 @@ class LocalProvider(StorageProvider):
         # path of the configs
         config_path = self.base_path + "/backends/configs"
         backend_names: list[str] = []
-        # now get all the files in config_path
+
+        # If the folder does not exist, return an empty list
+        if not os.path.exists(config_path):
+            return backend_names
 
         # Get a list of all items in the folder
         all_items = os.listdir(config_path)

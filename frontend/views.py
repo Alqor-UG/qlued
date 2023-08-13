@@ -7,6 +7,8 @@ import json
 import pytz
 from decouple import config
 
+from pydantic import ValidationError
+
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -59,14 +61,20 @@ def devices(request):
 
     # now loop through them and obtain the backends
     for storage_provider_entry in storage_provider_entries:
-        storage_provider = get_storage_provider_from_entry(storage_provider_entry)
+        try:
+            storage_provider = get_storage_provider_from_entry(storage_provider_entry)
 
-        backend_names = storage_provider.get_backends()
-        for backend in backend_names:
-            # for testing we created dummy devices. We should ignore them in any other cases.
-            if not "dummy_" in backend:
-                config_dict = storage_provider.get_backend_dict(backend, version="v1")
-                backend_list.append(config_dict)
+            backend_names = storage_provider.get_backends()
+            for backend in backend_names:
+                # for testing we created dummy devices. We should ignore them in any other cases.
+                if not "dummy_" in backend:
+                    config_dict = storage_provider.get_backend_dict(
+                        backend, version="v2"
+                    )
+                    backend_list.append(config_dict)
+        except ValidationError:
+            # we ignore the entry if it is not valid
+            pass
     base_url = config("BASE_URL", default="http://www.example.com")
     context = {"backend_list": backend_list, "base_url": base_url}
     return HttpResponse(template.render(context, request))
