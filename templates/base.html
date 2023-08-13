@@ -53,9 +53,6 @@
             <a class="nav-item nav-link" href="{% url 'devices'%}">Devices</a>
           </li>
           <li class="nav-item">
-            <a class="nav-item nav-link" href="/api/v2/docs">API</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-item nav-link" href="{% url 'about'%}">About</a>
           </li>
         </ul>
@@ -64,6 +61,19 @@
   </nav>
 
   {% block content %}{% endblock %}
+  <nav class="navbar fixed-bottom navbar-light bg-light navbar-expand-lg">
+<div class="container-fluid">
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarFooter"
+        aria-controls="navbarFooter" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="navbar-nav collapse navbar-collapse" id="navbarFooter">
+            <a class="nav-link nav-item" href="/api/v2/docs">API</a>
+            <a class="nav-link nav-item" href="https://alqor-ug.github.io/qlued/v0.2/">Documentation</a>
+            <a class="nav-link nav-item" href="{% url 'about'%}">About</a>
+      </div>
+</div>
+</nav>
 </body>
 
 </html>
