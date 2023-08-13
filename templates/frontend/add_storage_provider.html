@@ -56,7 +56,7 @@
         {% endif %}
         <input type="submit" value="Submit" class="btn btn-primary btn-lg">
     </form>
-    </div>
+    
     <h2>Some instructions</h2>
     The documentation for the storage providers and their role can be found over <a href="https://alqor-ug.github.io/qlued/v0.2/guides/storage_providers/">here</a>. At this stage we will only describe
     the most important steps to fill out the form. 
@@ -89,4 +89,14 @@
 </code>
     <p>For more information see <a href="https://alqor-ug.github.io/qlued/v0.2/guides/storage_providers/#setting-up-a-new-dropbox-storage">here</a>.</p>
   </div>
+  <h3>Login dictionary for Local storage</h3>
+    For <b>testing purposes</b> we created the local storage provider. If you would like to add a local as a storage provider, the login information should look like this:
+    <code>
+    <pre class="bg-light p-3">
+    {
+        "base_path": "YOUR-BASEPATH"
+    }</pre>
+    </code>
+    <p>For more information see <a href="https://alqor-ug.github.io/qlued/v0.2/guides/storage_providers/#setting-up-a-local-storage">here</a>.</p>
+    </div>
 {% endblock %}
