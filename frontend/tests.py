@@ -4,12 +4,14 @@ Module that contains all the tests for this app folder.
 
 # pylint: disable=C0103
 import json
+import shutil
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from backends.models import StorageProviderDb
+from backends.storage_providers import get_storage_provider_from_entry
 
 
 class IndexPageTests(TestCase):
@@ -205,3 +207,59 @@ class AddStorageProviderTest(TestCase):
         self.assertEqual(r.status_code, 302)
         with self.assertRaises(ObjectDoesNotExist):
             StorageProviderDb.objects.get(name="test")
+
+
+class DevicesTest(TestCase):
+    """
+    Test the devices page
+    """
+
+    def setUp(self):
+        self.username = "sandy"
+        self.password = "dog"
+        user = get_user_model().objects.create(username=self.username)
+        user.set_password(self.password)
+        user.save()
+
+    def tearDown(self):
+        shutil.rmtree("storage-1")
+
+    def test_call_devices(self):
+        """
+        is it possible to add a storage provider ?
+        """
+
+        self.client.login(username=self.username, password=self.password)
+        url = reverse("add_storage_provider")
+
+        login_dict = {
+            "base_path": "storage-1",
+        }
+        data = {
+            "storage_type": "local",
+            "name": "test",
+            "description": "test",
+            "login": json.dumps(login_dict),
+        }
+        r = self.client.post(url, data)
+        self.assertEqual(r.status_code, 302)
+
+        # now also try to see the devices page, even if no backend exists yet.
+        url = reverse("devices")
+        r = self.client.get(url)
+        self.assertEqual(r.status_code, 200)
+
+        # now with the backend config added
+        local_entry = StorageProviderDb.objects.get(name="test")
+        fermions_config = {
+            "display_name": "fermions",
+            "name": "fermions",
+            "gates": [{"description": "Fermionic hopping gate", "name": "fhop"}],
+            "num_wires": 2,
+            "version": "0.1",
+        }
+
+        local_storage = get_storage_provider_from_entry(local_entry)
+        local_storage.upload(fermions_config, "backends/configs", "fermions")
+        r = self.client.get(url)
+        self.assertEqual(r.status_code, 200)
