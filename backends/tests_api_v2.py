@@ -234,7 +234,7 @@ class JobSubmissionTest(TestCase):
 
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="alqor")
-        storage_provider = MongodbProvider(mongodb_entry.login)
+        storage_provider = MongodbProvider(mongodb_entry.login, mongodb_entry.name)
 
         # verify if the storageprovider is of the type DropboxProvider or MongodbProvider
         if storage_provider.__class__.__name__ == "DropboxProvider":

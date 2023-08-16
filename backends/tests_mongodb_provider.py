@@ -61,7 +61,7 @@ class MongodbProviderTest(TestCase):
         Test that we can create a MongoDB object.
         """
         mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
-        mongodb_provider = MongodbProvider(mongodb_entry.login)
+        mongodb_provider = MongodbProvider(mongodb_entry.login, mongodb_entry.name)
         self.assertIsNotNone(mongodb_provider)
 
         # test that we cannot create a dropbox object a poor login dict structure
@@ -71,7 +71,7 @@ class MongodbProviderTest(TestCase):
             "refresh_token": "test",
         }
         with self.assertRaises(ValidationError):
-            MongodbProvider(poor_login_dict)
+            MongodbProvider(poor_login_dict, mongodb_entry.name)
 
     def test_upload_etc(self):
         """
@@ -80,7 +80,7 @@ class MongodbProviderTest(TestCase):
 
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
-        storage_provider = MongodbProvider(mongodb_entry.login)
+        storage_provider = MongodbProvider(mongodb_entry.login, mongodb_entry.name)
 
         # upload a file and get it back
         test_content = {"experiment_0": "Nothing happened here."}
@@ -107,7 +107,7 @@ class MongodbProviderTest(TestCase):
         """
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
-        storage_provider = MongodbProvider(mongodb_entry.login)
+        storage_provider = MongodbProvider(mongodb_entry.login, mongodb_entry.name)
 
         # create a dummy config
         dummy_id = uuid.uuid4().hex[:5]
@@ -142,7 +142,7 @@ class MongodbProviderTest(TestCase):
 
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
-        storage_provider = MongodbProvider(mongodb_entry.login)
+        storage_provider = MongodbProvider(mongodb_entry.login, mongodb_entry.name)
 
         # let us first test the we can upload a dummy job
         job_payload = {

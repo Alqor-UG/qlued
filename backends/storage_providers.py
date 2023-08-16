@@ -36,6 +36,14 @@ class StorageProvider(ABC):
     The template for accessing any storage providers like dropbox, amazon S3 etc.
     """
 
+    def __init__(self, name: str) -> None:
+        """
+        Any storage provide must have a name that is not empty.
+        """
+        if not name:
+            raise ValueError("The name of the storage provider cannot be empty.")
+        self.name = name
+
     @abstractmethod
     def upload(self, content_dict: dict, storage_path: str, job_id: str) -> None:
         """
@@ -146,18 +154,19 @@ class DropboxProvider(StorageProvider):
     <https://blogs.dropbox.com/developers/2014/05/generate-an-access-token-for-your-own-account/>
     """
 
-    def __init__(self, login_dict: dict) -> None:
+    def __init__(self, login_dict: dict, name: str) -> None:
         """
         Set up the neccessary keys.
 
         Args:
             login_dict: The dictionary that contains the login information
+            name: The name of the storage provider
 
         Raises:
             ValidationError: If the login_dict does not contain the correct keys
         """
         DropboxLoginInformation(**login_dict)
-
+        super().__init__(name)
         self.app_key = login_dict["app_key"]
         self.app_secret = login_dict["app_secret"]
         self.refresh_token = login_dict["refresh_token"]
@@ -445,18 +454,22 @@ class MongodbProvider(StorageProvider):
     The access to the mongodb
     """
 
-    def __init__(self, login_dict: dict) -> None:
+    def __init__(self, login_dict: dict, name: str) -> None:
         """
         Set up the neccessary keys and create the client through which all the connections will run.
 
         Args:
             login_dict: The login dict that contains the neccessary
                         information to connect to the mongodb
+            name: The name of the storage provider
+
 
         Raises:
             ValidationError: If the login_dict is not valid
         """
         MongodbLoginInformation(**login_dict)
+
+        super().__init__(name)
         mongodb_username = login_dict["mongodb_username"]
         mongodb_password = login_dict["mongodb_password"]
         mongodb_database_url = login_dict["mongodb_database_url"]
@@ -725,18 +738,20 @@ class LocalProvider(StorageProvider):
     Create a file storage that works on the local machine.
     """
 
-    def __init__(self, login_dict: dict) -> None:
+    def __init__(self, login_dict: dict, name: str) -> None:
         """
         Set up the neccessary keys and create the client through which all the connections will run.
 
         Args:
             login_dict: The login dict that contains the neccessary
-                        information to connect to the mongodb
+                        information to connect to the local storage
+            name: The name of the storage provider
 
         Raises:
             ValidationError: If the login_dict is not valid
         """
         LocalLoginInformation(**login_dict)
+        super().__init__(name)
         self.base_path = login_dict["base_path"]
 
     def upload(self, content_dict: dict, storage_path: str, job_id: str) -> None:
@@ -1010,11 +1025,15 @@ def get_storage_provider_from_entry(
 
     # pylint: disable=R1705
     if storage_provider_entry.storage_type == "mongodb":
-        return MongodbProvider(storage_provider_entry.login)
+        return MongodbProvider(
+            storage_provider_entry.login, storage_provider_entry.name
+        )
     elif storage_provider_entry.storage_type == "dropbox":
-        return DropboxProvider(storage_provider_entry.login)
+        return DropboxProvider(
+            storage_provider_entry.login, storage_provider_entry.name
+        )
     elif storage_provider_entry.storage_type == "local":
-        return LocalProvider(storage_provider_entry.login)
+        return LocalProvider(storage_provider_entry.login, storage_provider_entry.name)
     raise ValueError("The storage provider is not supported.")
 
 
