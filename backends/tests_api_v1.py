@@ -158,7 +158,7 @@ class JobSubmissionTest(TestCase):
         self.assertEqual(req.status_code, 200)
 
         mongodb_entry = StorageProviderDb.objects.get(name="alqor")
-        storage_provider = MongodbProvider(mongodb_entry.login)
+        storage_provider = MongodbProvider(mongodb_entry.login, mongodb_entry.name)
 
         # verify if the storageprovider is of the type DropboxProvider or MongodbProvider
         if storage_provider.__class__.__name__ == "DropboxProvider":
