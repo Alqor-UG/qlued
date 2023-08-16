@@ -61,7 +61,7 @@ class DropboxProvideTest(TestCase):
         Test that we can create a dropbox object.
         """
         dropbox_entry = StorageProviderDb.objects.get(name="dropboxtest")
-        dropbox_provider = DropboxProvider(dropbox_entry.login)
+        dropbox_provider = DropboxProvider(dropbox_entry.login, dropbox_entry.name)
         self.assertIsNotNone(dropbox_provider)
 
         # test that we cannot create a dropbox object a poor login dict structure
@@ -71,7 +71,7 @@ class DropboxProvideTest(TestCase):
             "refresh_token": "test",
         }
         with self.assertRaises(ValidationError):
-            DropboxProvider(poor_login_dict)
+            DropboxProvider(poor_login_dict, dropbox_entry.name)
 
     def test_upload_etc(self):
         """
@@ -80,7 +80,7 @@ class DropboxProvideTest(TestCase):
 
         # create a dropbox object
         dropbox_entry = StorageProviderDb.objects.get(name="dropboxtest")
-        storage_provider = DropboxProvider(dropbox_entry.login)
+        storage_provider = DropboxProvider(dropbox_entry.login, dropbox_entry.name)
 
         # upload a file and get it back
         file_id = uuid.uuid4().hex
@@ -112,7 +112,7 @@ class DropboxProvideTest(TestCase):
 
         # create a dropbox object
         dropbox_entry = StorageProviderDb.objects.get(name="dropboxtest")
-        storage_provider = DropboxProvider(dropbox_entry.login)
+        storage_provider = DropboxProvider(dropbox_entry.login, dropbox_entry.name)
 
         # create a dummy config
         dummy_id = uuid.uuid4().hex[:5]
@@ -142,7 +142,7 @@ class DropboxProvideTest(TestCase):
         # pylint: disable=too-many-locals
         # create a dropbox object
         dropbox_entry = StorageProviderDb.objects.get(name="dropboxtest")
-        storage_provider = DropboxProvider(dropbox_entry.login)
+        storage_provider = DropboxProvider(dropbox_entry.login, dropbox_entry.name)
 
         # let us first test the we can upload a dummy job
         job_payload = {
