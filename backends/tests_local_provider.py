@@ -58,7 +58,7 @@ class LocalProviderTest(TestCase):
         Test that we can create a MongoDB object.
         """
         mongodb_entry = StorageProviderDb.objects.get(name="localtest")
-        mongodb_provider = LocalProvider(mongodb_entry.login)
+        mongodb_provider = LocalProvider(mongodb_entry.login, mongodb_entry.name)
         self.assertIsNotNone(mongodb_provider)
 
         # test that we cannot create a dropbox object a poor login dict structure
@@ -68,7 +68,7 @@ class LocalProviderTest(TestCase):
             "refresh_token": "test",
         }
         with self.assertRaises(ValidationError):
-            LocalProvider(poor_login_dict)
+            LocalProvider(poor_login_dict, mongodb_entry.name)
 
     def test_upload_etc(self):
         """
@@ -77,7 +77,7 @@ class LocalProviderTest(TestCase):
 
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="localtest")
-        storage_provider = LocalProvider(mongodb_entry.login)
+        storage_provider = LocalProvider(mongodb_entry.login, mongodb_entry.name)
 
         # upload a file and get it back
         test_content = {"experiment_0": "Nothing happened here."}
@@ -104,7 +104,7 @@ class LocalProviderTest(TestCase):
         """
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="localtest")
-        storage_provider = LocalProvider(mongodb_entry.login)
+        storage_provider = LocalProvider(mongodb_entry.login, mongodb_entry.name)
 
         # create a dummy config
         dummy_id = uuid.uuid4().hex[:5]
@@ -138,7 +138,7 @@ class LocalProviderTest(TestCase):
 
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="localtest")
-        storage_provider = LocalProvider(mongodb_entry.login)
+        storage_provider = LocalProvider(mongodb_entry.login, mongodb_entry.name)
 
         # let us first test the we can upload a dummy job
         job_payload = {
