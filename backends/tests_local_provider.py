@@ -159,20 +159,20 @@ class LocalProviderTest(TestCase):
         username = "dummy_user"
 
         job_id = storage_provider.upload_job(
-            job_dict=job_payload, backend_name=backend_name, username=username
+            job_dict=job_payload, display_name=backend_name, username=username
         )
         self.assertTrue(len(job_id) > 1)
 
         # now also test that we can upload the status
         job_response_dict = storage_provider.upload_status(
-            backend_name=backend_name,
+            display_name=backend_name,
             username=username,
             job_id=job_id,
         )
         self.assertTrue(len(job_response_dict["job_id"]) > 1)
         # now test that we can get the job status
         job_status = storage_provider.get_status(
-            backend_name=backend_name,
+            display_name=backend_name,
             username=username,
             job_id=job_id,
         )
@@ -187,7 +187,7 @@ class LocalProviderTest(TestCase):
 
         # now get the result
         result = storage_provider.get_result(
-            backend_name=backend_name,
+            display_name=backend_name,
             username=username,
             job_id=job_id,
         )

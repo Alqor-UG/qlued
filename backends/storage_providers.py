@@ -325,8 +325,18 @@ class DropboxProvider(StorageProvider):
         for gate in backend_config_dict["gates"]:
             backend_config_dict["basis_gates"].append(gate["name"])
 
-        backend_config_dict["backend_name"] = backend_config_dict["name"]
-        backend_config_dict["display_name"] = display_name
+        # if the name is already in the dict, we should set the backend_name to the name
+        # otherwise we calculate it.
+        backend_name: str
+        if "name" in backend_config_dict:
+            backend_name = backend_config_dict["name"]
+        else:
+            if backend_config_dict["simulator"]:
+                backend_name = f"{self.name}_{display_name}_simulator"
+            else:
+                backend_name = f"{self.name}_{display_name}_hardware"
+
+        backend_config_dict["backend_name"] = backend_name
         backend_config_dict["n_qubits"] = backend_config_dict["num_wires"]
         backend_config_dict["backend_version"] = backend_config_dict["version"]
 
