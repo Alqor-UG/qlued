@@ -4,7 +4,6 @@ The tests for the local storage provider
 import uuid
 import os
 import shutil
-from datetime import datetime
 
 from decouple import config
 from pydantic import ValidationError
@@ -17,7 +16,7 @@ from .storage_providers import (
     get_short_backend_name,
     get_storage_provider_from_entry,
 )
-from .models import StorageProviderDb, Token
+from .models import StorageProviderDb
 
 User = get_user_model()
 
