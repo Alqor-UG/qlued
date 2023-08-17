@@ -137,6 +137,52 @@ class StorageProvider(ABC):
             The result dict of the job
         """
 
+    def backend_dict_to_qiskit(
+        self, backend_config_dict: dict, version: str = "v2"
+    ) -> dict:
+        """
+        This function transforms the dictionary that is safed in the storage provider
+        into a qiskit backend dictionnary.
+
+        Args:
+            backend_config_dict: The dictionary that contains the configuration of the backend
+            version: the version of the API you are using
+
+        Returns:
+            The qiskit backend dictionary
+        """
+        display_name = backend_config_dict["display_name"]
+        # for comaptibility with qiskit
+        backend_config_dict["basis_gates"] = []
+        for gate in backend_config_dict["gates"]:
+            backend_config_dict["basis_gates"].append(gate["name"])
+
+        # if the name is already in the dict, we should set the backend_name to the name
+        # otherwise we calculate it.
+        backend_name: str
+        if "name" in backend_config_dict:
+            backend_name = backend_config_dict["name"]
+        else:
+            if backend_config_dict["simulator"]:
+                backend_name = f"{self.name}_{display_name}_simulator"
+            else:
+                backend_name = f"{self.name}_{display_name}_hardware"
+
+        backend_config_dict["backend_name"] = backend_name
+        backend_config_dict["n_qubits"] = backend_config_dict["num_wires"]
+        backend_config_dict["backend_version"] = backend_config_dict["version"]
+
+        backend_config_dict["conditional"] = False
+        backend_config_dict["local"] = False
+        backend_config_dict["open_pulse"] = False
+        backend_config_dict["memory"] = True
+        backend_config_dict["coupling_map"] = "linear"
+
+        # and the url
+        base_url = config("BASE_URL")
+        backend_config_dict["url"] = base_url + f"/api/{version}/" + backend_name + "/"
+        return backend_config_dict
+
 
 class DropboxLoginInformation(BaseModel):
     """
@@ -319,37 +365,8 @@ class DropboxProvider(StorageProvider):
         backend_config_dict = self.get_file_content(
             storage_path=backend_json_path, job_id="config"
         )
-
-        # for comaptibility with qiskit
-        backend_config_dict["basis_gates"] = []
-        for gate in backend_config_dict["gates"]:
-            backend_config_dict["basis_gates"].append(gate["name"])
-
-        # if the name is already in the dict, we should set the backend_name to the name
-        # otherwise we calculate it.
-        backend_name: str
-        if "name" in backend_config_dict:
-            backend_name = backend_config_dict["name"]
-        else:
-            if backend_config_dict["simulator"]:
-                backend_name = f"{self.name}_{display_name}_simulator"
-            else:
-                backend_name = f"{self.name}_{display_name}_hardware"
-
-        backend_config_dict["backend_name"] = backend_name
-        backend_config_dict["n_qubits"] = backend_config_dict["num_wires"]
-        backend_config_dict["backend_version"] = backend_config_dict["version"]
-
-        backend_config_dict["conditional"] = False
-        backend_config_dict["local"] = False
-        backend_config_dict["open_pulse"] = False
-        backend_config_dict["memory"] = True
-        backend_config_dict["coupling_map"] = "linear"
-
-        # and the url
-        base_url = config("BASE_URL")
-        backend_config_dict["url"] = base_url + f"/api/{version}/" + backend_name + "/"
-        return backend_config_dict
+        qiskit_backend_dict = self.backend_dict_to_qiskit(backend_config_dict)
+        return qiskit_backend_dict
 
     def upload_job(self, job_dict: dict, display_name: str, username: str) -> str:
         """
@@ -629,26 +646,8 @@ class MongodbProvider(StorageProvider):
             return {}
 
         backend_config_dict.pop("_id")
-        # for comaptibility with qiskit
-        backend_config_dict["basis_gates"] = []
-        for gate in backend_config_dict["gates"]:
-            backend_config_dict["basis_gates"].append(gate["name"])
-
-        backend_config_dict["backend_name"] = backend_config_dict["name"]
-        backend_config_dict["display_name"] = display_name
-        backend_config_dict["n_qubits"] = backend_config_dict["num_wires"]
-        backend_config_dict["backend_version"] = backend_config_dict["version"]
-
-        backend_config_dict["conditional"] = False
-        backend_config_dict["local"] = False
-        backend_config_dict["open_pulse"] = False
-        backend_config_dict["memory"] = True
-        backend_config_dict["coupling_map"] = "linear"
-
-        # and the url
-        base_url = config("BASE_URL")
-        backend_config_dict["url"] = f"{base_url}/api/{version}/{display_name}/"
-        return backend_config_dict
+        qiskit_backend_dict = self.backend_dict_to_qiskit(backend_config_dict, version)
+        return qiskit_backend_dict
 
     def upload_job(self, job_dict: dict, display_name: str, username: str) -> str:
         """
@@ -888,26 +887,8 @@ class LocalProvider(StorageProvider):
         if not backend_config_dict:
             return {}
 
-        # for comaptibility with qiskit
-        backend_config_dict["basis_gates"] = []
-        for gate in backend_config_dict["gates"]:
-            backend_config_dict["basis_gates"].append(gate["name"])
-
-        backend_config_dict["backend_name"] = backend_config_dict["name"]
-        backend_config_dict["display_name"] = display_name
-        backend_config_dict["n_qubits"] = backend_config_dict["num_wires"]
-        backend_config_dict["backend_version"] = backend_config_dict["version"]
-
-        backend_config_dict["conditional"] = False
-        backend_config_dict["local"] = False
-        backend_config_dict["open_pulse"] = False
-        backend_config_dict["memory"] = True
-        backend_config_dict["coupling_map"] = "linear"
-
-        # and the url
-        base_url = config("BASE_URL")
-        backend_config_dict["url"] = f"{base_url}/api/{version}/{display_name}/"
-        return backend_config_dict
+        qiskit_backend_dict = self.backend_dict_to_qiskit(backend_config_dict)
+        return qiskit_backend_dict
 
     def upload_job(self, job_dict: dict, display_name: str, username: str) -> str:
         """

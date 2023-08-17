@@ -3,6 +3,8 @@ The tests for the local storage provider
 """
 import uuid
 import os
+import shutil
+from datetime import datetime
 
 from decouple import config
 from pydantic import ValidationError
@@ -10,8 +12,12 @@ from pydantic import ValidationError
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from .storage_providers import LocalProvider, get_short_backend_name
-from .models import StorageProviderDb
+from .storage_providers import (
+    LocalProvider,
+    get_short_backend_name,
+    get_storage_provider_from_entry,
+)
+from .models import StorageProviderDb, Token
 
 User = get_user_model()
 
@@ -232,3 +238,102 @@ class LocalProviderTest(TestCase):
         test_name = "alqor_tests_simulator_crap"
         short_name = get_short_backend_name(test_name)
         self.assertEqual("", short_name)
+
+
+class BackendsWithMultipleLocalProvidersTest(TestCase):
+    """
+    The class that contains tests for multiple providers. Based on
+    a local storage, so without a connection to the spooler.
+    """
+
+    def setUp(self):
+        # create a user
+        self.username = config("USERNAME_TEST")
+        self.password = config("PASSWORD_TEST")
+        user = User.objects.create(username=self.username)
+        user.set_password(self.password)
+        user.save()
+
+        # add the first storage provider
+        base_path = "storage-3"
+
+        login_dict = {
+            "base_path": base_path,
+        }
+
+        local_entry = StorageProviderDb.objects.create(
+            storage_type="local",
+            name="local1",
+            owner=user,
+            description="First storage provider for tests",
+            login=login_dict,
+        )
+        local_entry.full_clean()
+        local_entry.save()
+
+        # create a dummy config for the required fermions
+        fermions_config = {
+            "display_name": "fermions",
+            "name": "alqor_fermionic-tweezer_simulator",
+            "gates": [],
+            "simulator": True,
+            "num_wires": 2,
+            "version": "0.0.1",
+        }
+
+        local_storage = get_storage_provider_from_entry(local_entry)
+        local_storage.upload(fermions_config, "backends/configs", "fermions")
+
+        # add the second storage provider
+        base_path = "storage-4"
+
+        login_dict = {
+            "base_path": base_path,
+        }
+
+        local_entry = StorageProviderDb.objects.create(
+            storage_type="local",
+            name="local2",
+            owner=user,
+            description="Second storage provider for tests",
+            login=login_dict,
+        )
+        local_entry.full_clean()
+        local_entry.save()
+
+        # create a dummy config for the required single qudit
+        single_qudit_config = {
+            "display_name": "singlequdit",
+            "gates": [],
+            "simulator": True,
+            "num_wires": 1,
+            "version": "0.0.1",
+        }
+
+        local_storage = get_storage_provider_from_entry(local_entry)
+        local_storage.upload(single_qudit_config, "backends/configs", "singlequdit")
+
+    def tearDown(self):
+        shutil.rmtree("storage-3")
+        shutil.rmtree("storage-4")
+
+    def test_get_backend_config(self):
+        """
+        Test that we get the appropiate config dictionnary
+        """
+
+        # first get the entry
+        db_entry = StorageProviderDb.objects.get(name="local2")
+        storage_provider = LocalProvider(db_entry.login, db_entry.name)
+
+        # now get the backend config
+        config_dict = storage_provider.get_backend_dict(display_name="singlequdit")
+        assert config_dict["backend_name"] == "local2_singlequdit_simulator"
+
+        # now also test that the name overwrites the display name
+        db_entry = StorageProviderDb.objects.get(name="local1")
+        storage_provider = LocalProvider(db_entry.login, db_entry.name)
+
+        # now get the backend config
+        config_dict = storage_provider.get_backend_dict(display_name="fermions")
+        assert config_dict["backend_name"] == "alqor_fermionic-tweezer_simulator"
