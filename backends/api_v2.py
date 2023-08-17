@@ -116,13 +116,13 @@ def post_job(request, data: JobSchemaWithTokenIn, backend_name: str):
 
         # upload the job to the backend via the storage provider
         job_id = storage_provider.upload_job(
-            job_dict=job_dict, backend_name=short_backend, username=username
+            job_dict=job_dict, display_name=short_backend, username=username
         )
 
         # now we upload the status json to the backend. this is the same status json
         # that is returned to the user
         job_response_dict = storage_provider.upload_status(
-            backend_name=short_backend,
+            display_name=short_backend,
             username=username,
             job_id=job_id,
         )
@@ -187,7 +187,7 @@ def get_job_status(request, backend_name: str, job_id: str, token: str):
         storage_provider = get_storage_provider(backend_name)
 
         job_response_dict = storage_provider.get_status(
-            backend_name=short_backend, username=username, job_id=job_id
+            display_name=short_backend, username=username, job_id=job_id
         )
 
         return 200, job_response_dict
@@ -252,7 +252,7 @@ def get_job_result(request, backend_name: str, job_id: str, token: str):
     # request the data from the queue
     try:
         status_msg_dict = storage_provider.get_status(
-            backend_name=short_backend, username=username, job_id=job_id
+            display_name=short_backend, username=username, job_id=job_id
         )
         if status_msg_dict["status"] != "DONE":
             return 200, status_msg_dict
@@ -267,7 +267,7 @@ def get_job_result(request, backend_name: str, job_id: str, token: str):
     # and if the status is switched to done, we can also obtain the result
     try:
         result_dict = storage_provider.get_result(
-            backend_name=short_backend, username=username, job_id=job_id
+            display_name=short_backend, username=username, job_id=job_id
         )
 
         return 200, result_dict

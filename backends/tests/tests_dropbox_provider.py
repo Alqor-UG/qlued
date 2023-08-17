@@ -1,22 +1,22 @@
 """
-The tests for the local storage provider
+The tests for the storage provider
 """
+
 import uuid
-import os
-
-from decouple import config
 from pydantic import ValidationError
+from decouple import config
 
-from django.contrib.auth import get_user_model
 from django.test import TestCase
+from django.contrib.auth import get_user_model
 
-from .storage_providers import LocalProvider, get_short_backend_name
+
 from .models import StorageProviderDb
+from .storage_providers import DropboxProvider
 
 User = get_user_model()
 
 
-class LocalProviderTest(TestCase):
+class DropboxProvideTest(TestCase):
     """
     The class that contains all the tests for the dropbox provider.
     """
@@ -25,7 +25,6 @@ class LocalProviderTest(TestCase):
         """
         set up the test.
         """
-        # load the credentials from the environment through decouple
 
         # create a user
         self.username = config("USERNAME_TEST")
@@ -36,30 +35,34 @@ class LocalProviderTest(TestCase):
         self.user = user
 
         # put together the login information
-        base_path = "storage"
+        app_key = config("APP_KEY")
+        app_secret = config("APP_SECRET")
+        refresh_token = config("REFRESH_TOKEN")
 
         login_dict = {
-            "base_path": base_path,
+            "app_key": app_key,
+            "app_secret": app_secret,
+            "refresh_token": refresh_token,
         }
 
         # create the storage entry in the models
-        local_entry = StorageProviderDb.objects.create(
-            storage_type="local",
-            name="localtest",
+        dropbox_entry = StorageProviderDb.objects.create(
+            storage_type="dropbox",
+            name="dropboxtest",
             owner=self.user,
-            description="Local storage provider for tests",
+            description="Dropbox storage provider for tests",
             login=login_dict,
         )
-        local_entry.full_clean()
-        local_entry.save()
+        dropbox_entry.full_clean()
+        dropbox_entry.save()
 
-    def test_localdb_object(self):
+    def test_dropbox_object(self):
         """
-        Test that we can create a MongoDB object.
+        Test that we can create a dropbox object.
         """
-        mongodb_entry = StorageProviderDb.objects.get(name="localtest")
-        mongodb_provider = LocalProvider(mongodb_entry.login, mongodb_entry.name)
-        self.assertIsNotNone(mongodb_provider)
+        dropbox_entry = StorageProviderDb.objects.get(name="dropboxtest")
+        dropbox_provider = DropboxProvider(dropbox_entry.login, dropbox_entry.name)
+        self.assertIsNotNone(dropbox_provider)
 
         # test that we cannot create a dropbox object a poor login dict structure
         poor_login_dict = {
@@ -68,29 +71,33 @@ class LocalProviderTest(TestCase):
             "refresh_token": "test",
         }
         with self.assertRaises(ValidationError):
-            LocalProvider(poor_login_dict, mongodb_entry.name)
+            DropboxProvider(poor_login_dict, dropbox_entry.name)
 
     def test_upload_etc(self):
         """
         Test that it is possible to upload a file.
         """
 
-        # create a mongodb object
-        mongodb_entry = StorageProviderDb.objects.get(name="localtest")
-        storage_provider = LocalProvider(mongodb_entry.login, mongodb_entry.name)
+        # create a dropbox object
+        dropbox_entry = StorageProviderDb.objects.get(name="dropboxtest")
+        storage_provider = DropboxProvider(dropbox_entry.login, dropbox_entry.name)
 
         # upload a file and get it back
+        file_id = uuid.uuid4().hex
         test_content = {"experiment_0": "Nothing happened here."}
-        storage_path = "test/subcollection"
-
-        job_id = uuid.uuid4().hex[:24]
+        storage_path = "test_folder"
+        job_id = f"world-{file_id}"
         storage_provider.upload(test_content, storage_path, job_id)
+
+        # make sure that this did not add the _id field to the dict
+        self.assertFalse("_id" in test_content)
+
         test_result = storage_provider.get_file_content(storage_path, job_id)
 
         self.assertDictEqual(test_content, test_result)
 
         # move it and get it back
-        second_path = "test/subcollection_2"
+        second_path = "test_folder_2"
         storage_provider.move_file(storage_path, second_path, job_id)
         test_result = storage_provider.get_file_content(second_path, job_id)
         self.assertDictEqual(test_content, test_result)
@@ -102,9 +109,10 @@ class LocalProviderTest(TestCase):
         """
         Test that we are able to obtain a list of backends.
         """
-        # create a mongodb object
-        mongodb_entry = StorageProviderDb.objects.get(name="localtest")
-        storage_provider = LocalProvider(mongodb_entry.login, mongodb_entry.name)
+
+        # create a dropbox object
+        dropbox_entry = StorageProviderDb.objects.get(name="dropboxtest")
+        storage_provider = DropboxProvider(dropbox_entry.login, dropbox_entry.name)
 
         # create a dummy config
         dummy_id = uuid.uuid4().hex[:5]
@@ -115,10 +123,8 @@ class LocalProviderTest(TestCase):
         dummy_dict["version"] = "0.0.1"
 
         backend_name = f"dummy_{dummy_id}"
-        dummy_dict["display_name"] = backend_name
-
-        config_path = "backends/configs"
-        storage_provider.upload(dummy_dict, config_path, job_id=backend_name)
+        dummy_path = f"Backend_files/Config/{backend_name}"
+        storage_provider.upload(dummy_dict, dummy_path, job_id="config")
 
         # can we get the backend in the list ?
         backends = storage_provider.get_backends()
@@ -127,18 +133,16 @@ class LocalProviderTest(TestCase):
         # can we get the config of the backend ?
         backend_dict = storage_provider.get_backend_dict(backend_name)
         self.assertEqual(backend_dict["backend_name"], dummy_dict["name"])
-        storage_provider.delete_file(config_path, backend_name)
+        storage_provider.delete_file(dummy_path, "config")
 
     def test_jobs(self):
         """
         Test that we can handle the necessary functions for the jobs and status.
         """
-        # disable too many local variables
-        # pylint: disable=R0914
-
-        # create a mongodb object
-        mongodb_entry = StorageProviderDb.objects.get(name="localtest")
-        storage_provider = LocalProvider(mongodb_entry.login, mongodb_entry.name)
+        # pylint: disable=too-many-locals
+        # create a dropbox object
+        dropbox_entry = StorageProviderDb.objects.get(name="dropboxtest")
+        storage_provider = DropboxProvider(dropbox_entry.login, dropbox_entry.name)
 
         # let us first test the we can upload a dummy job
         job_payload = {
@@ -159,76 +163,50 @@ class LocalProviderTest(TestCase):
         username = "dummy_user"
 
         job_id = storage_provider.upload_job(
-            job_dict=job_payload, backend_name=backend_name, username=username
+            job_dict=job_payload, display_name=backend_name, username=username
         )
         self.assertTrue(len(job_id) > 1)
 
         # now also test that we can upload the status
         job_response_dict = storage_provider.upload_status(
-            backend_name=backend_name,
+            display_name=backend_name,
             username=username,
             job_id=job_id,
         )
         self.assertTrue(len(job_response_dict["job_id"]) > 1)
+
         # now test that we can get the job status
         job_status = storage_provider.get_status(
-            backend_name=backend_name,
+            display_name=backend_name,
             username=username,
             job_id=job_id,
         )
-        self.assertFalse("_id" in job_status.keys())
         self.assertEqual(job_status["job_id"], job_id)
 
         # test that we can get a job result
         # first upload a dummy result
         dummy_result = {"result": "dummy"}
-        result_json_dir = "results/" + backend_name
-        storage_provider.upload(dummy_result, result_json_dir, job_id)
+        result_json_dir = "Backend_files/Result/" + backend_name + "/" + username
+        result_json_name = "result-" + job_id
 
+        storage_provider.upload(dummy_result, result_json_dir, result_json_name)
         # now get the result
         result = storage_provider.get_result(
-            backend_name=backend_name,
+            display_name=backend_name,
             username=username,
             job_id=job_id,
         )
-        self.assertFalse("_id" in result.keys())
-        self.assertEqual(dummy_result["result"], result["result"])
+        self.assertDictEqual(result, dummy_result)
 
-        # remove the obsolete job from the storage
-        job_dir = "jobs/queued/" + backend_name
-        storage_provider.delete_file(job_dir, job_id)
+        # remove the obsolete job from the storage folder on the dropbox
+        job_dir = "/Backend_files/Queued_Jobs/" + backend_name + "/"
+        job_name = "job-" + job_id
+        storage_provider.delete_file(job_dir, job_name)
 
-        # remove the obsolete collection from the storage
-        full_path = os.path.join(storage_provider.base_path, job_dir)
-        os.rmdir(full_path)
+        # remove the obsolete status from the storage folder on the dropbox
+        status_dir = "/Backend_files/Status/" + backend_name + "/" + username
+        status_name = "status-" + job_id
+        storage_provider.delete_file(status_dir, status_name)
 
-        # remove the obsolete status from the storage
-        status_dir = "status/" + backend_name
-        storage_provider.delete_file(status_dir, job_id)
-
-        # remove the obsolete collection from the storage
-        full_path = os.path.join(storage_provider.base_path, status_dir)
-        os.rmdir(full_path)
-
-        # remove the obsolete result from the storage
-        storage_provider.delete_file(result_json_dir, job_id)
-        # remove the obsolete collection from the storage
-        full_path = os.path.join(storage_provider.base_path, result_json_dir)
-        os.rmdir(full_path)
-
-    def test_backend_name(self):
-        """
-        Test that we separate out properly the backend names
-        """
-        short_test_name = "tests"
-        short_name = get_short_backend_name(short_test_name)
-
-        self.assertEqual(short_test_name, short_name)
-
-        test_name = "alqor_tests_simulator"
-        short_name = get_short_backend_name(test_name)
-        self.assertEqual(short_test_name, short_name)
-
-        test_name = "alqor_tests_simulator_crap"
-        short_name = get_short_backend_name(test_name)
-        self.assertEqual("", short_name)
+        # remove the obsolete result from the storage folder on the dropbox
+        storage_provider.delete_file(result_json_dir, result_json_name)

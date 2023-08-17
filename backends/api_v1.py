@@ -83,13 +83,13 @@ def post_job(request, data: JobSchemaIn, backend_name: str):
         storage_provider = get_storage_provider(backend_name)
 
         job_id = storage_provider.upload_job(
-            job_dict=job_dict, backend_name=backend_name, username=username
+            job_dict=job_dict, display_name=backend_name, username=username
         )
 
         # now we upload the status json to the backend. this is the same status json
         # that is returned to the user
         job_response_dict = storage_provider.upload_status(
-            backend_name=backend_name,
+            display_name=backend_name,
             username=username,
             job_id=job_id,
         )
@@ -153,7 +153,7 @@ def get_job_status(
         # get the status json from the backend through storage provider
         storage_provider = get_storage_provider(backend_name)
         job_response_dict = storage_provider.get_status(
-            backend_name=backend_name, username=username, job_id=job_id
+            display_name=backend_name, username=username, job_id=job_id
         )
 
         return 200, job_response_dict
@@ -217,7 +217,7 @@ def get_job_result(
     # request the data from the queue
     try:
         status_msg_dict = storage_provider.get_status(
-            backend_name=backend_name, username=username, job_id=job_id
+            display_name=backend_name, username=username, job_id=job_id
         )
 
         if status_msg_dict["status"] != "DONE":
@@ -235,7 +235,7 @@ def get_job_result(
     try:
         # now get the result from the database
         result_dict = storage_provider.get_result(
-            backend_name=backend_name, username=username, job_id=job_id
+            display_name=backend_name, username=username, job_id=job_id
         )
 
         return 200, result_dict
