@@ -159,14 +159,10 @@ class StorageProvider(ABC):
 
         # if the name is already in the dict, we should set the backend_name to the name
         # otherwise we calculate it.
-        backend_name: str
-        if "name" in backend_config_dict:
-            backend_name = backend_config_dict["name"]
+        if backend_config_dict["simulator"]:
+            backend_name = f"{self.name}_{display_name}_simulator"
         else:
-            if backend_config_dict["simulator"]:
-                backend_name = f"{self.name}_{display_name}_simulator"
-            else:
-                backend_name = f"{self.name}_{display_name}_hardware"
+            backend_name = f"{self.name}_{display_name}_hardware"
 
         backend_config_dict["backend_name"] = backend_name
         backend_config_dict["n_qubits"] = backend_config_dict["num_wires"]
