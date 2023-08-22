@@ -12,7 +12,7 @@ from django.contrib.auth import get_user_model
 from django.db.utils import IntegrityError
 from django.core.exceptions import ValidationError
 
-from .models import Backend, Token, StorageProviderDb
+from ..models import Backend, Token, StorageProviderDb
 
 User = get_user_model()
 
