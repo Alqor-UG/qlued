@@ -14,8 +14,8 @@ from django.test import TestCase
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 
-from .models import Token, StorageProviderDb
-from .storage_providers import MongodbProvider, get_storage_provider_from_entry
+from ..models import Token, StorageProviderDb
+from ..storage_providers import MongodbProvider, get_storage_provider_from_entry
 
 User = get_user_model()
 
@@ -66,11 +66,11 @@ class BackendConfigTest(TestCase):
         data = json.loads(req.content)
         self.assertEqual(req.status_code, 200)
         self.assertCountEqual(data["basis_gates"], ["fhop", "fint", "fphase"])
-        self.assertEqual(data["backend_name"], "alqor_fermionic_tweezer_simulator")
+        self.assertEqual(data["backend_name"], "alqor_fermions_simulator")
         self.assertEqual(data["display_name"], "fermions")
 
         base_url = config("BASE_URL")
-        self.assertEqual(data["url"], base_url + "/api/v2/fermions/")
+        self.assertEqual(data["url"], base_url + "/api/v2/alqor_fermions_simulator/")
         self.assertEqual(data["n_qubits"], 8)
         self.assertEqual(data["num_species"], 2)
         gates = data["gates"]
