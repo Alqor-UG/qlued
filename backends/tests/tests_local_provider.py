@@ -11,12 +11,12 @@ from pydantic import ValidationError
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from .storage_providers import (
+from ..storage_providers import (
     LocalProvider,
     get_short_backend_name,
     get_storage_provider_from_entry,
 )
-from .models import StorageProviderDb
+from ..models import StorageProviderDb
 
 User = get_user_model()
 

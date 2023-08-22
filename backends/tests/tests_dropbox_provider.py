@@ -10,8 +10,8 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 
 
-from .models import StorageProviderDb
-from .storage_providers import DropboxProvider
+from ..models import StorageProviderDb
+from ..storage_providers import DropboxProvider
 
 User = get_user_model()
 

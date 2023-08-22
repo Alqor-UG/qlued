@@ -9,8 +9,8 @@ from pydantic import ValidationError
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from .storage_providers import MongodbProvider, get_short_backend_name
-from .models import StorageProviderDb
+from ..storage_providers import MongodbProvider, get_short_backend_name
+from ..models import StorageProviderDb
 
 User = get_user_model()
 

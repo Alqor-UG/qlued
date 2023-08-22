@@ -257,6 +257,7 @@ class DevicesTest(TestCase):
             "gates": [{"description": "Fermionic hopping gate", "name": "fhop"}],
             "num_wires": 2,
             "version": "0.1",
+            "simulator": True,
         }
 
         local_storage = get_storage_provider_from_entry(local_entry)
