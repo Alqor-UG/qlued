@@ -301,7 +301,7 @@ def list_backends(request):
         backend_names = storage_provider.get_backends()
         for backend in backend_names:
             # for testing we created dummy devices. We should ignore them in any other cases.
-            if not "dummy_" in backend:
+            if not "dummy" in backend:
                 config_dict = storage_provider.get_backend_dict(backend, version="v2")
                 backend_list.append(config_dict)
     return backend_list

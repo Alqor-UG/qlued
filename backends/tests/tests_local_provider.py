@@ -58,6 +58,9 @@ class LocalProviderTest(TestCase):
         local_entry.full_clean()
         local_entry.save()
 
+    def tearDown(self):
+        shutil.rmtree("storage", ignore_errors=True)
+
     def test_localdb_object(self):
         """
         Test that we can create a MongoDB object.
@@ -119,19 +122,23 @@ class LocalProviderTest(TestCase):
         dummy_dict["num_wires"] = 3
         dummy_dict["version"] = "0.0.1"
 
-        backend_name = f"dummy_{dummy_id}"
+        backend_name = f"dummy{dummy_id}"
         dummy_dict["display_name"] = backend_name
+        dummy_dict["simulator"] = True
 
         config_path = "backends/configs"
         storage_provider.upload(dummy_dict, config_path, job_id=backend_name)
 
         # can we get the backend in the list ?
         backends = storage_provider.get_backends()
-        self.assertTrue(f"dummy_{dummy_id}" in backends)
+        self.assertTrue(f"dummy{dummy_id}" in backends)
 
         # can we get the config of the backend ?
         backend_dict = storage_provider.get_backend_dict(backend_name)
-        self.assertEqual(backend_dict["backend_name"], dummy_dict["name"])
+        self.assertEqual(
+            backend_dict["backend_name"],
+            f"localtest_{dummy_dict['display_name']}_simulator",
+        )
         storage_provider.delete_file(config_path, backend_name)
 
     def test_jobs(self):
@@ -144,6 +151,21 @@ class LocalProviderTest(TestCase):
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="localtest")
         storage_provider = LocalProvider(mongodb_entry.login, mongodb_entry.name)
+
+        # create a dummy config
+        dummy_id = uuid.uuid4().hex[:5]
+        dummy_dict: dict = {}
+        dummy_dict["gates"] = []
+        dummy_dict["name"] = "Dummy"
+        dummy_dict["num_wires"] = 3
+        dummy_dict["version"] = "0.0.1"
+
+        backend_name = f"dummy{dummy_id}"
+        dummy_dict["display_name"] = backend_name
+        dummy_dict["simulator"] = True
+
+        config_path = "backends/configs"
+        storage_provider.upload(dummy_dict, config_path, job_id=backend_name)
 
         # let us first test the we can upload a dummy job
         job_payload = {
@@ -160,7 +182,6 @@ class LocalProviderTest(TestCase):
                 "wire_order": "sequential",
             },
         }
-        backend_name = "dummy" + uuid.uuid4().hex[:5]
         username = "dummy_user"
 
         job_id = storage_provider.upload_job(
@@ -186,7 +207,7 @@ class LocalProviderTest(TestCase):
 
         # test that we can get a job result
         # first upload a dummy result
-        dummy_result = {"result": "dummy"}
+        dummy_result = {"results": "dummy"}
         result_json_dir = "results/" + backend_name
         storage_provider.upload(dummy_result, result_json_dir, job_id)
 
@@ -197,7 +218,7 @@ class LocalProviderTest(TestCase):
             job_id=job_id,
         )
         self.assertFalse("_id" in result.keys())
-        self.assertEqual(dummy_result["result"], result["result"])
+        self.assertEqual(dummy_result["results"], result["results"])
 
         # remove the obsolete job from the storage
         job_dir = "jobs/queued/" + backend_name
@@ -335,4 +356,4 @@ class BackendsWithMultipleLocalProvidersTest(TestCase):
 
         # now get the backend config
         config_dict = storage_provider.get_backend_dict(display_name="fermions")
-        assert config_dict["backend_name"] == "alqor_fermionic-tweezer_simulator"
+        assert config_dict["backend_name"] == "local1_fermions_simulator"

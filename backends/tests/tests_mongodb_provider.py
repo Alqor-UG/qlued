@@ -56,6 +56,33 @@ class MongodbProviderTest(TestCase):
         mongodb_entry.full_clean()
         mongodb_entry.save()
 
+    def tearDown(self) -> None:
+        """
+        Clean out the mongodb database.
+        """
+        # Remove all the collections that start with queued.
+        mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
+        storage_provider = MongodbProvider(mongodb_entry.login, mongodb_entry.name)
+        database = storage_provider.client["jobs"]
+        for collection_name in database.list_collection_names():
+            if collection_name.startswith("queued.dummy"):
+                collection = database[collection_name]
+                collection.drop()
+
+        # Remove all the collections from results that start with dummy
+        database = storage_provider.client["results"]
+        for collection_name in database.list_collection_names():
+            if collection_name.startswith("dummy"):
+                collection = database[collection_name]
+                collection.drop()
+
+        # Remove all the collections from status that start with dummy
+        database = storage_provider.client["status"]
+        for collection_name in database.list_collection_names():
+            if collection_name.startswith("dummy"):
+                collection = database[collection_name]
+                collection.drop()
+
     def test_mongodb_object(self):
         """
         Test that we can create a MongoDB object.
@@ -116,8 +143,8 @@ class MongodbProviderTest(TestCase):
         dummy_dict["name"] = "Dummy"
         dummy_dict["num_wires"] = 3
         dummy_dict["version"] = "0.0.1"
-
-        backend_name = f"dummy_{dummy_id}"
+        dummy_dict["simulator"] = True
+        backend_name = f"dummy{dummy_id}"
         dummy_dict["display_name"] = backend_name
 
         config_path = "backends/configs"
@@ -126,11 +153,14 @@ class MongodbProviderTest(TestCase):
 
         # can we get the backend in the list ?
         backends = storage_provider.get_backends()
-        self.assertTrue(f"dummy_{dummy_id}" in backends)
+        self.assertTrue(f"dummy{dummy_id}" in backends)
 
         # can we get the config of the backend ?
         backend_dict = storage_provider.get_backend_dict(backend_name)
-        self.assertEqual(backend_dict["backend_name"], dummy_dict["name"])
+        self.assertEqual(
+            backend_dict["backend_name"],
+            f"mongodbtest_{dummy_dict['display_name']}_simulator",
+        )
         storage_provider.delete_file(config_path, mongo_id)
 
     def test_jobs(self):
@@ -143,6 +173,21 @@ class MongodbProviderTest(TestCase):
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
         storage_provider = MongodbProvider(mongodb_entry.login, mongodb_entry.name)
+
+        # create a dummy config
+        dummy_id = uuid.uuid4().hex[:5]
+        dummy_dict: dict = {}
+        dummy_dict["gates"] = []
+        dummy_dict["name"] = "Dummy"
+        dummy_dict["num_wires"] = 3
+        dummy_dict["version"] = "0.0.1"
+
+        backend_name = f"dummy{dummy_id}"
+        dummy_dict["display_name"] = backend_name
+        dummy_dict["simulator"] = True
+        config_path = "backends/configs"
+        mongo_id = uuid.uuid4().hex[:24]
+        storage_provider.upload(dummy_dict, config_path, job_id=mongo_id)
 
         # let us first test the we can upload a dummy job
         job_payload = {
@@ -159,7 +204,6 @@ class MongodbProviderTest(TestCase):
                 "wire_order": "sequential",
             },
         }
-        backend_name = "dummy" + uuid.uuid4().hex[:5]
         username = "dummy_user"
 
         job_id = storage_provider.upload_job(
@@ -185,7 +229,7 @@ class MongodbProviderTest(TestCase):
 
         # test that we can get a job result
         # first upload a dummy result
-        dummy_result = {"result": "dummy"}
+        dummy_result = {"results": "dummy"}
         result_json_dir = "results/" + backend_name
         storage_provider.upload(dummy_result, result_json_dir, job_id)
 
@@ -196,7 +240,7 @@ class MongodbProviderTest(TestCase):
             job_id=job_id,
         )
         self.assertFalse("_id" in result.keys())
-        self.assertEqual(dummy_result["result"], result["result"])
+        self.assertEqual(dummy_result["results"], result["results"])
 
         # remove the obsolete job from the storage
         job_dir = "jobs/queued/" + backend_name
@@ -222,6 +266,9 @@ class MongodbProviderTest(TestCase):
         database = storage_provider.client["results"]
         collection = database[backend_name]
         collection.drop()
+
+        # remove the obsolete config from the storage
+        storage_provider.delete_file(config_path, mongo_id)
 
     def test_backend_name(self):
         """
