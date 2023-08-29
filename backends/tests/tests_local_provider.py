@@ -356,5 +356,4 @@ class BackendsWithMultipleLocalProvidersTest(TestCase):
 
         # now get the backend config
         config_dict = storage_provider.get_backend_dict(display_name="fermions")
-        print(config_dict)
         assert config_dict["backend_name"] == "local1_fermions_simulator"
