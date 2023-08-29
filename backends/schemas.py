@@ -3,9 +3,25 @@ The schemas that define our communication with the api.
 """
 
 
-from typing import List
+from typing import List, Optional, TypedDict
 from ninja import ModelSchema, Schema
 from .models import Backend
+
+
+class ResultDict(TypedDict):
+    """
+    A class that defines the structure of results.
+    """
+
+    display_name: str
+    backend_name: str
+    backend_version: str
+    job_id: str
+    qobj_id: Optional[str]
+    success: bool
+    status: str
+    header: dict
+    results: list
 
 
 # pylint: disable=R0903

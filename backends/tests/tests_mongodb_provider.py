@@ -185,7 +185,7 @@ class MongodbProviderTest(TestCase):
 
         # test that we can get a job result
         # first upload a dummy result
-        dummy_result = {"result": "dummy"}
+        dummy_result = {"results": "dummy"}
         result_json_dir = "results/" + backend_name
         storage_provider.upload(dummy_result, result_json_dir, job_id)
 
@@ -196,7 +196,7 @@ class MongodbProviderTest(TestCase):
             job_id=job_id,
         )
         self.assertFalse("_id" in result.keys())
-        self.assertEqual(dummy_result["result"], result["result"])
+        self.assertEqual(dummy_result["results"], result["results"])
 
         # remove the obsolete job from the storage
         job_dir = "jobs/queued/" + backend_name

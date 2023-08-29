@@ -4,7 +4,7 @@ storage for the jobs.
 """
 from abc import ABC, abstractmethod
 import sys
-from typing import List
+from typing import List, cast
 import json
 
 # necessary for the local provider
@@ -26,6 +26,7 @@ from bson.objectid import ObjectId
 # get the environment variables
 from decouple import config
 from pydantic import BaseModel
+from .schemas import ResultDict
 
 # At some point we might start to split up the file
 # pylint: disable=C0302
@@ -124,7 +125,7 @@ class StorageProvider(ABC):
         """
 
     @abstractmethod
-    def get_result(self, display_name: str, username: str, job_id: str) -> dict:
+    def get_result(self, display_name: str, username: str, job_id: str) -> ResultDict:
         """
         This function gets the result file from the backend and returns the result dict.
 
@@ -442,7 +443,7 @@ class DropboxProvider(StorageProvider):
         )
         return status_dict
 
-    def get_result(self, display_name: str, username: str, job_id: str) -> dict:
+    def get_result(self, display_name: str, username: str, job_id: str) -> ResultDict:
         """
         This function gets the result file from the backend and returns the result dict.
 
@@ -459,7 +460,11 @@ class DropboxProvider(StorageProvider):
         result_dict = self.get_file_content(
             storage_path=result_json_dir, job_id=result_json_name
         )
-        return result_dict
+        backend_config_dict = self.get_backend_dict(display_name, "v2")
+        result_dict["backend_name"] = backend_config_dict["backend_name"]
+
+        typed_result = cast(ResultDict, result_dict)
+        return typed_result
 
 
 class MongodbLoginInformation(BaseModel):
@@ -711,7 +716,7 @@ class MongodbProvider(StorageProvider):
         status_dict = self.get_file_content(storage_path=status_json_dir, job_id=job_id)
         return status_dict
 
-    def get_result(self, display_name: str, username: str, job_id: str) -> dict:
+    def get_result(self, display_name: str, username: str, job_id: str) -> ResultDict:
         """
         This function gets the result file from the backend and returns the result dict.
 
@@ -725,7 +730,11 @@ class MongodbProvider(StorageProvider):
         """
         result_json_dir = "results/" + display_name
         result_dict = self.get_file_content(storage_path=result_json_dir, job_id=job_id)
-        return result_dict
+        backend_config_dict = self.get_backend_dict(display_name, "v2")
+        result_dict["backend_name"] = backend_config_dict["backend_name"]
+
+        typed_result = cast(ResultDict, result_dict)
+        return typed_result
 
 
 class LocalLoginInformation(BaseModel):
@@ -952,7 +961,7 @@ class LocalProvider(StorageProvider):
         status_dict = self.get_file_content(storage_path=status_json_dir, job_id=job_id)
         return status_dict
 
-    def get_result(self, display_name: str, username: str, job_id: str) -> dict:
+    def get_result(self, display_name: str, username: str, job_id: str) -> ResultDict:
         """
         This function gets the result file from the backend and returns the result dict.
 
@@ -966,7 +975,11 @@ class LocalProvider(StorageProvider):
         """
         result_json_dir = "results/" + display_name
         result_dict = self.get_file_content(storage_path=result_json_dir, job_id=job_id)
-        return result_dict
+        backend_config_dict = self.get_backend_dict(display_name, "v2")
+        result_dict["backend_name"] = backend_config_dict["backend_name"]
+
+        typed_result = cast(ResultDict, result_dict)
+        return typed_result
 
 
 def get_storage_provider(backend_name: str) -> StorageProvider:
