@@ -9,7 +9,7 @@ django-ninja==0.22.1
 dnspython==2.3.0
 dropbox==11.36.2
 gunicorn==20.1.0
-pydantic==1.8.2
+pydantic==2.4.2
 pathspec==0.11.1
 pyrsistent==0.17.3
 pytz==2023.3
