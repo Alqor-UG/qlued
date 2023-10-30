@@ -61,6 +61,8 @@ def devices(request):
 
     # now loop through them and obtain the backends
     for storage_provider_entry in storage_provider_entries:
+        if not storage_provider_entry.is_active:
+            continue
         try:
             storage_provider = get_storage_provider_from_entry(storage_provider_entry)
 
