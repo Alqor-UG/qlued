@@ -52,6 +52,7 @@ class MongodbProviderTest(TestCase):
             owner=self.user,
             description="MongoDB storage provider for tests",
             login=login_dict,
+            is_active=True,
         )
         mongodb_entry.full_clean()
         mongodb_entry.save()
@@ -99,6 +100,29 @@ class MongodbProviderTest(TestCase):
         }
         with self.assertRaises(ValidationError):
             MongodbProvider(poor_login_dict, mongodb_entry.name)
+
+    def test_not_active(self):
+        """
+        Test that we cannot work with the provider if it is not active.
+        """
+        entry = StorageProviderDb.objects.get(name="mongodbtest")
+        entry.is_active = False
+        storage_provider = MongodbProvider(entry.login, entry.name, entry.is_active)
+
+        # make sure that we cannot upload if it is not active
+        test_content = {"experiment_0": "Nothing happened here."}
+        storage_path = "test/subcollection"
+
+        job_id = uuid.uuid4().hex[:24]
+        second_path = "test/subcollection_2"
+        with self.assertRaises(ValueError):
+            storage_provider.upload(test_content, storage_path, job_id)
+        with self.assertRaises(ValueError):
+            storage_provider.get_file_content(storage_path, job_id)
+        with self.assertRaises(ValueError):
+            storage_provider.move_file(storage_path, second_path, job_id)
+        with self.assertRaises(ValueError):
+            storage_provider.delete_file(second_path, job_id)
 
     def test_upload_etc(self):
         """

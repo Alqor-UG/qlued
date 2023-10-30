@@ -4,6 +4,7 @@ storage for the jobs.
 """
 from abc import ABC, abstractmethod
 import sys
+import functools
 from typing import List, cast
 import json
 
@@ -32,18 +33,37 @@ from .schemas import ResultDict
 # pylint: disable=C0302
 
 
+def validate_active(func):
+    """
+    Decorator to check if the storage provider is active.
+    """
+
+    @functools.wraps(func)
+    def wrapper(self, *args, **kwargs):
+        if not self.is_active:
+            raise ValueError("The storage provider is not active.")
+        return func(self, *args, **kwargs)
+
+    return wrapper
+
+
 class StorageProvider(ABC):
     """
     The template for accessing any storage providers like dropbox, amazon S3 etc.
     """
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, is_active: bool = True) -> None:
         """
         Any storage provide must have a name that is not empty.
+
+        Args:
+            name: The name of the storage provider
+            is_active: Is the storage provider active.
         """
         if not name:
             raise ValueError("The name of the storage provider cannot be empty.")
         self.name = name
+        self.is_active = is_active
 
     @abstractmethod
     def upload(self, content_dict: dict, storage_path: str, job_id: str) -> None:
@@ -197,23 +217,25 @@ class DropboxProvider(StorageProvider):
     <https://blogs.dropbox.com/developers/2014/05/generate-an-access-token-for-your-own-account/>
     """
 
-    def __init__(self, login_dict: dict, name: str) -> None:
+    def __init__(self, login_dict: dict, name: str, is_active: bool = True) -> None:
         """
         Set up the neccessary keys.
 
         Args:
             login_dict: The dictionary that contains the login information
             name: The name of the storage provider
+            is_active: Is the storage provider active.
 
         Raises:
             ValidationError: If the login_dict does not contain the correct keys
         """
         DropboxLoginInformation(**login_dict)
-        super().__init__(name)
+        super().__init__(name, is_active)
         self.app_key = login_dict["app_key"]
         self.app_secret = login_dict["app_secret"]
         self.refresh_token = login_dict["refresh_token"]
 
+    @validate_active
     def upload(self, content_dict: dict, storage_path: str, job_id: str) -> None:
         """
         Upload the content_dict as a json file to the dropbox
@@ -244,6 +266,7 @@ class DropboxProvider(StorageProvider):
                 dump_str.encode("utf-8"), full_path, mode=WriteMode("overwrite")
             )
 
+    @validate_active
     def get_file_content(self, storage_path: str, job_id: str) -> dict:
         """
         Get the file content from the dropbox
@@ -271,6 +294,7 @@ class DropboxProvider(StorageProvider):
             data = res.content
         return json.loads(data.decode("utf-8"))
 
+    @validate_active
     def move_file(self, start_path: str, final_path: str, job_id: str) -> None:
         """
         Move the file from start_path to final_path
@@ -302,6 +326,7 @@ class DropboxProvider(StorageProvider):
             full_final_path = "/" + final_path + "/" + job_id + ".json"
             dbx.files_move_v2(full_start_path, full_final_path)
 
+    @validate_active
     def delete_file(self, storage_path: str, job_id: str) -> None:
         """
         Remove the file from the dropbox
@@ -325,6 +350,7 @@ class DropboxProvider(StorageProvider):
             full_path = "/" + storage_path + "/" + job_id + ".json"
             _ = dbx.files_delete(path=full_path)
 
+    @validate_active
     def get_backends(self) -> List[str]:
         """
         Get a list of all the backends that the provider offers.
@@ -482,7 +508,7 @@ class MongodbProvider(StorageProvider):
     The access to the mongodb
     """
 
-    def __init__(self, login_dict: dict, name: str) -> None:
+    def __init__(self, login_dict: dict, name: str, is_active: bool = True) -> None:
         """
         Set up the neccessary keys and create the client through which all the connections will run.
 
@@ -490,6 +516,7 @@ class MongodbProvider(StorageProvider):
             login_dict: The login dict that contains the neccessary
                         information to connect to the mongodb
             name: The name of the storage provider
+            is_active: Is the storage provider active.
 
 
         Raises:
@@ -497,7 +524,7 @@ class MongodbProvider(StorageProvider):
         """
         MongodbLoginInformation(**login_dict)
 
-        super().__init__(name)
+        super().__init__(name, is_active)
         mongodb_username = login_dict["mongodb_username"]
         mongodb_password = login_dict["mongodb_password"]
         mongodb_database_url = login_dict["mongodb_database_url"]
@@ -510,6 +537,7 @@ class MongodbProvider(StorageProvider):
         # Send a ping to confirm a successful connection
         self.client.admin.command("ping")
 
+    @validate_active
     def upload(self, content_dict: dict, storage_path: str, job_id: str) -> None:
         """
         Upload the file to the storage
@@ -533,6 +561,7 @@ class MongodbProvider(StorageProvider):
         # remove the id from the content dict for further use
         content_dict.pop("_id", None)
 
+    @validate_active
     def get_file_content(self, storage_path: str, job_id: str) -> dict:
         """
         Get the file content from the storage
@@ -558,6 +587,7 @@ class MongodbProvider(StorageProvider):
         result_found.pop("_id", None)
         return result_found
 
+    @validate_active
     def move_file(self, start_path: str, final_path: str, job_id: str) -> None:
         """
         Move the file from start_path to final_path
@@ -588,6 +618,7 @@ class MongodbProvider(StorageProvider):
         collection = database[collection_name]
         collection.insert_one(result_found)
 
+    @validate_active
     def delete_file(self, storage_path: str, job_id: str) -> None:
         """
         Remove the file from the mongodb database
@@ -609,6 +640,7 @@ class MongodbProvider(StorageProvider):
         document_to_find = {"_id": ObjectId(job_id)}
         collection.delete_one(document_to_find)
 
+    @validate_active
     def get_backends(self) -> List[str]:
         """
         Get a list of all the backends that the provider offers.
@@ -623,6 +655,7 @@ class MongodbProvider(StorageProvider):
             backend_names.append(config_dict["display_name"])
         return backend_names
 
+    @validate_active
     def get_backend_dict(self, display_name: str, version: str = "v2") -> dict:
         """
         The configuration dictionary of the backend such that it can be sent out to the API to
@@ -752,7 +785,7 @@ class LocalProvider(StorageProvider):
     Create a file storage that works on the local machine.
     """
 
-    def __init__(self, login_dict: dict, name: str) -> None:
+    def __init__(self, login_dict: dict, name: str, is_active: bool = True) -> None:
         """
         Set up the neccessary keys and create the client through which all the connections will run.
 
@@ -760,14 +793,16 @@ class LocalProvider(StorageProvider):
             login_dict: The login dict that contains the neccessary
                         information to connect to the local storage
             name: The name of the storage provider
+            is_active: Is the storage provider active.
 
         Raises:
             ValidationError: If the login_dict is not valid
         """
         LocalLoginInformation(**login_dict)
-        super().__init__(name)
+        super().__init__(name, is_active)
         self.base_path = login_dict["base_path"]
 
+    @validate_active
     def upload(self, content_dict: dict, storage_path: str, job_id: str) -> None:
         """
         Upload the file to the storage
@@ -791,6 +826,7 @@ class LocalProvider(StorageProvider):
         with open(full_json_path, "w", encoding="utf-8") as json_file:
             json.dump(content_dict, json_file)
 
+    @validate_active
     def get_file_content(self, storage_path: str, job_id: str) -> dict:
         """
         Get the file content from the storage
@@ -809,6 +845,7 @@ class LocalProvider(StorageProvider):
             loaded_data_dict = json.load(json_file)
         return loaded_data_dict
 
+    @validate_active
     def move_file(self, start_path: str, final_path: str, job_id: str) -> None:
         """
         Move the file from start_path to final_path
@@ -831,6 +868,7 @@ class LocalProvider(StorageProvider):
         # Move the file
         shutil.move(source_file, final_path)
 
+    @validate_active
     def delete_file(self, storage_path: str, job_id: str) -> None:
         """
         Remove the file from the mongodb database
@@ -846,6 +884,7 @@ class LocalProvider(StorageProvider):
         source_file = self.base_path + "/" + storage_path + "/" + job_id + ".json"
         os.remove(source_file)
 
+    @validate_active
     def get_backends(self) -> List[str]:
         """
         Get a list of all the backends that the provider offers.
@@ -870,6 +909,7 @@ class LocalProvider(StorageProvider):
                 backend_names.append(config_dict["display_name"])
         return backend_names
 
+    @validate_active
     def get_backend_dict(self, display_name: str, version: str = "v2") -> dict:
         """
         The configuration dictionary of the backend such that it can be sent out to the API to
@@ -1027,6 +1067,11 @@ def get_storage_provider_from_entry(
     """
 
     # pylint: disable=R1705
+    # test if the storage provider is actually active or not
+    if not storage_provider_entry.is_active:
+        raise ValueError("The storage provider is not active.")
+
+    # find the appropriate storage provider
     if storage_provider_entry.storage_type == "mongodb":
         return MongodbProvider(
             storage_provider_entry.login, storage_provider_entry.name

@@ -296,6 +296,8 @@ def list_backends(request):
 
     # now loop through them and obtain the backends
     for storage_provider_entry in storage_provider_entries:
+        if not storage_provider_entry.is_active:
+            continue
         storage_provider = get_storage_provider_from_entry(storage_provider_entry)
 
         backend_names = storage_provider.get_backends()

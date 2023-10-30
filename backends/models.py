@@ -65,7 +65,7 @@ class StorageProviderDb(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
     # is the storage provider active.
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     # the owner of the storage provider.
     owner = models.ForeignKey(
