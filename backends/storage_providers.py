@@ -5,7 +5,7 @@ storage for the jobs.
 from abc import ABC, abstractmethod
 import sys
 import functools
-from typing import List, cast
+from typing import List, cast, Callable
 import json
 
 # necessary for the local provider
@@ -33,7 +33,7 @@ from .schemas import ResultDict
 # pylint: disable=C0302
 
 
-def validate_active(func):
+def validate_active(func: Callable) -> Callable:
     """
     Decorator to check if the storage provider is active.
     """
