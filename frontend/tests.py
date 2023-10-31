@@ -161,6 +161,7 @@ class AddStorageProviderTest(TestCase):
             "name": "test",
             "description": "test",
             "login": json.dumps(login_dict),
+            "is_active": True,
         }
         r = self.client.post(url, data)
         self.assertEqual(r.status_code, 302)
@@ -172,12 +173,14 @@ class AddStorageProviderTest(TestCase):
             "name": "test",
             "description": "another test",
             "login": json.dumps(login_dict),
+            "is_active": False,
         }
         url = reverse("edit_storage_provider", args=[dropbox_entry.pk])
         r = self.client.post(url, data)
         self.assertEqual(r.status_code, 302)
         dropbox_entry = StorageProviderDb.objects.get(name="test")
         self.assertEqual(dropbox_entry.description, "another test")
+        self.assertEqual(dropbox_entry.is_active, False)
 
     def test_delete_storage_provider(self):
         """

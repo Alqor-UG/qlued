@@ -114,9 +114,6 @@ def profile(request):
 
     # we also need to find all the StorageProviderDb entries that belong to the user
     storage_provider_entries = StorageProviderDb.objects.filter(owner=current_user)
-    print(storage_provider_entries)
-    for storage_provider_entry in storage_provider_entries:
-        print(storage_provider_entry.name)
     template = loader.get_template("frontend/user.html")
     context = {
         "token_key": token.key,
@@ -190,6 +187,7 @@ def add_storage_provider(request):
             storage_provider = StorageProviderDb(
                 storage_type=storage_type,
                 name=name,
+                is_active=True,
                 owner=owner,
                 description=description,
                 login=json.loads(login_string),
@@ -229,6 +227,16 @@ def edit_storage_provider(request, storage_id):
             storage_provider.name = request.POST["name"]
             storage_provider.description = request.POST["description"]
             storage_provider.login = json.loads(request.POST["login"])
+
+            # get the is_active field
+            # this is really ugly but I don't know how to do it better
+            active_value = request.POST.get("is_active", False)
+            if not active_value:
+                storage_provider.is_active = False
+            else:
+                storage_provider.is_active = request.POST["is_active"] == "on"
+
+            # now clean the storage provider and save it
             storage_provider.full_clean()
             storage_provider.save()
             return HttpResponseRedirect(reverse("profile"))
@@ -248,6 +256,7 @@ def edit_storage_provider(request, storage_id):
                 "name": storage_provider.name,
                 "description": storage_provider.description,
                 "login": storage_provider.login,
+                "is_active": storage_provider.is_active,
             }
         )
     return render(
