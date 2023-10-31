@@ -43,6 +43,7 @@ class StorageProviderDb(models.Model):
     Args:
         storage_type: The type of storage provider.
         name: The name of the storage provider. Has to be unique.
+        is_active: Is the storage provider active.
         owner: Which user owns this storage provider.
         description: An optional description of the storage provider.
         login: The login information for the storage provider.
@@ -62,6 +63,9 @@ class StorageProviderDb(models.Model):
 
     # the name of the storage provider. Has to be unique.
     name = models.CharField(max_length=50, unique=True)
+
+    # is the storage provider active.
+    is_active = models.BooleanField(default=True)
 
     # the owner of the storage provider.
     owner = models.ForeignKey(

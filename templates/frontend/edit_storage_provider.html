@@ -29,6 +29,15 @@
                 {% endfor %}
             </ul>
         {% endif %}
+        <p><label for="{{ form.is_active.id_for_label }}" title="Is the storage active">Is active:</label>
+        {{ form.is_active }}</p>
+        {% if form.is_active.errors %}
+            <ul>
+                {% for error in form.is_active.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
         <p><label for="{{ form.description.id_for_label }}" title="The description of the storage">Description:</label>
         {{ form.description }}</p>
         {% if form.description.errors %}
