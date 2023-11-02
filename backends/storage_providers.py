@@ -103,6 +103,18 @@ class StorageProvider(ABC):
         """
 
     @abstractmethod
+    def get_backend_status(self, display_name: str) -> dict:
+        """
+        Get the status of the backend. This follows the qiskit logic.
+
+        Args:
+            display_name: The name of the backend
+
+        Returns:
+            The status dict of the backend
+        """
+
+    @abstractmethod
     def upload_job(self, job_dict: dict, display_name: str, username: str) -> str:
         """
         Upload the job to the storage provider.
@@ -199,6 +211,41 @@ class StorageProvider(ABC):
         base_url = config("BASE_URL")
         backend_config_dict["url"] = base_url + f"/api/{version}/" + backend_name + "/"
         return backend_config_dict
+
+    def backend_dict_to_qiskit_status(self, backend_dict: dict) -> dict:
+        """
+        This function transforms the dictionary that is safed in the storage provider
+        into a qiskit backend status dictionnary.
+
+        Args:
+            backend_config_dict: The dictionary that contains the configuration of the backend
+
+        Returns:
+            The qiskit backend dictionary
+        """
+        backend_status_dict = {
+            "backend_name": "",
+            "backend_version": "",
+            "operational": True,
+            "pending_jobs": 0,
+            "status_msg": "",
+        }
+
+        display_name = backend_dict["display_name"]
+
+        # if the name is already in the dict, we should set the backend_name to the name
+        # otherwise we calculate it.
+        if backend_dict["simulator"]:
+            backend_name = f"{self.name}_{display_name}_simulator"
+        else:
+            backend_name = f"{self.name}_{display_name}_hardware"
+
+        backend_status_dict["backend_name"] = backend_name
+        backend_status_dict["backend_version"] = backend_dict["version"]
+
+        # now I also need to obtain the operational status from the backend.
+        # would be nice to attempt to get the pending jobs too, if possible easily.
+        return backend_status_dict
 
 
 class DropboxLoginInformation(BaseModel):
@@ -681,6 +728,33 @@ class MongodbProvider(StorageProvider):
 
         backend_config_dict.pop("_id")
         qiskit_backend_dict = self.backend_dict_to_qiskit(backend_config_dict, version)
+        return qiskit_backend_dict
+
+    @validate_active
+    def get_backend_status(self, display_name: str, version: str = "v2") -> dict:
+        """
+        Get the status of the backend. This follows the qiskit logic. And implements
+        a dict that is similiar to `qiskit.providers.models.BackendStatus`
+
+        Args:
+            display_name: The name of the backend
+
+        Returns:
+            The status dict of the backend
+        """
+        # get the database on which we work
+        database = self.client["backends"]
+        config_collection = database["configs"]
+
+        # create the filter for the document with display_name that is equal to display_name
+        document_to_find = {"display_name": display_name}
+        backend_config_dict = config_collection.find_one(document_to_find)
+
+        if not backend_config_dict:
+            return {}
+
+        backend_config_dict.pop("_id")
+        qiskit_backend_dict = self.backend_dict_to_qiskit_status(backend_config_dict)
         return qiskit_backend_dict
 
     def upload_job(self, job_dict: dict, display_name: str, username: str) -> str:

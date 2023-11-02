@@ -11,6 +11,7 @@ from dropbox.exceptions import ApiError, AuthError
 
 from .schemas import (
     BackendSchemaOut,
+    BackendStatusSchemaOut,
     JobSchemaWithTokenIn,
     JobResponseSchema,
 )
@@ -32,11 +33,15 @@ api = NinjaAPI(version="2.0.0")
 )
 def get_config(request, backend_name: str):
     """
-    Returns the list of backends.
+    Returns the configuration of the backend. This is an API implementation of the class
+    `qiskit.providers.models.BackendConfiguration`
 
     Args:
         request: The request object.
         backend_name: The name of the backend.
+
+    Returns:
+        The configuration of the backend.
 
     Raises:
         404: If the backend is not found.
@@ -58,6 +63,46 @@ def get_config(request, backend_name: str):
 
     storage_provider = get_storage_provider(backend_name)
     return storage_provider.get_backend_dict(short_backend, version="v2")
+
+
+@api.get(
+    "{backend_name}/get_backend_status",
+    response={200: BackendStatusSchemaOut, codes_4xx: JobResponseSchema},
+    tags=["Backend"],
+    url_name="get_backend_status",
+)
+def get_backend_status(request, backend_name: str):
+    """
+    Returns the status of the backend. This is an API implementation of the class
+    `qiskit.providers.models.BackendStatus`
+
+    Args:
+        request: The request object.
+        backend_name: The name of the backend.
+
+    Returns:
+        The status of the backend.
+
+    Raises:
+        404: If the backend is not found.
+    """
+    # pylint: disable=W0613
+
+    # we have to split the name into several parts by `_`. If there is only one part, then we
+    # assume that the user has given the short name of the backend. If there are more parts, then
+    # we assume that the user has given the full name of the backend.
+    short_backend = get_short_backend_name(backend_name)
+    if not short_backend:
+        job_response_dict = {
+            "job_id": "None",
+            "status": "ERROR",
+            "detail": "Unknown back-end! The string should have 1 or three parts separated by `_`!",
+            "error_message": "Unknown back-end!",
+        }
+        return 404, job_response_dict
+
+    storage_provider = get_storage_provider(backend_name)
+    return storage_provider.get_backend_status(short_backend)
 
 
 @api.post(

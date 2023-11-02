@@ -47,6 +47,19 @@ class JobSchemaWithTokenIn(Schema):
     token: str
 
 
+class BackendStatusSchemaOut(Schema):
+    """
+    The schema for the status of a backend. Follows the conventions of the
+    `qiskit.providers.models.BackendStatus`.
+    """
+
+    backend_name: str
+    backend_version: str
+    operational: bool
+    pending_jobs: int
+    status_msg: str
+
+
 class JobResponseSchema(Schema):
     """
     The schema for any job response.
