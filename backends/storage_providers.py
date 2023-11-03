@@ -244,7 +244,9 @@ class StorageProvider(ABC):
         backend_status_dict["backend_version"] = backend_dict["version"]
 
         # now I also need to obtain the operational status from the backend.
+        backend_status_dict["operational"] = backend_dict.get("operational", True)
         # would be nice to attempt to get the pending jobs too, if possible easily.
+        backend_status_dict["pending_jobs"] = backend_dict.get("pending_jobs", 0)
         return backend_status_dict
 
 
@@ -436,6 +438,23 @@ class DropboxProvider(StorageProvider):
             storage_path=backend_json_path, job_id="config"
         )
         qiskit_backend_dict = self.backend_dict_to_qiskit(backend_config_dict)
+        return qiskit_backend_dict
+
+    def get_backend_status(self, display_name: str) -> dict:
+        """
+        Get the status of the backend. This follows the qiskit logic.
+
+        Args:
+            display_name: The name of the backend
+
+        Returns:
+            The status dict of the backend
+        """
+        backend_json_path = f"Backend_files/Config/{display_name}"
+        backend_config_dict = self.get_file_content(
+            storage_path=backend_json_path, job_id="config"
+        )
+        qiskit_backend_dict = self.backend_dict_to_qiskit_status(backend_config_dict)
         return qiskit_backend_dict
 
     def upload_job(self, job_dict: dict, display_name: str, username: str) -> str:
@@ -730,11 +749,9 @@ class MongodbProvider(StorageProvider):
         qiskit_backend_dict = self.backend_dict_to_qiskit(backend_config_dict, version)
         return qiskit_backend_dict
 
-    @validate_active
-    def get_backend_status(self, display_name: str, version: str = "v2") -> dict:
+    def get_backend_status(self, display_name: str) -> dict:
         """
-        Get the status of the backend. This follows the qiskit logic. And implements
-        a dict that is similiar to `qiskit.providers.models.BackendStatus`
+        Get the status of the backend. This follows the qiskit logic.
 
         Args:
             display_name: The name of the backend
@@ -1007,6 +1024,29 @@ class LocalProvider(StorageProvider):
             return {}
 
         qiskit_backend_dict = self.backend_dict_to_qiskit(backend_config_dict)
+        return qiskit_backend_dict
+
+    def get_backend_status(self, display_name: str) -> dict:
+        """
+        Get the status of the backend. This follows the qiskit logic.
+
+        Args:
+            display_name: The name of the backend
+
+        Returns:
+            The status dict of the backend
+        """
+        # path of the configs
+        config_path = self.base_path + "/backends/configs"
+
+        full_json_path = config_path + "/" + display_name + ".json"
+        with open(full_json_path, "r", encoding="utf-8") as json_file:
+            backend_config_dict = json.load(json_file)
+
+        if not backend_config_dict:
+            return {}
+
+        qiskit_backend_dict = self.backend_dict_to_qiskit_status(backend_config_dict)
         return qiskit_backend_dict
 
     def upload_job(self, job_dict: dict, display_name: str, username: str) -> str:
