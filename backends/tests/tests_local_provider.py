@@ -165,6 +165,91 @@ class LocalProviderTest(TestCase):
         )
         storage_provider.delete_file(config_path, backend_name)
 
+    def test_status(self):
+        """
+        Test that we are able to obtain the status of the backend.
+        """
+        # create a mongodb object
+        mongodb_entry = StorageProviderDb.objects.get(name="localtest")
+        storage_provider = LocalProvider(mongodb_entry.login, mongodb_entry.name)
+
+        # create a dummy config
+        dummy_id = uuid.uuid4().hex[:5]
+        dummy_dict: dict = {}
+        dummy_dict["gates"] = []
+        dummy_dict["name"] = "Dummy"
+        dummy_dict["num_wires"] = 3
+        dummy_dict["version"] = "0.0.1"
+
+        # create the necessary status entries
+        dummy_dict["operational"] = True
+        dummy_dict["pending_jobs"] = 7
+        dummy_dict["status_msg"] = "All good"
+
+        backend_name = f"dummy{dummy_id}"
+        dummy_dict["display_name"] = backend_name
+        dummy_dict["simulator"] = True
+
+        config_path = "backends/configs"
+        storage_provider.upload(dummy_dict, config_path, job_id=backend_name)
+
+        # can we get the backend in the list ?
+        backends = storage_provider.get_backends()
+        self.assertTrue(f"dummy{dummy_id}" in backends)
+
+        # can we get the status of the backend ?
+        status_dict = storage_provider.get_backend_status(backend_name)
+        self.assertEqual(
+            status_dict["backend_name"],
+            f"localtest_{dummy_dict['display_name']}_simulator",
+        )
+        self.assertEqual(status_dict["operational"], dummy_dict["operational"])
+        self.assertEqual(status_dict["backend_version"], dummy_dict["version"])
+        self.assertEqual(status_dict["pending_jobs"], dummy_dict["pending_jobs"])
+        self.assertEqual(status_dict["status_msg"], dummy_dict["status_msg"])
+
+        storage_provider.delete_file(config_path, backend_name)
+
+    def test_status_bare(self):
+        """
+        Test status if the backend is not well updated yet.
+        """
+        # create a mongodb object
+        mongodb_entry = StorageProviderDb.objects.get(name="localtest")
+        storage_provider = LocalProvider(mongodb_entry.login, mongodb_entry.name)
+
+        # create a dummy config
+        dummy_id = uuid.uuid4().hex[:5]
+        dummy_dict: dict = {}
+        dummy_dict["gates"] = []
+        dummy_dict["name"] = "Dummy"
+        dummy_dict["num_wires"] = 3
+        dummy_dict["version"] = "0.0.1"
+
+        backend_name = f"dummy{dummy_id}"
+        dummy_dict["display_name"] = backend_name
+        dummy_dict["simulator"] = True
+
+        config_path = "backends/configs"
+        storage_provider.upload(dummy_dict, config_path, job_id=backend_name)
+
+        # can we get the backend in the list ?
+        backends = storage_provider.get_backends()
+        self.assertTrue(f"dummy{dummy_id}" in backends)
+
+        # can we get the status of the backend ?
+        status_dict = storage_provider.get_backend_status(backend_name)
+        self.assertEqual(
+            status_dict["backend_name"],
+            f"localtest_{dummy_dict['display_name']}_simulator",
+        )
+        self.assertEqual(status_dict["operational"], True)
+        self.assertEqual(status_dict["backend_version"], dummy_dict["version"])
+        self.assertEqual(status_dict["pending_jobs"], 0)
+        self.assertEqual(status_dict["status_msg"], "")
+
+        storage_provider.delete_file(config_path, backend_name)
+
     def test_jobs(self):
         """
         Test that we can handle the necessary functions for the jobs and status.

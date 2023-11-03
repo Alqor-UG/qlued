@@ -247,6 +247,8 @@ class StorageProvider(ABC):
         backend_status_dict["operational"] = backend_dict.get("operational", True)
         # would be nice to attempt to get the pending jobs too, if possible easily.
         backend_status_dict["pending_jobs"] = backend_dict.get("pending_jobs", 0)
+
+        backend_status_dict["status_msg"] = backend_dict.get("status_msg", "")
         return backend_status_dict
 
 
