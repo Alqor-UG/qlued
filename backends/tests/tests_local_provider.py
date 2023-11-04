@@ -198,11 +198,13 @@ class LocalProviderTest(TestCase):
         self.assertTrue(f"dummy{dummy_id}" in backends)
 
         # can we get the status of the backend ?
-        status_dict = storage_provider.get_backend_status(backend_name)
+        status_schema = storage_provider.get_backend_status(backend_name)
+        status_dict = status_schema.dict()
         self.assertEqual(
             status_dict["backend_name"],
             f"localtest_{dummy_dict['display_name']}_simulator",
         )
+
         self.assertEqual(status_dict["operational"], dummy_dict["operational"])
         self.assertEqual(status_dict["backend_version"], dummy_dict["version"])
         self.assertEqual(status_dict["pending_jobs"], dummy_dict["pending_jobs"])
@@ -238,7 +240,8 @@ class LocalProviderTest(TestCase):
         self.assertTrue(f"dummy{dummy_id}" in backends)
 
         # can we get the status of the backend ?
-        status_dict = storage_provider.get_backend_status(backend_name)
+        status_schema = storage_provider.get_backend_status(backend_name)
+        status_dict = status_schema.dict()
         self.assertEqual(
             status_dict["backend_name"],
             f"localtest_{dummy_dict['display_name']}_simulator",

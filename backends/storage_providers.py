@@ -27,7 +27,7 @@ from bson.objectid import ObjectId
 # get the environment variables
 from decouple import config
 from pydantic import BaseModel
-from .schemas import ResultDict
+from .schemas import ResultDict, BackendStatusSchemaOut
 
 # At some point we might start to split up the file
 # pylint: disable=C0302
@@ -103,7 +103,7 @@ class StorageProvider(ABC):
         """
 
     @abstractmethod
-    def get_backend_status(self, display_name: str) -> dict:
+    def get_backend_status(self, display_name: str) -> BackendStatusSchemaOut:
         """
         Get the status of the backend. This follows the qiskit logic.
 
@@ -212,7 +212,9 @@ class StorageProvider(ABC):
         backend_config_dict["url"] = base_url + f"/api/{version}/" + backend_name + "/"
         return backend_config_dict
 
-    def backend_dict_to_qiskit_status(self, backend_dict: dict) -> dict:
+    def backend_dict_to_qiskit_status(
+        self, backend_dict: dict
+    ) -> BackendStatusSchemaOut:
         """
         This function transforms the dictionary that is safed in the storage provider
         into a qiskit backend status dictionnary.
@@ -249,7 +251,7 @@ class StorageProvider(ABC):
         backend_status_dict["pending_jobs"] = backend_dict.get("pending_jobs", 0)
 
         backend_status_dict["status_msg"] = backend_dict.get("status_msg", "")
-        return backend_status_dict
+        return BackendStatusSchemaOut(**backend_status_dict)
 
 
 class DropboxLoginInformation(BaseModel):
@@ -442,7 +444,7 @@ class DropboxProvider(StorageProvider):
         qiskit_backend_dict = self.backend_dict_to_qiskit(backend_config_dict)
         return qiskit_backend_dict
 
-    def get_backend_status(self, display_name: str) -> dict:
+    def get_backend_status(self, display_name: str) -> BackendStatusSchemaOut:
         """
         Get the status of the backend. This follows the qiskit logic.
 
@@ -751,7 +753,7 @@ class MongodbProvider(StorageProvider):
         qiskit_backend_dict = self.backend_dict_to_qiskit(backend_config_dict, version)
         return qiskit_backend_dict
 
-    def get_backend_status(self, display_name: str) -> dict:
+    def get_backend_status(self, display_name: str) -> BackendStatusSchemaOut:
         """
         Get the status of the backend. This follows the qiskit logic.
 
@@ -760,6 +762,9 @@ class MongodbProvider(StorageProvider):
 
         Returns:
             The status dict of the backend
+
+        Raises:
+            FileNotFoundError: If the backend does not exist
         """
         # get the database on which we work
         database = self.client["backends"]
@@ -770,7 +775,9 @@ class MongodbProvider(StorageProvider):
         backend_config_dict = config_collection.find_one(document_to_find)
 
         if not backend_config_dict:
-            return {}
+            raise FileNotFoundError(
+                f"The backend {display_name} does not exist for the given storageprovider."
+            )
 
         backend_config_dict.pop("_id")
         qiskit_backend_dict = self.backend_dict_to_qiskit_status(backend_config_dict)
@@ -1028,7 +1035,7 @@ class LocalProvider(StorageProvider):
         qiskit_backend_dict = self.backend_dict_to_qiskit(backend_config_dict)
         return qiskit_backend_dict
 
-    def get_backend_status(self, display_name: str) -> dict:
+    def get_backend_status(self, display_name: str) -> BackendStatusSchemaOut:
         """
         Get the status of the backend. This follows the qiskit logic.
 
@@ -1037,6 +1044,9 @@ class LocalProvider(StorageProvider):
 
         Returns:
             The status dict of the backend
+
+        Raises:
+            FileNotFoundError: If the backend does not exist
         """
         # path of the configs
         config_path = self.base_path + "/backends/configs"
@@ -1046,7 +1056,9 @@ class LocalProvider(StorageProvider):
             backend_config_dict = json.load(json_file)
 
         if not backend_config_dict:
-            return {}
+            raise FileNotFoundError(
+                f"The backend {display_name} does not exist for the given storageprovider."
+            )
 
         qiskit_backend_dict = self.backend_dict_to_qiskit_status(backend_config_dict)
         return qiskit_backend_dict
