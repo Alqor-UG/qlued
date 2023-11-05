@@ -1,0 +1,866 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../contributing/">
+      
+      
+        <link rel="next" href="../user_guide/">
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.5">
+    
+    
+      
+        <title>General description - Qlued</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7a7fce14.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.a0c5b2b5.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#general-description" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Qlued" class="md-header__button md-logo" aria-label="Qlued" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Qlued
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              General description
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/alqor-ug/qlued" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Qlued" class="md-nav__button md-logo" aria-label="Qlued" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Qlued
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/alqor-ug/qlued" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        Contributing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          Guides
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          General description
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        General description
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-big-picture" class="md-nav__link">
+    The big picture
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-use-case" class="md-nav__link">
+    A use case
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-client" class="md-nav__link">
+    The client
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-server" class="md-nav__link">
+    The server
+  </a>
+  
+    <nav class="md-nav" aria-label="The server">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-django-app-qlued" class="md-nav__link">
+    The Django app (qlued)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-api" class="md-nav__link">
+    The API
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-storage" class="md-nav__link">
+    The storage
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-backends" class="md-nav__link">
+    The backends
+  </a>
+  
+    <nav class="md-nav" aria-label="The backends">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-simulator-backend" class="md-nav__link">
+    The simulator backend
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-experiment-backend" class="md-nav__link">
+    The experiment backend
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_guide/" class="md-nav__link">
+        User Guide
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../heroku/" class="md-nav__link">
+        Deployment via heroku
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../local_installation/" class="md-nav__link">
+        Deploy your own instance
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage_providers/" class="md-nav__link">
+        Storage providers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../local_testing/" class="md-nav__link">
+        Testing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../oauth/" class="md-nav__link">
+        Third-party sign on
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          Tutorials
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Tutorials
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/rydberg_qiskit_dynamics/" class="md-nav__link">
+        Running the system through qiskit-cold-atom
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/rydberg_api_showcase_v2/" class="md-nav__link">
+        Rydberg back-end workflow demonstration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../notebooks/fermions_api_showcase_v2/" class="md-nav__link">
+        Fermion back-end workflow demonstration
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-big-picture" class="md-nav__link">
+    The big picture
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-use-case" class="md-nav__link">
+    A use case
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-client" class="md-nav__link">
+    The client
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-server" class="md-nav__link">
+    The server
+  </a>
+  
+    <nav class="md-nav" aria-label="The server">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-django-app-qlued" class="md-nav__link">
+    The Django app (qlued)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-api" class="md-nav__link">
+    The API
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-storage" class="md-nav__link">
+    The storage
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-backends" class="md-nav__link">
+    The backends
+  </a>
+  
+    <nav class="md-nav" aria-label="The backends">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-simulator-backend" class="md-nav__link">
+    The simulator backend
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-experiment-backend" class="md-nav__link">
+    The experiment backend
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="general-description">General description</h1>
+<h2 id="the-big-picture">The big picture</h2>
+<p>The idea for developing <a href="https://github.com/synqs/qlue" title="qlue">qlued</a> stems from the desire for unifying experiment execution on different platforms for quantum simulation/computation. These platforms can be based on different technologies (e.g. neutral atoms, ions, superconducting qubits, photonic systems etc.) and have different software for experiment control.</p>
+<p>In this diversity there is a unifying feature for different experiments, they essentially act as a backend for executing some instructions. On adopting this picture we quickly realise that we become totally agnostic to the details of how the instructions are executed on a hardware if we can provide a general higher level description of the experiments. A very suitable high-level description for experiments on different platforms is to think of these experiments as quantum circuits. In this picture any experiment essentially has three steps : state preparation, unitary evolution under a given Hamiltonian and measurement. Infact we are not just limited to experiments anymore and can even include theoretical simulator backends which execute the quantum circuits on a computer.</p>
+<p>For providing software support for a given backend to use the language of quantum circuits, two types of libraries are required : one which allows to write quantum circuits for the experiments using some kind of quantum circuit framework and a second one for parsing the quantum circuits into a format which can be run on the experiment. For the first one, there already exists quantum circuit frameworks like <a href="https://github.com/Qiskit" title="Qiskit">Qiskit</a>, <a href="https://github.com/PennyLaneAI" title="Pennylane">Pennylane</a> etc. which provide a comprehensive support for writing quantum circuits. For the second one, custom code has to be written which will depend on the details of the particular backend.</p>
+<p>Another important point is that we assume that the user who writes the quantum circuits does not necessarily have local access to experiments. So the user submits quantum circuits to the backend remotely over the internet. We use the word job for the submissions by the remote user. Therefore, we also need a service which can act as the central point for various remote users to submit their jobs or fetch the result/status of their previously submitted jobs. For security reasons this service should provide robust user management and authentication.</p>
+<p>To address the issue we have developed a web interface called <a href="https://github.com/synqs/qlue" title="qlue">qlued</a> which allows remote users to submit their jobs to remote cold atom backends. This architecture has several advantages :</p>
+<ul>
+<li>The same circuit can be executed on different backends.</li>
+<li>Makes collaboration between researchers easier.</li>
+<li>A nice tool for teaching.</li>
+</ul>
+<h2 id="a-use-case">A use case</h2>
+<p>We want to use our quantum computing backends as platforms for executing experiments written as quantum circuits. These backends can be a real cold atom machine or a simulator running on a computer . But how will the backend understand a quantum circuit? For e.g. in our experiment we use the <a href="https://github.com/labscript-suite" title="labscript">labscript suite</a> to control all hardware and for data analysis. We need to tackle the following issues:</p>
+<ul>
+<li>Labscript suite does not have native support for writing quantum circuits.</li>
+<li>We want to allow remote users to be able to submit jobs to our backends. So we need a server architecture and user management.</li>
+</ul>
+<p>The above issues can also exist for a simulator package. Hence the need for <a href="https://github.com/synqs/qlue" title="qlue">this project</a>. There are two sides : <a href="#the-client">client</a> and <a href="#the-server">server</a>.</p>
+<h2 id="the-client">The client</h2>
+<p>A client is a remote user who will write quantum circuits in the user's favorite quantum circuit framework (<a href="https://github.com/Qiskit" title="Qiskit">Qiskit</a>, <a href="https://github.com/PennyLaneAI" title="Pennylane">Pennylane</a>, ...). These circuits then have to be compiled into JSON files. The JSON files can be sent over the internet to a remote server which will queue it for parsing/execution on the backend. The backend can be a real cold atom machine or a simulator running on a computer. To get credentials, user has to create an account at a qlued instance like <a href="https://qlued.alqor.io/">qlued.alqor.io</a>.</p>
+<p>We have decided on a schema for the JSON files. See <a href="https://github.com/eggerdj/backends/" title="Qiskit_json">1</a>  for more details. The document mentions in detail how things should be formatted. We also provide extensive tutorials that work without the SDKs <a href="../../notebooks/rydberg_api_showcase_v2">here</a>.</p>
+<p>The plugin for compiling Qiskit circuits to JSON files is available at <a href="https://github.com/Qiskit-Extensions/qiskit-cold-atom"><code>qiskit-cold-atom</code></a>. Similarly the plugin for compiling a pennylane circuit into JSON is available at <a href="https://github.com/synqs/pennylane-ls" title="penny_json"><code>pennylane-ls</code></a>. Note that the pennylane plugin at <a href="https://github.com/synqs/pennylane-ls" title="penny_json"><code>pennylane-ls</code></a> already offers several backends. Each backend is a device with its own operations.</p>
+<p>That's all that is required on the client side. Basically choose one of these frameworks. If the client wants to use a different quantum circuit framework, then the client must write appropriate code for compiling quantum circuits of that framework into JSON files which follow the schema of <a href="https://github.com/eggerdj/backends/" title="Qiskit_json">1</a>.</p>
+<h2 id="the-server">The server</h2>
+<p>Here we describe 3 parts:</p>
+<ul>
+<li>The Django app (<code>qlued</code>).</li>
+<li>The storage.</li>
+<li>The backends.</li>
+</ul>
+<p><img alt="" src="../arch.png" /></p>
+<h3 id="the-django-app-qlued">The Django app (qlued)</h3>
+<p>The <a href="https://www.heroku.com/home" title="Heroku">Heroku</a> platform hosts our <a href="https://github.com/django" title="Django">Django</a> app. Django is a Python-based free and open-source web framework. It uses the Model-View-Template architecture:</p>
+<ul>
+<li>Model : Build databases from classes with the help of Object Relational Mapper (ORM).</li>
+<li>View : Function executed whenever a particular URL receives an HTTP request. For every URL there is a corresponding view function.</li>
+<li>Template : HTML/CSS code for inserting web elements in a HTML document.</li>
+</ul>
+<p>Note that <a href="https://github.com/django" title="Django">Django</a> is just a framework to design web-apps. Its not a server by itself. After writing a webapp it has to be hosted on a server. Although, Django also comes with a built-in server but this is meant only for local testing and development. In production environment one must use a proper server like <a href="https://httpd.apache.org/" title="Apache">Apache web server</a>, <a href="https://gunicorn.org/" title="Gunicorn">Gunicorn</a>, <a href="https://github.com/Pylons/waitress" title="Waitress">waitress</a> etc. to host the webapp. For e.g. our Django app is hosted on a <a href="https://gunicorn.org/" title="Gunicorn">Gunicorn</a> server on the <a href="https://www.heroku.com/home" title="Heroku">Heroku</a> platform.</p>
+<p>Another point is that although we have a Django webapp running on our server, it is functionally equivalent to a REST API. REST API is a popular architecture of communicating with remote servers. <a href="https://github.com/encode/django-rest-framework" title="DRF">Django Rest Framework</a> is widely used for writing such REST APIs. However, here we choose to work with <a href="https://django-ninja.rest-framework.com/">django-ninja</a> for the sake of simplicity and speed.</p>
+<p>Before describing the server in detail, lets mention that for the client, communicating with the server essentially boils down to sending correct HTTP request to the correct URL. Then on the server side Django will execute the view function corresponding to that URL. The structure of a general URL looks like :</p>
+<p><code>server_domain/requested_backend/appropriate_view_name</code></p>
+<p>So for example if the <code>server_domain=https://qlued.alqor.io/api/v2</code>, and we want to use <code>post_job</code> view for the <code>fermions</code> backend i.e.  <code>requested_backend=fermions</code> and <code>appropriate_view_name=post_job</code>. The complete URL will look like :</p>
+<p><code>https://qlued.alqor.io/api/v2/fermions/post_job/</code></p>
+<h3 id="the-api">The API</h3>
+<p>A automatically generated documentation of the API can be found <a href="https://qlued.alqor.io/api/v2/docs">here</a>. Here, we explain different view functions and their purpose in slightly more detail:</p>
+<ul>
+<li><strong>The <code>get_config</code> view</strong> : This function returns a JSON dictionary containing the backend capabilities and details. At the moment this is relevant only for the Qiskit plugin as the pennylane plugin does not make use of it.</li>
+<li><strong>The <code>post_job</code> view</strong> : This function extracts the JSON dictionary describing a potential experiment from a HTTP request. The extracted job_JSON is dumped onto <strong>Dropbox</strong> for further processing. It then responds with another JSON dictionary which has a <code>job_id</code> key. This job_id is important to query the server for results of the experiment later on. A typical JSON response from the server has the following schema:
+<code>{'job_id': 'something','status': 'something','detail': 'something'}</code></li>
+<li><strong>The <code>get_job_status</code> view</strong> : This function extracts the job_id of a previously submitted job from a HTTP request. It responds with a JSON dictionary describing the status.</li>
+<li><strong>The <code>get_job_result</code> view</strong> : This function extracts the job_id of a previously submitted job from a HTTP request. If the job has not finished running and results are unavailable, it responds with a JSON dictionary describing the status. Otherwise it responds with a JSON dictionary describing the result. The formatting of the result dictionary is described in <a href="https://github.com/eggerdj/backends/" title="Qiskit_json">1</a>.</li>
+</ul>
+<p>We will frequently use the term status dictionary and result dictionary. These are just text files which host the appropriate JSON data. These files are stored on the Dropbox like job_JSON. When a view reads these text files, it coverts the data in them to a python dictionary and sends it to the client or modifies the dictionary further before saving it back to the text file.</p>
+<p>Since we use MongoDB or Dropbox to store JSONs, the view functions call functions written in a file called <code>storage_providers.py</code> which in turn calls  API functions for reading and writing. Note that we currently provide storage with MongoDB by default or Dropbox. However, it can be <strong>replaced</strong> with any other storage service (like Amazon S3, Microsoft azure storage, Google cloud storage etc.) which allows a user to read and write content using a python API. For this one would need to implement four basic functions for accessing the cloud storage provider. The details of these four functions are given in <code>storage_providers.py</code> with an example implementation for Dropbox. A new storage service can have its own class inheriting from the base class (just like the Dropbox class) and override the base functions.</p>
+<h2 id="the-storage">The storage</h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Beware, we have recently updated the default storage to mongoDb. The following description is outdated. However, the main idea is still the same. We will update the description soon.</p>
+</div>
+<p>This completes the execution of the job and the results are now available.</p>
+<h2 id="the-backends">The backends</h2>
+<p>The backend can be a real cold atom machine or a simulator running on a computer. In summary, the backend runs a spooler which is responsible for executing job_JSONs and updating status_JSONs and result_JSONs. However different backends have different Spoolers. The Spoolers of different simulator backends have similar structure. The experiment backends have slightly different implementation of spoolers. This is because simulators and real machine operate in different conditions. We first describe the simulator backend and then the experiment one.</p>
+<h4 id="the-simulator-backend">The simulator backend</h4>
+<p>This is just a PC running spooler(s). It is typically based on any kind of implementation like the <code>sqooler</code>package. For more information see <a href="https://alqor-ug.github.io/sqooler/">here</a>.</p>
+<h4 id="the-experiment-backend">The experiment backend</h4>
+<p>A first draft for implementing the experiment backends is highlighted <a href="https://github.com/synqs/labscript-qc" title="labscript-qc">here</a>. The code was tested to perform MOT loading in a cold atom machine in Heidelberg by submitting circuits from Zurich. Although we still need to polish this part of the code, it already highlights important ideas on how to connect a real cold atom machine to <a href="https://github.com/synqs/qlue" title="qlue">qlue</a>.</p>
+
+
+
+
+
+
+
+  <h2 id="__comments">Comments</h2>
+  <script src="https://giscus.app/client.js"
+        data-repo="alqor-ug/qlued"
+        data-repo-id="R_kgDOIpXsjg"
+        data-category="Website Discussions"
+        data-category-id="DIC_kwDOIpXsjs4CV4Et"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="en"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
+
+  <!-- Synchronize Giscus theme with palette -->
+  <script>
+    var giscus = document.querySelector("script[src*=giscus]")
+
+    /* Set palette on initial load */
+    var palette = __md_get("__palette")
+    if (palette && typeof palette.color === "object") {
+      var theme = palette.color.scheme === "slate" ? "dark" : "light"
+      giscus.setAttribute("data-theme", theme) 
+
+
+    }
+
+    /* Register event handlers after documented loaded */
+    document.addEventListener("DOMContentLoaded", function() {
+      var ref = document.querySelector("[data-md-component=palette]")
+      ref.addEventListener("change", function() {
+        var palette = __md_get("__palette")
+        if (palette && typeof palette.color === "object") {
+          var theme = palette.color.scheme === "slate" ? "dark" : "light"
+
+          /* Instruct Giscus to change theme */
+          var frame = document.querySelector(".giscus-frame")
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme } } },
+            "https://giscus.app"
+          )
+        }
+      })
+    })
+  </script>
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../contributing/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Contributing" rel="prev">
+            <div class="md-footer__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Contributing
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../user_guide/" class="md-footer__link md-footer__link--next" aria-label="Next: User Guide" rel="next">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                User Guide
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.footer", "toc.follow"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.407015b8.min.js"></script>
+      
+    
+  </body>
+</html>
