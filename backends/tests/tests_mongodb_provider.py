@@ -187,6 +187,51 @@ class MongodbProviderTest(TestCase):
         )
         storage_provider.delete_file(config_path, mongo_id)
 
+    def test_status(self):
+        """
+        Test that we are able to obtain the status of the backend.
+        """
+        # create a mongodb object
+        mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
+        storage_provider = MongodbProvider(mongodb_entry.login, mongodb_entry.name)
+
+        # create a dummy config
+        dummy_id = uuid.uuid4().hex[:5]
+        dummy_dict: dict = {}
+        dummy_dict["gates"] = []
+        dummy_dict["name"] = "Dummy"
+        dummy_dict["num_wires"] = 3
+        dummy_dict["version"] = "0.0.1"
+        dummy_dict["simulator"] = True
+        backend_name = f"dummy{dummy_id}"
+        dummy_dict["display_name"] = backend_name
+
+        # create the necessary status entries
+        dummy_dict["operational"] = True
+        dummy_dict["pending_jobs"] = 7
+        dummy_dict["status_msg"] = "All good"
+
+        config_path = "backends/configs"
+        mongo_id = uuid.uuid4().hex[:24]
+        storage_provider.upload(dummy_dict, config_path, job_id=mongo_id)
+
+        # can we get the backend in the list ?
+        backends = storage_provider.get_backends()
+        self.assertTrue(f"dummy{dummy_id}" in backends)
+
+        # can we get the status of the backend ?
+        status_schema = storage_provider.get_backend_status(backend_name)
+        status_dict = status_schema.dict()
+        self.assertEqual(
+            status_dict["backend_name"],
+            f"mongodbtest_{dummy_dict['display_name']}_simulator",
+        )
+        self.assertEqual(status_dict["operational"], dummy_dict["operational"])
+        self.assertEqual(status_dict["backend_version"], dummy_dict["version"])
+        self.assertEqual(status_dict["pending_jobs"], dummy_dict["pending_jobs"])
+        self.assertEqual(status_dict["status_msg"], dummy_dict["status_msg"])
+        storage_provider.delete_file(config_path, mongo_id)
+
     def test_jobs(self):
         """
         Test that we can handle the necessary functions for the jobs and status.

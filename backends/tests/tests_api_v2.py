@@ -100,6 +100,33 @@ class BackendConfigTest(TestCase):
         self.assertEqual(data["backend_name"], "alqor_singlequdit_simulator")
         self.assertEqual(data["display_name"], "singlequdit")
 
+    def test_get_backend_status(self):
+        """
+        Test the API that presents the status of the backend
+        """
+        url = reverse_lazy(
+            "api-2.0.0:get_backend_status",
+            kwargs={"backend_name": "alqor_fermions_simulator"},
+        )
+        req = self.client.get(url)
+        data = json.loads(req.content)
+        self.assertEqual(req.status_code, 200)
+
+        # get the name
+        self.assertEqual(data["backend_name"], "alqor_fermions_simulator")
+
+        # get the version
+        self.assertEqual(data["backend_version"], "0.0.1")
+
+        # get the operational status
+        self.assertEqual(data["operational"], True)
+
+        # get the pending jobs
+        self.assertEqual(data["pending_jobs"], 0)
+
+        # get the status message
+        self.assertEqual(data["status_msg"], "")
+
     def test_get_backends_ninja(self):
         """
         Test that we are able to obtain the config of all the backends.
