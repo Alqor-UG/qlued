@@ -33,7 +33,7 @@ mypy==1.4.1
 packaging==22.0
 pathspec==0.11.2
 pydantic==1.8.2
-pylint==2.17.7
+pylint==3.0.2
 pylint-django==2.5.3
 platformdirs==3.5.1
 pymongo==4.3.3
