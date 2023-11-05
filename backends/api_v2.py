@@ -101,7 +101,16 @@ def get_backend_status(request, backend_name: str):
         }
         return 404, job_response_dict
 
-    storage_provider = get_storage_provider(backend_name)
+    try:
+        storage_provider = get_storage_provider(backend_name)
+    except FileNotFoundError:
+        job_response_dict = {
+            "job_id": "None",
+            "status": "ERROR",
+            "detail": "Unknown back-end! The string should have 1 or three parts separated by `_`!",
+            "error_message": "Unknown back-end!",
+        }
+        return 404, job_response_dict
     return storage_provider.get_backend_status(short_backend)
 
 

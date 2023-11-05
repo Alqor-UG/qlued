@@ -253,6 +253,10 @@ class LocalProviderTest(TestCase):
 
         storage_provider.delete_file(config_path, backend_name)
 
+        # and make sure that we raise an error if the backend is not there
+        with self.assertRaises(FileNotFoundError):
+            status_schema = storage_provider.get_backend_status(backend_name)
+
     def test_jobs(self):
         """
         Test that we can handle the necessary functions for the jobs and status.

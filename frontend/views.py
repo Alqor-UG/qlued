@@ -73,6 +73,9 @@ def devices(request):
                     config_dict = storage_provider.get_backend_dict(
                         backend, version="v2"
                     )
+                    # set the operational key to true if is not defined by the backend
+                    if not "operational" in config_dict:
+                        config_dict["operational"] = True
                     backend_list.append(config_dict)
         except ValidationError:
             # we ignore the entry if it is not valid
