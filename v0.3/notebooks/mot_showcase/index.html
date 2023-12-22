@@ -9,13 +9,15 @@
       
       
       
+        <link rel="prev" href="../fermions_api_showcase_v2/">
+      
       
       <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.5">
     
     
       
-        <title>Django shot requests external user - Qlued</title>
+        <title>Mot back-end demonstration - Qlued</title>
       
     
     
@@ -63,7 +65,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#get-config" class="md-skip">
+        <a href="#mot-back-end-demonstration" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +104,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Django shot requests external user
+              Mot back-end demonstration
             
           </span>
         </div>
@@ -342,16 +344,16 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-        
-      
-      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
       
       
       
@@ -360,7 +362,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
         <label class="md-nav__title" for="__nav_4">
           <span class="md-nav__icon md-icon"></span>
           Tutorials
@@ -413,11 +415,73 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../mot_showcase/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Mot back-end demonstration
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Mot back-end demonstration
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#optional-preparation-for-local-deployment" class="md-nav__link">
+    Optional: Preparation for local deployment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get-the-configuration" class="md-nav__link">
+    Get the configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#load-gate" class="md-nav__link">
+    Load gate
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    Conclusion
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -446,6 +510,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -454,50 +520,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#get-config" class="md-nav__link">
-    Get config
+  <a href="#optional-preparation-for-local-deployment" class="md-nav__link">
+    Optional: Preparation for local deployment
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#submit-jobs" class="md-nav__link">
-    Submit jobs
+  <a href="#get-the-configuration" class="md-nav__link">
+    Get the configuration
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#get-job-status" class="md-nav__link">
-    Get job status
+  <a href="#load-gate" class="md-nav__link">
+    Load gate
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#get-job-results" class="md-nav__link">
-    Get job results
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#get-user-jobs-for-this-backend" class="md-nav__link">
-    Get user jobs for this backend
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#get-next-job-in-queue" class="md-nav__link">
-    Get next job in queue
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#change-password" class="md-nav__link">
-    Change password
+  <a href="#conclusion" class="md-nav__link">
+    Conclusion
   </a>
   
 </li>
@@ -519,8 +564,6 @@
   
   
 
-
-  <h1>Django shot requests external user</h1>
 
 <script>
 (function (global, factory) {
@@ -1542,7 +1585,54 @@ Licensed under the Apache License, Version 2.0.
     }
     init_mathjax();
     </script>
-<!-- End of mathjax configuration --><div class="jupyter-wrapper"><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<!-- End of mathjax configuration --><div class="jupyter-wrapper">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h1 id="mot-back-end-demonstration">Mot back-end demonstration<a class="anchor-link" href="#mot-back-end-demonstration">¶</a></h1><p>In this notebook we demonstrate the most basic of all cold atoms systems a MOT and most helpful for tests of basic functionalities of new devices. It is a cloud of atoms that is cooled down to a few micro Kelvin. The atoms are trapped in a magneto-optical trap (MOT) and can be used for further experiments. The MOT is the starting point for many experiments in cold atoms physics. In this notebook we will demonstrate how to use the MOT backend of the qlued platform. It allows us to demonstrate the basic functionality of the platform and the two gates that are always required <code>load</code> and <code>measure</code>.</p>
+<p>The communication with the backend happens through the four url</p>
+<ol>
+<li>'.../api/v2/alqor_mot_simulator/get_config/'</li>
+<li>'.../api/v2/alqor_mot_simulator/post_job/'</li>
+<li>'.../api/v2/alqor_mot_simulator/get_job_status/'</li>
+<li>'.../api/v2/alqor_mot_simulator/get_job_result/'</li>
+</ol>
+<p>An interactive documentation can be also found directly online under the <a href="https://qlued.alqor.io/api/v2/docs">docs</a>.</p>
+<p>You can use this tutorial in two ways. For testing of local deployments of <code>qlued</code> or the <a href="https://qlued.alqor.io">hosted version</a> provided by Alqor.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="optional-preparation-for-local-deployment">Optional: Preparation for local deployment<a class="anchor-link" href="#optional-preparation-for-local-deployment">¶</a></h2><p>Some first things that you have to do:</p>
+<ul>
+<li>Apply any migrations to your local server <code>python manage.py migrate</code></li>
+<li>Start the server in a tab as <code>python manage.py runserver</code></li>
+<li>You created an account and saved this in the local <code>credentials.py</code> file</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="get-the-configuration">Get the configuration<a class="anchor-link" href="#get-the-configuration">¶</a></h2><p>In a first step, we will try to see what are the available backends and what are the capabilities. This can be done through the json API endpoint <code>get_config</code> for the <code>alqor_mot_simulator</code> backend.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -1561,26 +1651,15 @@ Licensed under the Apache License, Version 2.0.
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">from</span> <span class="nn">decouple</span> <span class="kn">import</span> <span class="n">config</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1">import json
-import requests
-from decouple import config</div>
+<div class="clipboard-copy-txt" id="cell-1">import requests
+import json
+from pprint import pprint</div>
 </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="get-config">Get config<a class="anchor-link" href="#get-config">¶</a></h2>
 </div>
 </div>
 </div>
@@ -1603,22 +1682,16 @@ from decouple import config</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">username</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"USERNAME_TEST"</span><span class="p">)</span>
-<span class="n">password</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s2">"PASSWORD_TEST"</span><span class="p">)</span>
-<span class="n">server_domain</span> <span class="o">=</span> <span class="s2">"http://coquma-sim.herokuapp.com/api/"</span>
-<span class="n">requested_backend</span> <span class="o">=</span> <span class="s2">"fermions"</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">credentials_v2</span> <span class="kn">import</span> <span class="n">username</span><span class="p">,</span> <span class="n">token</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2">username = config("USERNAME_TEST")
-password = config("PASSWORD_TEST")
-server_domain = "http://coquma-sim.herokuapp.com/api/"
-requested_backend = "fermions"</div>
+<div class="clipboard-copy-txt" id="cell-2">from credentials_v2 import username, token</div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1636,50 +1709,28 @@ requested_backend = "fermions"</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="n">server_domain</span> <span class="o">+</span> <span class="n">requested_backend</span> <span class="o">+</span> <span class="s2">"/get_config/"</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">host_url</span> <span class="o">=</span> <span class="s2">"https://qlued.alqor.io/"</span>
+<span class="n">device_name</span> <span class="o">=</span> <span class="s2">"alqor_mot_simulator"</span>
 
-<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">"username"</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s2">"password"</span><span class="p">:</span> <span class="n">password</span><span class="p">})</span>
+<span class="c1">#host_url = "http://localhost:8000/"</span>
+<span class="c1">#device_name = "localtest_mot_simulator"</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-<span class="c1"># print(r.content)</span>
+<span class="n">url_prefix</span> <span class="o">=</span> <span class="n">host_url</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">"api/v2/</span><span class="si">{</span><span class="n">device_name</span><span class="si">}</span><span class="s2">/"</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3">url = server_domain + requested_backend + "/get_config/"
+<div class="clipboard-copy-txt" id="cell-3">host_url = "https://qlued.alqor.io/"
+device_name = "alqor_mot_simulator"
 
-r = requests.get(url, params={"username": username, "password": password})
+#host_url = "http://localhost:8000/"
+#device_name = "localtest_mot_simulator"
 
-print(r.text)
-# print(r.content)</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>{"conditional": false, "coupling_map": "linear", "dynamic_reprate_enabled": false, "local": false, "memory": true, "open_pulse": false, "display_name": "fermions", "description": "simulator of a fermionic tweezer hardware. The even wires denote the occupations of the spin-up fermions and the odd wires denote the spin-down fermions", "backend_version": "0.0.1", "cold_atom_type": "fermion", "simulator": true, "num_species": 1, "max_shots": 1000000, "max_experiments": 1000, "n_qubits": 1, "supported_instructions": ["load", "measure", "barrier", "fhop", "fint", "fphase"], "wire_order": "interleaved", "backend_name": "synqs_fermions_simulator", "gates": [{"name": "fhop", "qasm_def": "{}", "parameters": ["j_i"], "description": "hopping of atoms to neighboring tweezers", "coupling_map": [[0, 1, 2, 3], [2, 3, 4, 5], [4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 6, 7]]}, {"name": "fint", "qasm_def": "{}", "parameters": ["u"], "description": "on-site interaction of atoms of opposite spin state", "coupling_map": [[0, 1, 2, 3, 4, 5, 6, 7]]}, {"name": "fphase", "qasm_def": "{}", "parameters": ["mu_i"], "description": "Applying a local phase to tweezers through an external potential", "coupling_map": [[0, 1], [2, 3], [4, 5], [6, 7], [0, 1, 2, 3, 4, 5, 6, 7]]}], "basis_gates": ["fhop", "fint", "fphase"], "url": "https://coquma-sim.herokuapp.com/api/fermions/"}
-</pre>
+url_prefix = host_url + f"api/v2/{device_name}/"</div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="submit-jobs">Submit jobs<a class="anchor-link" href="#submit-jobs">¶</a></h2>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1697,97 +1748,79 @@ print(r.text)
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">job_payload</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"experiment_0"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">"instructions"</span><span class="p">:</span> <span class="p">[</span>
-            <span class="p">(</span><span class="s2">"load"</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"load"</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"load"</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"fhop"</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]),</span>
-            <span class="p">(</span><span class="s2">"fint"</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">]),</span>
-            <span class="p">(</span><span class="s2">"fphase"</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">]),</span>
-            <span class="p">(</span><span class="s2">"measure"</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"measure"</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"measure"</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"measure"</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"measure"</span><span class="p">,</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"measure"</span><span class="p">,</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"measure"</span><span class="p">,</span> <span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"measure"</span><span class="p">,</span> <span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="p">[]),</span>
-        <span class="p">],</span>
-        <span class="s2">"num_wires"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">"shots"</span><span class="p">:</span> <span class="mi">10</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>
-        <span class="s2">"wire_order"</span><span class="p">:</span> <span class="s2">"interleaved"</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">"experiment_1"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">"instructions"</span><span class="p">:</span> <span class="p">[</span>
-            <span class="p">(</span><span class="s2">"load"</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"load"</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"load"</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"fhop"</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]),</span>
-            <span class="p">(</span><span class="s2">"fint"</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">]),</span>
-            <span class="p">(</span><span class="s2">"fphase"</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">]),</span>
-            <span class="p">(</span><span class="s2">"measure"</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"measure"</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"measure"</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"measure"</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"measure"</span><span class="p">,</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"measure"</span><span class="p">,</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"measure"</span><span class="p">,</span> <span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="p">[]),</span>
-            <span class="p">(</span><span class="s2">"measure"</span><span class="p">,</span> <span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="p">[]),</span>
-        <span class="p">],</span>
-        <span class="s2">"num_wires"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">"shots"</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>
-        <span class="s2">"wire_order"</span><span class="p">:</span> <span class="s2">"interleaved"</span><span class="p">,</span>
-    <span class="p">},</span>
-<span class="p">}</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="n">url_prefix</span> <span class="o">+</span> <span class="s2">"get_config"</span>
+<span class="n">pprint</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">"username"</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s2">"token"</span><span class="p">:</span> <span class="n">token</span><span class="p">})</span>
+<span class="n">r_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<span class="n">pprint</span><span class="p">(</span><span class="n">r_dict</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4">job_payload = {
-    "experiment_0": {
-        "instructions": [
-            ("load", [0], []),
-            ("load", [1], []),
-            ("load", [2], []),
-            ("fhop", [0, 1, 2, 3], [1.0]),
-            ("fint", [0, 1, 2, 3, 4, 5, 6, 7], [2.0]),
-            ("fphase", [0, 2], [2.0]),
-            ("measure", [0], []),
-            ("measure", [1], []),
-            ("measure", [2], []),
-            ("measure", [3], []),
-            ("measure", [4], []),
-            ("measure", [5], []),
-            ("measure", [6], []),
-            ("measure", [7], []),
-        ],
-        "num_wires": 1,
-        "shots": 10**2,
-        "wire_order": "interleaved",
-    },
-    "experiment_1": {
-        "instructions": [
-            ("load", [0], []),
-            ("load", [1], []),
-            ("load", [2], []),
-            ("fhop", [0, 1, 2, 3], [1.0]),
-            ("fint", [0, 1, 2, 3, 4, 5, 6, 7], [2.0]),
-            ("fphase", [0, 2], [2.0]),
-            ("measure", [0], []),
-            ("measure", [1], []),
-            ("measure", [2], []),
-            ("measure", [3], []),
-            ("measure", [4], []),
-            ("measure", [5], []),
-            ("measure", [6], []),
-            ("measure", [7], []),
-        ],
-        "num_wires": 1,
-        "shots": 600,
-        "wire_order": "interleaved",
-    },
-}</div>
+<div class="clipboard-copy-txt" id="cell-4">url = url_prefix + "get_config"
+pprint(url)
+r = requests.get(url, params={"username": username, "token": token})
+r_dict = json.loads(r.text)
+pprint(r_dict)</div>
 </div>
 </div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>'https://qlued.alqor.io/api/v2/alqor_mot_simulator/get_config'
+{'backend_name': 'alqor_mot_simulator',
+ 'backend_version': '0.1',
+ 'basis_gates': [],
+ 'cold_atom_type': 'spin',
+ 'conditional': False,
+ 'coupling_map': 'linear',
+ 'description': 'Setup of an atomic mot.',
+ 'display_name': 'mot',
+ 'dynamic_reprate_enabled': False,
+ 'gates': [],
+ 'local': False,
+ 'max_experiments': 1000,
+ 'max_shots': 1000000,
+ 'memory': True,
+ 'n_qubits': 1,
+ 'num_species': 1,
+ 'open_pulse': False,
+ 'simulator': True,
+ 'supported_instructions': ['barrier', 'measure', 'load'],
+ 'url': 'https://qlued.alqor.io/api/v2/alqor_mot_simulator/',
+ 'wire_order': 'interleaved'}
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>The above json gives us all the necessary information. The system has one wire, in other words one MOT. For this wire we have implemented the following instructions:</p>
+<ul>
+<li><code>load</code> which adds a Fermion to the wire.</li>
+<li><code>measure</code> which reads out the occupation.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="load-gate">Load gate<a class="anchor-link" href="#load-gate">¶</a></h2><p>It is now time to try a simple sequence, where we load the MOT.</p>
 </div>
 </div>
 </div>
@@ -1810,173 +1843,29 @@ print(r.text)
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># job_payload = {</span>
-<span class="c1">#     'experiment_0': {'instructions': [('load', [0], [100]), ('load', [1], [20]), ('measure', [0], [])], 'num_wires': 4, 'shots': 5},</span>
-<span class="c1">#     'experiment_1': {'instructions': [('rLx', [0], [0.1]), ('rLx', [3], [0.3]), ('measure', [0], [])], 'num_wires': 4, 'shots': 5},</span>
-<span class="c1">#     'experiment_2': {'instructions': [('rLz', [0], [0.15]), ('rLz', [3], [0.2]), ('measure', [0], [])], 'num_wires': 4, 'shots': 5},</span>
-<span class="c1">#     'experiment_3': {'instructions': [('rLz2', [0], [3.141592653589793]), ('measure', [0], [])], 'num_wires': 4, 'shots': 5},</span>
-<span class="c1">#     'experiment_4': {'instructions': [('load', [0], [10]), ('LzLz', [0, 1], [0.1]), ('measure', [0], [])], 'num_wires': 4, 'shots': 5},</span>
-<span class="c1">#     'experiment_5': {'instructions': [('load', [0], [10]), ('LxLy', [0, 1], [0.1]), ('measure', [0], [])], 'num_wires': 4, 'shots': 5},</span>
-<span class="c1"># }</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">job_payload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"experiment_0"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"instructions"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">(</span><span class="s2">"load"</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">20</span><span class="p">]),</span>
+            <span class="p">(</span><span class="s2">"measure"</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[]),</span>
+        <span class="p">],</span>
+        <span class="s2">"num_wires"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">"shots"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">"wire_order"</span><span class="p">:</span> <span class="s2">"interleaved"</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5"># job_payload = {
-#     'experiment_0': {'instructions': [('load', [0], [100]), ('load', [1], [20]), ('measure', [0], [])], 'num_wires': 4, 'shots': 5},
-#     'experiment_1': {'instructions': [('rLx', [0], [0.1]), ('rLx', [3], [0.3]), ('measure', [0], [])], 'num_wires': 4, 'shots': 5},
-#     'experiment_2': {'instructions': [('rLz', [0], [0.15]), ('rLz', [3], [0.2]), ('measure', [0], [])], 'num_wires': 4, 'shots': 5},
-#     'experiment_3': {'instructions': [('rLz2', [0], [3.141592653589793]), ('measure', [0], [])], 'num_wires': 4, 'shots': 5},
-#     'experiment_4': {'instructions': [('load', [0], [10]), ('LzLz', [0, 1], [0.1]), ('measure', [0], [])], 'num_wires': 4, 'shots': 5},
-#     'experiment_5': {'instructions': [('load', [0], [10]), ('LxLy', [0, 1], [0.1]), ('measure', [0], [])], 'num_wires': 4, 'shots': 5},
-# }</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy for="cell-6">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># job_payload = {</span>
-<span class="c1">#     'experiment_0': {</span>
-<span class="c1">#         'instructions': [</span>
-<span class="c1">#             ('load', [0], [50]),</span>
-<span class="c1">#             ('rLx', [0], [1.5707963267948966]),</span>
-<span class="c1">#             ('rLx', [0], [1.5707963267948966]),</span>
-<span class="c1">#             ('rLz', [0], [3.141592653589793]),</span>
-<span class="c1">#             ('measure', [0], [])</span>
-<span class="c1">#             ],</span>
-<span class="c1">#             'num_wires': 1,</span>
-<span class="c1">#             'shots': 500},</span>
-<span class="c1">#     'experiment_1': {</span>
-<span class="c1">#         'instructions': [</span>
-<span class="c1">#             ('load', [0], [50]),</span>
-<span class="c1">#             ('rLx', [0], [1.5707963267948966]),</span>
-<span class="c1">#             ('rLx', [0], [1.5707963267948966]),</span>
-<span class="c1">#             ('rLz', [0], [3.141592653589793]),</span>
-<span class="c1">#             ('measure', [0], [])</span>
-<span class="c1">#             ],</span>
-<span class="c1">#             'num_wires': 1,</span>
-<span class="c1">#             'shots': 500},</span>
-<span class="c1"># }</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-6"># job_payload = {
-#     'experiment_0': {
-#         'instructions': [
-#             ('load', [0], [50]),
-#             ('rLx', [0], [1.5707963267948966]),
-#             ('rLx', [0], [1.5707963267948966]),
-#             ('rLz', [0], [3.141592653589793]),
-#             ('measure', [0], [])
-#             ],
-#             'num_wires': 1,
-#             'shots': 500},
-#     'experiment_1': {
-#         'instructions': [
-#             ('load', [0], [50]),
-#             ('rLx', [0], [1.5707963267948966]),
-#             ('rLx', [0], [1.5707963267948966]),
-#             ('rLz', [0], [3.141592653589793]),
-#             ('measure', [0], [])
-#             ],
-#             'num_wires': 1,
-#             'shots': 500},
-# }</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy for="cell-7">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="n">server_domain</span> <span class="o">+</span> <span class="n">requested_backend</span> <span class="o">+</span> <span class="s2">"/post_job/"</span>
-
-<span class="n">job_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-    <span class="n">url</span><span class="p">,</span>
-    <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">"json"</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">job_payload</span><span class="p">),</span> <span class="s2">"username"</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s2">"password"</span><span class="p">:</span> <span class="n">password</span><span class="p">},</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">job_response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-7">url = server_domain + requested_backend + "/post_job/"
-
-job_response = requests.post(
-    url,
-    data={"json": json.dumps(job_payload), "username": username, "password": password},
-)
-
-print(job_response.text)</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>{"job_id": "20220114_175837-fermions-synqs_test-de242", "status": "INITIALIZING", "detail": "Got your json.", "error_message": "None"}
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy for="cell-8">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">job_id</span> <span class="o">=</span> <span class="p">(</span><span class="n">job_response</span><span class="o">.</span><span class="n">json</span><span class="p">())[</span><span class="s2">"job_id"</span><span class="p">]</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-8">job_id = (job_response.json())["job_id"]</div>
+<div class="clipboard-copy-txt" id="cell-5">job_payload = {
+    "experiment_0": {
+        "instructions": [
+            ("load", [0], [20]),
+            ("measure", [0], []),
+        ],
+        "num_wires": 1,
+        "shots": 2,
+        "wire_order": "interleaved",
+    },
+}</div>
 </div>
 </div>
 </div>
@@ -1989,7 +1878,75 @@ print(job_response.text)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="get-job-status">Get job status<a class="anchor-link" href="#get-job-status">¶</a></h2>
+<p>Now, that we set up the instruction, we can submit it via the <code>post_job</code> endpoint.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy for="cell-6">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="n">url_prefix</span> <span class="o">+</span> <span class="s2">"post_job"</span>
+
+<span class="n">pprint</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">job_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+    <span class="n">url</span><span class="p">,</span>
+    <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">"job"</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">job_payload</span><span class="p">),</span> <span class="s2">"username"</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s2">"token"</span><span class="p">:</span> <span class="n">token</span><span class="p">},</span>
+<span class="p">)</span>
+<span class="n">job_id</span> <span class="o">=</span> <span class="p">(</span><span class="n">job_response</span><span class="o">.</span><span class="n">json</span><span class="p">())[</span><span class="s2">"job_id"</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">job_response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-6">url = url_prefix + "post_job"
+
+pprint(url)
+job_response = requests.post(
+    url,
+    json={"job": json.dumps(job_payload), "username": username, "token": token},
+)
+job_id = (job_response.json())["job_id"]
+print(job_response.json())</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>'https://qlued.alqor.io/api/v2/alqor_mot_simulator/post_job'
+{'job_id': '0e4200b3ab894dde936f1716', 'status': 'INITIALIZING', 'detail': 'Got your json.', 'error_message': 'None'}
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>The simulator has now put the job into the queue and we will have to wait until the calculation is finished. To see its test the job status through <code>get_job_status</code>.</p>
 </div>
 </div>
 </div>
@@ -2002,7 +1959,7 @@ print(job_response.text)</div>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-9">
+<clipboard-copy for="cell-7">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2012,30 +1969,18 @@ print(job_response.text)</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">status_payload</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"job_id"</span><span class="p">:</span> <span class="n">job_id</span><span class="p">}</span>
-<span class="n">url</span> <span class="o">=</span> <span class="n">server_domain</span> <span class="o">+</span> <span class="n">requested_backend</span> <span class="o">+</span> <span class="s2">"/get_job_status/"</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="n">url_prefix</span> <span class="o">+</span> <span class="s2">"get_job_status"</span>
 
 <span class="n">status_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-    <span class="n">url</span><span class="p">,</span>
-    <span class="n">params</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">"json"</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">status_payload</span><span class="p">),</span>
-        <span class="s2">"username"</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
-        <span class="s2">"password"</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span>
-    <span class="p">},</span>
+    <span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">"job_id"</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span> <span class="s2">"username"</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s2">"token"</span><span class="p">:</span> <span class="n">token</span><span class="p">}</span>
 <span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">status_response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-9">status_payload = {"job_id": job_id}
-url = server_domain + requested_backend + "/get_job_status/"
+<div class="clipboard-copy-txt" id="cell-7">url = url_prefix + "get_job_status"
 
 status_response = requests.get(
-    url,
-    params={
-        "json": json.dumps(status_payload),
-        "username": username,
-        "password": password,
-    },
+    url, params={"job_id": job_id, "username": username, "token": token}
 )
 
 print(status_response.text)</div>
@@ -2050,7 +1995,7 @@ print(status_response.text)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>{"job_id": "20220114_175837-fermions-synqs_test-de242", "status": "DONE", "detail": "Got your json.; Passed json sanity check; Compilation done. Shots sent to solver.", "error_message": "None"}
+<pre>{"job_id": "1730f8085c1140ec96b66d68", "status": "DONE", "detail": "None; Passed json sanity check; Compilation done. Shots sent to solver.", "error_message": "None"}
 </pre>
 </div>
 </div>
@@ -2064,166 +2009,12 @@ print(status_response.text)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="get-job-results">Get job results<a class="anchor-link" href="#get-job-results">¶</a></h2>
+<p>As we can see the job is finished, so let us see the results the <code>get_job_result</code> endpoint.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy for="cell-10">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">result_payload</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"job_id"</span><span class="p">:</span> <span class="n">job_id</span><span class="p">}</span>
-<span class="n">url</span> <span class="o">=</span> <span class="n">server_domain</span> <span class="o">+</span> <span class="n">requested_backend</span> <span class="o">+</span> <span class="s2">"/get_job_result/"</span>
-
-<span class="n">result_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-    <span class="n">url</span><span class="p">,</span>
-    <span class="n">params</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">"json"</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result_payload</span><span class="p">),</span>
-        <span class="s2">"username"</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
-        <span class="s2">"password"</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span>
-    <span class="p">},</span>
-<span class="p">)</span>
-
-<span class="c1"># print(result_response.text)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-10">result_payload = {"job_id": job_id}
-url = server_domain + requested_backend + "/get_job_result/"
-
-result_response = requests.get(
-    url,
-    params={
-        "json": json.dumps(result_payload),
-        "username": username,
-        "password": password,
-    },
-)
-
-# print(result_response.text)</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="get-user-jobs-for-this-backend">Get user jobs for this backend<a class="anchor-link" href="#get-user-jobs-for-this-backend">¶</a></h2>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy for="cell-11">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="n">server_domain</span> <span class="o">+</span> <span class="n">requested_backend</span> <span class="o">+</span> <span class="s2">"/get_user_jobs/"</span>
-
-<span class="n">queue_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">"username"</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s2">"password"</span><span class="p">:</span> <span class="n">password</span><span class="p">})</span>
-
-<span class="c1"># print(queue_response.text)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-11">url = server_domain + requested_backend + "/get_user_jobs/"
-
-queue_response = requests.get(url, params={"username": username, "password": password})
-
-# print(queue_response.text)</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="get-next-job-in-queue">Get next job in queue<a class="anchor-link" href="#get-next-job-in-queue">¶</a></h2>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy for="cell-12">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># url=server_domain + requested_backend +"/get_next_job_in_queue/"</span>
-
-<span class="c1"># queue_response = requests.get(url, params={'username': username,'password':password})</span>
-
-<span class="c1"># print(queue_response.text)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-12"># url=server_domain + requested_backend +"/get_next_job_in_queue/"
-
-# queue_response = requests.get(url, params={'username': username,'password':password})
-
-# print(queue_response.text)</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="change-password">Change password<a class="anchor-link" href="#change-password">¶</a></h2>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2231,7 +2022,7 @@ queue_response = requests.get(url, params={"username": username, "password": pas
 <div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy for="cell-13">
+<clipboard-copy for="cell-8">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -2241,46 +2032,59 @@ queue_response = requests.get(url, params={"username": username, "password": pas
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># url="http://localhost:9000/shots/change_password/"</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="n">url_prefix</span> <span class="o">+</span> <span class="s2">"get_job_result"</span>
 
-<span class="c1"># #job_response = requests.post(url, data={'username': username,'password':password,'new_password':'blah'})</span>
+<span class="n">result_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+    <span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">"job_id"</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span> <span class="s2">"username"</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s2">"token"</span><span class="p">:</span> <span class="n">token</span><span class="p">}</span>
+<span class="p">)</span>
 
-<span class="c1"># print(job_response.text)</span>
+<span class="n">pprint</span><span class="p">(</span><span class="n">result_response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-13"># url="http://localhost:9000/shots/change_password/"
+<div class="clipboard-copy-txt" id="cell-8">url = url_prefix + "get_job_result"
 
-# #job_response = requests.post(url, data={'username': username,'password':password,'new_password':'blah'})
+result_response = requests.get(
+    url, params={"job_id": job_id, "username": username, "token": token}
+)
 
-# print(job_response.text)</div>
+pprint(result_response.json())</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>{'backend_name': 'alqor_mot_simulator',
+ 'backend_version': '0.1',
+ 'display_name': 'mot',
+ 'header': {},
+ 'job_id': '1730f8085c1140ec96b66d68',
+ 'qobj_id': None,
+ 'results': [{'data': {'memory': ['20', '20']},
+              'header': {'extra metadata': 'text', 'name': 'experiment_0'},
+              'shots': 2,
+              'success': True}],
+ 'status': 'finished',
+ 'success': True}
+</pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy for="cell-14">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-14"></div>
-</div>
-</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>As you can see the MOT was twice loaded with twenty atoms.</p>
+<h2 id="conclusion">Conclusion<a class="anchor-link" href="#conclusion">¶</a></h2><p>We have seen how to use the MOT backend of the qlued platform. It allows us to demonstrate the basic functionality of the platform and the two gates that are always required <code>load</code> and <code>measure</code>.</p>
 </div>
 </div>
 </div>
@@ -2305,6 +2109,27 @@ queue_response = requests.get(url, params={"username": username, "password": pas
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../fermions_api_showcase_v2/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Fermion back-end workflow demonstration" rel="prev">
+            <div class="md-footer__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Fermion back-end workflow demonstration
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">
