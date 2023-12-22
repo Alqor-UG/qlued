@@ -25,6 +25,7 @@ nav:
       - Qiskit-Cold-Atoms: notebooks/rydberg_qiskit_dynamics.ipynb
       - Rydberg: notebooks/rydberg_api_showcase_v2.ipynb
       - Fermions: notebooks/fermions_api_showcase_v2.ipynb
+      - MOT: notebooks/mot_showcase.ipynb
 
 extra:
   version:
