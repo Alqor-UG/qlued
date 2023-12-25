@@ -14,7 +14,7 @@ Markdown==3.4.4
 MarkupSafe==2.1.3
 mccabe==0.7.0
 mergedeep==1.3.4
-mkdocs==1.5.2
+mkdocs==1.5.3
 mkdocs-material==9.1.5
 mkdocs-material-extensions==1.1.1
 mkdocs-jupyter==0.24.1
