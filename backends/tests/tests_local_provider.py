@@ -12,10 +12,12 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from ..storage_providers import (
-    LocalProvider,
     get_short_backend_name,
     get_storage_provider_from_entry,
 )
+
+from sqooler.storage_providers import LocalProviderExtended as LocalProvider
+
 from ..models import StorageProviderDb
 
 User = get_user_model()

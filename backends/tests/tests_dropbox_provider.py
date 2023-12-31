@@ -11,7 +11,7 @@ from django.contrib.auth import get_user_model
 
 
 from ..models import StorageProviderDb
-from ..storage_providers import DropboxProvider
+from sqooler.storage_providers import DropboxProviderExtended as DropboxProvider
 
 User = get_user_model()
 
