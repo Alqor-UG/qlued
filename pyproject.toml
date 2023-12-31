@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "qlued"
+version = "0.3.0"
+description = "An API to make quantum circuits accessible for cold atom backends"
+authors = ["fretchen <fred.jendrzejewski@gmail.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+django = "^4.2.7"
+django-allauth = "^0.54.0"
+sqooler = {git = "https://github.com/Alqor-UG/sqooler.git"}
+
+
+[tool.poetry.group.prod.dependencies]
+whitenoise = "^5.2.0"
+gunicorn = "^20.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
