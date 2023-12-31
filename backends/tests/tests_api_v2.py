@@ -14,8 +14,10 @@ from django.test import TestCase
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
 
+from sqooler.storage_providers import MongodbProviderExtended as MongodbProvider
+from sqooler.schemes import MongodbLoginInformation
 from ..models import Token, StorageProviderDb
-from ..storage_providers import MongodbProvider, get_storage_provider_from_entry
+from ..storage_providers import get_storage_provider_from_entry
 
 User = get_user_model()
 
@@ -116,7 +118,7 @@ class BackendConfigTest(TestCase):
         self.assertEqual(data["backend_name"], "alqor_fermions_simulator")
 
         # get the version
-        self.assertEqual(data["backend_version"], "0.0.1")
+        self.assertEqual(data["backend_version"], "0.1")
 
         # get the operational status
         self.assertEqual(data["operational"], True)
@@ -261,7 +263,8 @@ class JobSubmissionTest(TestCase):
 
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="alqor")
-        storage_provider = MongodbProvider(mongodb_entry.login, mongodb_entry.name)
+        login_info = MongodbLoginInformation(**mongodb_entry.login)
+        storage_provider = MongodbProvider(login_info, mongodb_entry.name)
 
         # verify if the storageprovider is of the type DropboxProvider or MongodbProvider
         if storage_provider.__class__.__name__ == "DropboxProvider":

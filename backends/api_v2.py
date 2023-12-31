@@ -62,7 +62,7 @@ def get_config(request, backend_name: str):
         return 404, job_response_dict
 
     storage_provider = get_storage_provider(backend_name)
-    return storage_provider.get_backend_dict(short_backend, version="v2")
+    return storage_provider.get_backend_dict(short_backend)
 
 
 @api.get(
@@ -358,6 +358,6 @@ def list_backends(request):
         for backend in backend_names:
             # for testing we created dummy devices. We should ignore them in any other cases.
             if not "dummy" in backend:
-                config_dict = storage_provider.get_backend_dict(backend, version="v2")
+                config_dict = storage_provider.get_backend_dict(backend)
                 backend_list.append(config_dict)
     return backend_list
