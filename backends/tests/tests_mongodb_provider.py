@@ -9,7 +9,10 @@ from pydantic import ValidationError
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from ..storage_providers import MongodbProvider, get_short_backend_name
+from sqooler.storage_providers import MongodbProviderExtended as MongodbProvider
+from sqooler.schemes import MongodbLoginInformation
+
+from ..storage_providers import get_short_backend_name
 from ..models import StorageProviderDb
 
 User = get_user_model()
@@ -63,7 +66,8 @@ class MongodbProviderTest(TestCase):
         """
         # Remove all the collections that start with queued.
         mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
-        storage_provider = MongodbProvider(mongodb_entry.login, mongodb_entry.name)
+        login_info = MongodbLoginInformation(**mongodb_entry.login)
+        storage_provider = MongodbProvider(login_info, mongodb_entry.name)
         database = storage_provider.client["jobs"]
         for collection_name in database.list_collection_names():
             if collection_name.startswith("queued.dummy"):
@@ -89,7 +93,9 @@ class MongodbProviderTest(TestCase):
         Test that we can create a MongoDB object.
         """
         mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
-        mongodb_provider = MongodbProvider(mongodb_entry.login, mongodb_entry.name)
+        login_info = MongodbLoginInformation(**mongodb_entry.login)
+        mongodb_provider = MongodbProvider(login_info, mongodb_entry.name)
+
         self.assertIsNotNone(mongodb_provider)
 
         # test that we cannot create a dropbox object a poor login dict structure
@@ -99,7 +105,8 @@ class MongodbProviderTest(TestCase):
             "refresh_token": "test",
         }
         with self.assertRaises(ValidationError):
-            MongodbProvider(poor_login_dict, mongodb_entry.name)
+            login_info = MongodbLoginInformation(**poor_login_dict)
+            MongodbProvider(login_info, mongodb_entry.name)
 
     def test_not_active(self):
         """
@@ -107,7 +114,8 @@ class MongodbProviderTest(TestCase):
         """
         entry = StorageProviderDb.objects.get(name="mongodbtest")
         entry.is_active = False
-        storage_provider = MongodbProvider(entry.login, entry.name, entry.is_active)
+        login_info = MongodbLoginInformation(**entry.login)
+        storage_provider = MongodbProvider(login_info, entry.name, entry.is_active)
 
         # make sure that we cannot upload if it is not active
         test_content = {"experiment_0": "Nothing happened here."}
@@ -131,7 +139,8 @@ class MongodbProviderTest(TestCase):
 
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
-        storage_provider = MongodbProvider(mongodb_entry.login, mongodb_entry.name)
+        login_info = MongodbLoginInformation(**mongodb_entry.login)
+        storage_provider = MongodbProvider(login_info, mongodb_entry.name)
 
         # upload a file and get it back
         test_content = {"experiment_0": "Nothing happened here."}
@@ -158,7 +167,8 @@ class MongodbProviderTest(TestCase):
         """
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
-        storage_provider = MongodbProvider(mongodb_entry.login, mongodb_entry.name)
+        login_info = MongodbLoginInformation(**mongodb_entry.login)
+        storage_provider = MongodbProvider(login_info, mongodb_entry.name)
 
         # create a dummy config
         dummy_id = uuid.uuid4().hex[:5]
@@ -193,7 +203,8 @@ class MongodbProviderTest(TestCase):
         """
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
-        storage_provider = MongodbProvider(mongodb_entry.login, mongodb_entry.name)
+        login_info = MongodbLoginInformation(**mongodb_entry.login)
+        storage_provider = MongodbProvider(login_info, mongodb_entry.name)
 
         # create a dummy config
         dummy_id = uuid.uuid4().hex[:5]
@@ -241,7 +252,9 @@ class MongodbProviderTest(TestCase):
 
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="mongodbtest")
-        storage_provider = MongodbProvider(mongodb_entry.login, mongodb_entry.name)
+
+        login_info = MongodbLoginInformation(**mongodb_entry.login)
+        storage_provider = MongodbProvider(login_info, mongodb_entry.name)
 
         # create a dummy config
         dummy_id = uuid.uuid4().hex[:5]
