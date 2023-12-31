@@ -17,7 +17,7 @@ from ..storage_providers import (
 )
 
 from sqooler.storage_providers import LocalProviderExtended as LocalProvider
-
+from sqooler.schemes import LocalLoginInformation
 from ..models import StorageProviderDb
 
 User = get_user_model()
@@ -69,7 +69,8 @@ class LocalProviderTest(TestCase):
         Test that we can create a MongoDB object.
         """
         mongodb_entry = StorageProviderDb.objects.get(name="localtest")
-        mongodb_provider = LocalProvider(mongodb_entry.login, mongodb_entry.name)
+        login_info = LocalLoginInformation(**mongodb_entry.login)
+        mongodb_provider = LocalProvider(login_info, mongodb_entry.name)
         self.assertIsNotNone(mongodb_provider)
 
         # test that we cannot create a dropbox object a poor login dict structure
@@ -79,7 +80,8 @@ class LocalProviderTest(TestCase):
             "refresh_token": "test",
         }
         with self.assertRaises(ValidationError):
-            LocalProvider(poor_login_dict, mongodb_entry.name)
+            login_info = LocalLoginInformation(**poor_login_dict)
+            LocalProvider(login_info, mongodb_entry.name)
 
     def test_not_active(self):
         """
@@ -87,7 +89,8 @@ class LocalProviderTest(TestCase):
         """
         entry = StorageProviderDb.objects.get(name="localtest")
         entry.is_active = False
-        storage_provider = LocalProvider(entry.login, entry.name, entry.is_active)
+        login_info = LocalLoginInformation(**entry.login)
+        storage_provider = LocalProvider(login_info, entry.name, entry.is_active)
 
         # make sure that we cannot upload if it is not active
         test_content = {"experiment_0": "Nothing happened here."}
@@ -111,7 +114,8 @@ class LocalProviderTest(TestCase):
 
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="localtest")
-        storage_provider = LocalProvider(mongodb_entry.login, mongodb_entry.name)
+        login_info = LocalLoginInformation(**mongodb_entry.login)
+        storage_provider = LocalProvider(login_info, mongodb_entry.name)
 
         # upload a file and get it back
         test_content = {"experiment_0": "Nothing happened here."}
@@ -138,7 +142,8 @@ class LocalProviderTest(TestCase):
         """
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="localtest")
-        storage_provider = LocalProvider(mongodb_entry.login, mongodb_entry.name)
+        login_info = LocalLoginInformation(**mongodb_entry.login)
+        storage_provider = LocalProvider(login_info, mongodb_entry.name)
 
         # create a dummy config
         dummy_id = uuid.uuid4().hex[:5]
@@ -173,7 +178,8 @@ class LocalProviderTest(TestCase):
         """
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="localtest")
-        storage_provider = LocalProvider(mongodb_entry.login, mongodb_entry.name)
+        login_info = LocalLoginInformation(**mongodb_entry.login)
+        storage_provider = LocalProvider(login_info, mongodb_entry.name)
 
         # create a dummy config
         dummy_id = uuid.uuid4().hex[:5]
@@ -220,7 +226,9 @@ class LocalProviderTest(TestCase):
         """
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="localtest")
-        storage_provider = LocalProvider(mongodb_entry.login, mongodb_entry.name)
+
+        login_info = LocalLoginInformation(**mongodb_entry.login)
+        storage_provider = LocalProvider(login_info, mongodb_entry.name)
 
         # create a dummy config
         dummy_id = uuid.uuid4().hex[:5]
@@ -268,7 +276,8 @@ class LocalProviderTest(TestCase):
 
         # create a mongodb object
         mongodb_entry = StorageProviderDb.objects.get(name="localtest")
-        storage_provider = LocalProvider(mongodb_entry.login, mongodb_entry.name)
+        login_info = LocalLoginInformation(**mongodb_entry.login)
+        storage_provider = LocalProvider(login_info, mongodb_entry.name)
 
         # create a dummy config
         dummy_id = uuid.uuid4().hex[:5]
@@ -462,7 +471,9 @@ class BackendsWithMultipleLocalProvidersTest(TestCase):
 
         # first get the entry
         db_entry = StorageProviderDb.objects.get(name="local2")
-        storage_provider = LocalProvider(db_entry.login, db_entry.name)
+
+        login_info = LocalLoginInformation(**db_entry.login)
+        storage_provider = LocalProvider(login_info, db_entry.name)
 
         # now get the backend config
         config_dict = storage_provider.get_backend_dict(display_name="singlequdit")
@@ -470,7 +481,8 @@ class BackendsWithMultipleLocalProvidersTest(TestCase):
 
         # now also test that the name overwrites the display name
         db_entry = StorageProviderDb.objects.get(name="local1")
-        storage_provider = LocalProvider(db_entry.login, db_entry.name)
+        login_info = LocalLoginInformation(**db_entry.login)
+        storage_provider = LocalProvider(login_info, db_entry.name)
 
         # now get the backend config
         config_dict = storage_provider.get_backend_dict(display_name="fermions")
