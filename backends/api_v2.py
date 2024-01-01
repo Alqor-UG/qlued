@@ -7,6 +7,8 @@ import json
 from ninja import NinjaAPI
 from ninja.responses import codes_4xx
 
+from decouple import config
+
 from dropbox.exceptions import ApiError, AuthError
 
 from .schemas import (
@@ -62,6 +64,11 @@ def get_config(request, backend_name: str):
         return 404, job_response_dict
 
     storage_provider = get_storage_provider(backend_name)
+    config_dict = storage_provider.get_backend_dict(short_backend)
+    # we have to add the URL to the backend configuration
+    base_url = config("BASE_URL")
+    config_dict["url"] = base_url + f"/api/v2/" + backend_name + "/"
+
     return storage_provider.get_backend_dict(short_backend)
 
 

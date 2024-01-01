@@ -944,7 +944,7 @@ setuptools = "^69.0.3"
 type = "git"
 url = "https://github.com/Alqor-UG/sqooler.git"
 reference = "HEAD"
-resolved_reference = "468e2e18ff375e0439c0b39a8187f18f955197e7"
+resolved_reference = "178e0c5b5c6219e8bc313e0fe6e71419f126aa01"
 
 [[package]]
 name = "typing-extensions"
