@@ -11,9 +11,9 @@ from decouple import config
 
 from dropbox.exceptions import ApiError, AuthError
 
+from sqooler.schemes import BackendConfigSchemaOut, BackendStatusSchemaOut
+
 from .schemas import (
-    BackendSchemaOut,
-    BackendStatusSchemaOut,
     JobSchemaWithTokenIn,
     JobResponseSchema,
 )
@@ -29,7 +29,7 @@ api = NinjaAPI(version="2.0.0")
 
 @api.get(
     "{backend_name}/get_config",
-    response={200: BackendSchemaOut, codes_4xx: JobResponseSchema},
+    response={200: BackendConfigSchemaOut, codes_4xx: JobResponseSchema},
     tags=["Backend"],
     url_name="get_config",
 )
@@ -64,12 +64,18 @@ def get_config(request, backend_name: str):
         return 404, job_response_dict
 
     storage_provider = get_storage_provider(backend_name)
-    config_dict = storage_provider.get_backend_dict(short_backend)
+    config_info = storage_provider.get_backend_dict(short_backend)
     # we have to add the URL to the backend configuration
     base_url = config("BASE_URL")
-    config_dict["url"] = base_url + f"/api/v2/" + backend_name + "/"
 
-    return storage_provider.get_backend_dict(short_backend)
+    if config_info.simulator:
+        full_backend_name = f"{storage_provider.name}_{short_backend}_simulator"
+    else:
+        full_backend_name = f"{storage_provider.name}_{short_backend}_hardware"
+
+    config_info.url = base_url + f"/api/v2/" + full_backend_name + "/"
+
+    return config_info
 
 
 @api.get(
@@ -340,7 +346,7 @@ def get_job_result(request, backend_name: str, job_id: str, token: str):
 
 @api.get(
     "/backends",
-    response=list[BackendSchemaOut],
+    response=list[BackendConfigSchemaOut],
     tags=["Backend"],
     url_name="get_backends",
 )
