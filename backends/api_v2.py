@@ -73,7 +73,7 @@ def get_config(request, backend_name: str):
     else:
         full_backend_name = f"{storage_provider.name}_{short_backend}_hardware"
 
-    config_info.url = base_url + f"/api/v2/" + full_backend_name + "/"
+    config_info.url = base_url + "/api/v2/" + full_backend_name + "/"
 
     return config_info
 
