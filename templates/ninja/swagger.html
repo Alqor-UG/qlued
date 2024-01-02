@@ -1,16 +1,10 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <link type="text/css" rel="stylesheet" href="{% static 'ninja/swagger-ui.css' %}">
-    <link rel="shortcut icon" href="{% static 'ninja/favicon.png' %}">
-    <title>{{ api.title }}</title>
-</head>
-<body
-    data-csrf-token="{% if add_csrf %}{{ csrf_token }}{% endif %}"
-    data-api-csrf="{% if add_csrf %}true{% endif %}">
+{% extends "base.html" %}
 
-    <script type="application/json" id="swagger-settings">
+{% load static %}
+{% load csp %}
+{% block content %}
+<link type="text/css" rel="stylesheet" href="{% static 'ninja/swagger-ui.css' %}">
+<script type="application/json" id="swagger-settings">
         {{ swagger_settings | safe }}
     </script>
     
@@ -19,5 +13,4 @@
     <script src="{% static 'ninja/swagger-ui-bundle.js' %}"></script>
     <script src="{% static 'ninja/swagger-ui-init.js' %}"></script>
 
-</body>
-</html>
+{% endblock %}
