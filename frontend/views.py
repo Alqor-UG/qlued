@@ -70,9 +70,8 @@ def devices(request):
             for backend in backend_names:
                 # for testing we created dummy devices. We should ignore them in any other cases.
                 if not "dummy_" in backend:
-                    config_dict = storage_provider.get_backend_dict(
-                        backend, version="v2"
-                    )
+                    config_info = storage_provider.get_backend_dict(backend)
+                    config_dict = config_info.model_dump()
                     # set the operational key to true if is not defined by the backend
                     if "operational" not in config_dict:
                         config_dict["operational"] = True
