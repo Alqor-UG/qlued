@@ -1,34 +1,23 @@
-{% extends "base.html" %}
-
 {% load static %}
-{% load csp %}
-{% block content %}
-<link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@4.15.5/swagger-ui.css">
-<link rel="shortcut icon" href="https://django-ninja.rest-framework.com/img/favicon.png">
+<!DOCTYPE html>
+<html>
+<head>
+    <link type="text/css" rel="stylesheet" href="{% static 'ninja/swagger-ui.css' %}">
+    <link rel="shortcut icon" href="{% static 'ninja/favicon.png' %}">
+    <title>{{ api.title }}</title>
+</head>
+<body
+    data-csrf-token="{% if add_csrf %}{{ csrf_token }}{% endif %}"
+    data-api-csrf="{% if add_csrf %}true{% endif %}">
 
-<div id="swagger-ui">
-</div>
+    <script type="application/json" id="swagger-settings">
+        {{ swagger_settings | safe }}
+    </script>
+    
+    <div id="swagger-ui"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@4.15.5/swagger-ui-bundle.js"></script>
+    <script src="{% static 'ninja/swagger-ui-bundle.js' %}"></script>
+    <script src="{% static 'ninja/swagger-ui-init.js' %}"></script>
 
-{% script type="application/javascript" async=False %}
-<script>
-    const ui = SwaggerUIBundle({
-        url: '{{ openapi_json_url }}',
-        dom_id: '#swagger-ui',
-        presets: [
-            SwaggerUIBundle.presets.apis,
-            SwaggerUIBundle.SwaggerUIStandalonePreset
-        ],
-        layout: "BaseLayout",
-        {% if api.csrf and csrf_token %}
-    requestInterceptor: (req) => {
-        req.headers['X-CSRFToken'] = "{{csrf_token}}"
-        return req;
-    },
-        {% endif %}
-    deepLinking: true
-        })
-</script>
-{% endscript %}
-{% endblock %}
+</body>
+</html>
