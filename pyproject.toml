@@ -40,6 +40,7 @@ django-stubs = {version = "^4.2.3", extras = ["compatible-mypy"]}
 pylint = "^3.0.3"
 pylint-django = "^2.5.5"
 black = "^23.7.0"
+pre-commit = "^3.6.0"
 
 [build-system]
 requires = ["poetry-core"]
