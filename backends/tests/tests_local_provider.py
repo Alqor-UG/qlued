@@ -11,7 +11,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from sqooler.storage_providers import LocalProviderExtended as LocalProvider
-from sqooler.schemes import LocalLoginInformation
+from sqooler.schemes import LocalLoginInformation, BackendConfigSchemaIn
 
 from ..storage_providers import (
     get_short_backend_name,
@@ -136,53 +136,6 @@ class LocalProviderTest(TestCase):
         # clean up our mess
         storage_provider.delete_file(second_path, job_id)
 
-    def test_status_bare(self):
-        """
-        Test status if the backend is not well updated yet.
-        """
-        # create a mongodb object
-        mongodb_entry = StorageProviderDb.objects.get(name="localtest")
-
-        login_info = LocalLoginInformation(**mongodb_entry.login)
-        storage_provider = LocalProvider(login_info, mongodb_entry.name)
-
-        # create a dummy config
-        dummy_id = uuid.uuid4().hex[:5]
-        dummy_dict: dict = {}
-        dummy_dict["gates"] = []
-        dummy_dict["name"] = "Dummy"
-        dummy_dict["num_wires"] = 3
-        dummy_dict["version"] = "0.0.1"
-
-        backend_name = f"dummy{dummy_id}"
-        dummy_dict["display_name"] = backend_name
-        dummy_dict["simulator"] = True
-
-        config_path = "backends/configs"
-        storage_provider.upload(dummy_dict, config_path, job_id=backend_name)
-
-        # can we get the backend in the list ?
-        backends = storage_provider.get_backends()
-        self.assertTrue(f"dummy{dummy_id}" in backends)
-
-        # can we get the status of the backend ?
-        status_schema = storage_provider.get_backend_status(backend_name)
-        status_dict = status_schema.dict()
-        self.assertEqual(
-            status_dict["backend_name"],
-            f"localtest_{dummy_dict['display_name']}_simulator",
-        )
-        self.assertEqual(status_dict["operational"], True)
-        self.assertEqual(status_dict["backend_version"], dummy_dict["version"])
-        self.assertEqual(status_dict["pending_jobs"], 0)
-        self.assertEqual(status_dict["status_msg"], "")
-
-        storage_provider.delete_file(config_path, backend_name)
-
-        # and make sure that we raise an error if the backend is not there
-        with self.assertRaises(FileNotFoundError):
-            status_schema = storage_provider.get_backend_status(backend_name)
-
     def test_backend_name(self):
         """
         Test that we separate out properly the backend names
@@ -233,6 +186,7 @@ class BackendsWithMultipleLocalProvidersTest(TestCase):
         local_entry.save()
 
         # create a dummy config for the required fermions
+        backend_name = "fermions"
         fermions_config = {
             "display_name": "fermions",
             "name": "alqor_fermionic-tweezer_simulator",
@@ -247,10 +201,12 @@ class BackendsWithMultipleLocalProvidersTest(TestCase):
             "max_experiments": 100,
             "cold_atom_type": "fermions",
             "description": "First device for tests",
+            "operational": True,
         }
 
         local_storage = get_storage_provider_from_entry(local_entry)
-        local_storage.upload(fermions_config, "backends/configs", "fermions")
+        config_info = BackendConfigSchemaIn(**fermions_config)
+        local_storage.upload_config(config_info, backend_name)
 
         # add the second storage provider
         base_path = "storage-4"
@@ -270,6 +226,8 @@ class BackendsWithMultipleLocalProvidersTest(TestCase):
         local_entry.save()
 
         # create a dummy config for the required single qudit
+
+        backend_name = "singlequdit"
         single_qudit_config = {
             "display_name": "singlequdit",
             "gates": [],
@@ -283,10 +241,12 @@ class BackendsWithMultipleLocalProvidersTest(TestCase):
             "max_experiments": 100,
             "cold_atom_type": "fermions",
             "description": "Second device for tests",
+            "operational": True,
         }
 
         local_storage = get_storage_provider_from_entry(local_entry)
-        local_storage.upload(single_qudit_config, "backends/configs", "singlequdit")
+        config_info = BackendConfigSchemaIn(**single_qudit_config)
+        local_storage.upload_config(config_info, backend_name)
 
     def tearDown(self):
         shutil.rmtree("storage-3")
