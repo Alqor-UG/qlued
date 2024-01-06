@@ -186,6 +186,7 @@ class BackendsWithMultipleLocalProvidersTest(TestCase):
         local_entry.save()
 
         # create a dummy config for the required fermions
+        backend_name = "fermions"
         fermions_config = {
             "display_name": "fermions",
             "name": "alqor_fermionic-tweezer_simulator",
@@ -205,7 +206,7 @@ class BackendsWithMultipleLocalProvidersTest(TestCase):
 
         local_storage = get_storage_provider_from_entry(local_entry)
         config_info = BackendConfigSchemaIn(**fermions_config)
-        local_storage.upload_config(config_info, local_entry)
+        local_storage.upload_config(config_info, backend_name)
 
         # add the second storage provider
         base_path = "storage-4"
@@ -225,6 +226,8 @@ class BackendsWithMultipleLocalProvidersTest(TestCase):
         local_entry.save()
 
         # create a dummy config for the required single qudit
+
+        backend_name = "singlequdit"
         single_qudit_config = {
             "display_name": "singlequdit",
             "gates": [],
@@ -243,7 +246,7 @@ class BackendsWithMultipleLocalProvidersTest(TestCase):
 
         local_storage = get_storage_provider_from_entry(local_entry)
         config_info = BackendConfigSchemaIn(**single_qudit_config)
-        local_storage.upload_config(config_info, local_entry)
+        local_storage.upload_config(config_info, backend_name)
 
     def tearDown(self):
         shutil.rmtree("storage-3")
