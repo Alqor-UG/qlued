@@ -16,7 +16,7 @@ python-decouple = "^3.8"
 django-csp = "^3.7"
 django-ninja = "^1.1.0"
 pytz = "^2023.3"
-whitenoise = "^5.2.0"
+whitenoise = "^6.6.0"
 
 
 [tool.poetry.group.prod]
