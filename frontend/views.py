@@ -18,8 +18,10 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
 from backends.models import Token, StorageProviderDb
-from backends.storage_providers import get_storage_provider_from_entry
-
+from backends.storage_providers import (
+    get_storage_provider_from_entry,
+    get_short_backend_name,
+)
 from .forms import SignUpForm, StorageProviderForm
 from .models import Impressum
 
@@ -71,10 +73,25 @@ def devices(request):
                 # for testing we created dummy devices. We should ignore them in any other cases.
                 if not "dummy_" in backend:
                     config_info = storage_provider.get_backend_dict(backend)
+                    short_backend = get_short_backend_name(backend)
+                    if config_info.simulator:
+                        full_backend_name = (
+                            f"{storage_provider.name}_{short_backend}_simulator"
+                        )
+                    else:
+                        full_backend_name = (
+                            f"{storage_provider.name}_{short_backend}_hardware"
+                        )
+
+                    # we have to add the URL to the backend configuration
+                    base_url = config("BASE_URL")
+
+                    config_info.url = base_url + "/api/v2/" + full_backend_name + "/"
                     config_dict = config_info.model_dump()
                     # set the operational key to true if is not defined by the backend
                     if "operational" not in config_dict:
                         config_dict["operational"] = True
+
                     backend_list.append(config_dict)
         except ValidationError:
             # we ignore the entry if it is not valid
