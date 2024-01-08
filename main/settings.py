@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.github",
     "allauth.socialaccount.providers.google",
+    "ninja",
     "qlued",
     "frontend",
 ]
