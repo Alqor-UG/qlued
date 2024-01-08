@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "qlued"
-version = "0.3.0"
+version = "0.4.0"
 description = "An API to make quantum circuits accessible for cold atom backends"
 authors = ["fretchen <fred.jendrzejewski@gmail.com>"]
 license = "Apache-2.0"
