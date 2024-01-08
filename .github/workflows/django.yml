@@ -74,10 +74,7 @@ jobs:
           poetry install
       - name: Run pylint
         run: |
-          poetry run pylint --load-plugins pylint_django --django-settings-module=main.settings backends frontend
+          poetry run pylint --load-plugins pylint_django --django-settings-module=main.settings frontend
       - name: Run black
         run: |
           poetry run black --check .
-      - name: Run mypy
-        run: |
-          poetry run mypy backends

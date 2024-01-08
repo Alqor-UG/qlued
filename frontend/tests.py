@@ -10,8 +10,8 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from backends.models import StorageProviderDb
-from backends.storage_providers import get_storage_provider_from_entry
+from qlued.models import StorageProviderDb
+from qlued.storage_providers import get_storage_provider_from_entry
 
 
 class IndexPageTests(TestCase):
