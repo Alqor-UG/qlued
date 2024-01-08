@@ -64,9 +64,8 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.github",
     "allauth.socialaccount.providers.google",
-    "ninja",
+    "qlued",
     "frontend",
-    "backends",
 ]
 
 MIDDLEWARE = [
@@ -82,7 +81,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "main.urls"
-AUTH_USER_MODEL = "backends.User"
 
 TEMPLATES = [
     {
@@ -203,7 +201,7 @@ LOGOUT_REDIRECT_URL = "index"
 ACCOUNT_LOGOUT_ON_GET = True
 
 # Content Security Policy (CSP)
-CSP_REPORT_ONLY = False
+CSP_REPORT_ONLY = True
 
 
 CSP_IMG_SRC = (

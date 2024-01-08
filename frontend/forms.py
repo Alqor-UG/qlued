@@ -7,7 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import RegexValidator
 from django import forms
 from django.forms import ModelForm
-from backends.models import StorageProviderDb
+from qlued.models import StorageProviderDb
 
 
 class StorageProviderForm(ModelForm):

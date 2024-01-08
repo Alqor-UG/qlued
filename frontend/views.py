@@ -17,8 +17,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
-from backends.models import Token, StorageProviderDb
-from backends.storage_providers import (
+from qlued.models import Token, StorageProviderDb
+from qlued.storage_providers import (
     get_storage_provider_from_entry,
     get_short_backend_name,
 )
