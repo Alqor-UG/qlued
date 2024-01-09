@@ -114,6 +114,7 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = "auth.User"
 
 if IS_HEROKU and "DATABASE_URL" in os.environ:
     # Configure Django for DATABASE_URL environment variable.
