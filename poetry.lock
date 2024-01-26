@@ -639,22 +639,18 @@ name = "django-qlued"
 version = "0.1.0"
 description = "Django packages that enables validated cloud access to quantum hardware."
 optional = false
-python-versions = "^3.10"
-files = []
-develop = false
+python-versions = ">=3.10,<4.0"
+files = [
+    {file = "django_qlued-0.1.0-py3-none-any.whl", hash = "sha256:aca3a3909cfacc56c72b25e866dcf84cae193a4bdb33e6396f73a904ea813cf4"},
+    {file = "django_qlued-0.1.0.tar.gz", hash = "sha256:aefb61cb401de828c74415cb636139e6c270272cba11549ba4f44b5bb24c5fee"},
+]
 
 [package.dependencies]
-django-ninja = "^1.1.0"
-python-decouple = "^3.8"
-pytz = "^2023.3.post1"
-sqooler = "^0.4.0"
-whitenoise = "^6.6.0"
-
-[package.source]
-type = "git"
-url = "https://github.com/fretchen/django-qlued.git"
-reference = "HEAD"
-resolved_reference = "ce83a8fa6ae5543e57a68905892f17bc81e26b1b"
+django-ninja = ">=1.1.0,<2.0.0"
+python-decouple = ">=3.8,<4.0"
+pytz = ">=2023.3.post1,<2024.0"
+sqooler = ">=0.4.0,<0.5.0"
+whitenoise = ">=6.6.0,<7.0.0"
 
 [[package]]
 name = "django-stubs"
@@ -3014,4 +3010,4 @@ brotli = ["Brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "c629d9a464c38675b506351c81efed3314d02d8665bf076dd6fd596fda17479d"
+content-hash = "99f0402526a90ca9c13dc2ed107091d66ef471af81f2482f8ccb80bab4250ca9"
