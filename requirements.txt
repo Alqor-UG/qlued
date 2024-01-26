@@ -1,24 +1,38 @@
-appdirs==1.4.4
-attrs==23.1.0
-certifi==2023.7.22
-dj-database-url==1.3.0
-Django==4.2.7
-django-allauth==0.54.0
-django-csp==3.7
-django-ninja==1.1.0
-dnspython==2.3.0
-dropbox==11.36.2
-gunicorn==20.1.0
-pydantic==2.5.2
-pathspec==0.12.1
-pyrsistent==0.17.3
-pytz==2023.3
-regex==2023.10.3
-requests==2.31.0
-six==1.16.0
-sqlparse==0.4.4
-toml==0.10.2
-whitenoise==5.2.0
-psycopg2>=2.0,<3.0
-pymongo==4.3.3
-python-decouple==3.8
+annotated-types==0.6.0 ; python_version >= "3.10" and python_version < "4.0"
+asgiref==3.7.2 ; python_version >= "3.10" and python_version < "4.0"
+certifi==2023.11.17 ; python_version >= "3.10" and python_version < "4.0"
+cffi==1.16.0 ; python_version >= "3.10" and python_version < "4.0"
+charset-normalizer==3.3.2 ; python_version >= "3.10" and python_version < "4.0"
+cryptography==41.0.7 ; python_version >= "3.10" and python_version < "4.0"
+defusedxml==0.7.1 ; python_version >= "3.10" and python_version < "4.0"
+dj-database-url==1.3.0 ; python_version >= "3.10" and python_version < "4.0"
+django-allauth==0.54.0 ; python_version >= "3.10" and python_version < "4.0"
+django-csp==3.7 ; python_version >= "3.10" and python_version < "4.0"
+django-ninja==1.1.0 ; python_version >= "3.10" and python_version < "4.0"
+django-qlued @ git+https://github.com/fretchen/django-qlued.git@55eb5b17401128b11c6d21a93d85cef95f0b339a ; python_version >= "3.10" and python_version < "4.0"
+django==4.2.9 ; python_version >= "3.10" and python_version < "4.0"
+dnspython==2.4.2 ; python_version >= "3.10" and python_version < "4.0"
+dropbox==10.10.0 ; python_version >= "3.10" and python_version < "4.0"
+gunicorn==20.1.0 ; python_version >= "3.10" and python_version < "4.0"
+idna==3.6 ; python_version >= "3.10" and python_version < "4.0"
+oauthlib==3.2.2 ; python_version >= "3.10" and python_version < "4.0"
+psycopg2==2.9.9 ; python_version >= "3.10" and python_version < "4.0"
+pycparser==2.21 ; python_version >= "3.10" and python_version < "4.0"
+pydantic-core==2.14.6 ; python_version >= "3.10" and python_version < "4.0"
+pydantic==2.5.3 ; python_version >= "3.10" and python_version < "4.0"
+pyjwt[crypto]==2.8.0 ; python_version >= "3.10" and python_version < "4.0"
+pymongo==4.6.1 ; python_version >= "3.10" and python_version < "4.0"
+python-decouple==3.8 ; python_version >= "3.10" and python_version < "4.0"
+python3-openid==3.2.0 ; python_version >= "3.10" and python_version < "4.0"
+pytz==2023.3.post1 ; python_version >= "3.10" and python_version < "4.0"
+regex==2023.12.25 ; python_version >= "3.10" and python_version < "4.0"
+requests-oauthlib==1.3.1 ; python_version >= "3.10" and python_version < "4.0"
+requests==2.31.0 ; python_version >= "3.10" and python_version < "4.0"
+setuptools==69.0.3 ; python_version >= "3.10" and python_version < "4.0"
+six==1.16.0 ; python_version >= "3.10" and python_version < "4.0"
+sqlparse==0.4.4 ; python_version >= "3.10" and python_version < "4.0"
+sqooler==0.3.0 ; python_version >= "3.10" and python_version < "4.0"
+typing-extensions==4.9.0 ; python_version >= "3.10" and python_version < "4.0"
+tzdata==2023.4 ; python_version >= "3.10" and python_version < "4.0" and sys_platform == "win32"
+urllib3==2.1.0 ; python_version >= "3.10" and python_version < "4.0"
+whitenoise==6.6.0 ; python_version >= "3.10" and python_version < "4.0"

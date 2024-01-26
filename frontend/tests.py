@@ -10,8 +10,8 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
-from backends.models import StorageProviderDb
-from backends.storage_providers import get_storage_provider_from_entry
+from qlued.models import StorageProviderDb
+from qlued.storage_providers import get_storage_provider_from_entry
 
 
 class IndexPageTests(TestCase):
@@ -258,12 +258,26 @@ class DevicesTest(TestCase):
             "display_name": "fermions",
             "name": "fermions",
             "gates": [{"description": "Fermionic hopping gate", "name": "fhop"}],
+            "supported_instructions": ["fhop"],
             "num_wires": 2,
             "version": "0.1",
             "simulator": True,
+            "wire_order": "interleaved",
+            "cold_atom_type": "fermion",
+            "max_shots": 5,
+            "max_experiments": 5,
+            "description": "Dummy simulator for testing",
+            "num_species": 1,
         }
 
         local_storage = get_storage_provider_from_entry(local_entry)
         local_storage.upload(fermions_config, "backends/configs", "fermions")
         r = self.client.get(url)
         self.assertEqual(r.status_code, 200)
+
+        # now test that we have the appropriate information in each device
+        devices = r.context["backend_list"]
+        for device in devices:
+            self.assertIsNotNone(
+                device["url"], "Device dictionary does not contain valid url"
+            )

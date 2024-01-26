@@ -24,7 +24,8 @@
 
 </head>
 
-<body>
+<body data-csrf-token="{% if add_csrf %}{{ csrf_token }}{% endif %}"
+    data-api-csrf="{% if add_csrf %}true{% endif %}">
   <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Qlued</a>
@@ -69,7 +70,7 @@
       </button>
       <div class="navbar-nav collapse navbar-collapse" id="navbarFooter">
             <a class="nav-link nav-item" href="/api/v2/docs">API</a>
-            <a class="nav-link nav-item" href="https://alqor-ug.github.io/qlued/v0.2/">Documentation</a>
+            <a class="nav-link nav-item" href="https://alqor-ug.github.io/qlued/">Documentation</a>
             <a class="nav-link nav-item" href="{% url 'about'%}">About</a>
       </div>
 </div>
