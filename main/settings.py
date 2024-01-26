@@ -203,7 +203,7 @@ LOGOUT_REDIRECT_URL = "index"
 ACCOUNT_LOGOUT_ON_GET = True
 
 # Content Security Policy (CSP)
-CSP_REPORT_ONLY = True
+CSP_REPORT_ONLY = False
 
 
 CSP_IMG_SRC = (
