@@ -645,25 +645,21 @@ test = ["django-stubs", "mypy (==1.7.1)", "psycopg2-binary", "pytest", "pytest-a
 
 [[package]]
 name = "django-qlued"
-version = "0.1.2"
+version = "0.2.0"
 description = "Django packages that enables validated cloud access to quantum hardware."
 optional = false
-python-versions = "^3.10"
-files = []
-develop = false
+python-versions = ">=3.10,<4.0"
+files = [
+    {file = "django_qlued-0.2.0-py3-none-any.whl", hash = "sha256:3ad6d3c1474f098c424dbb23d8c1f93b63aafba864e0067f43dd63c95edab720"},
+    {file = "django_qlued-0.2.0.tar.gz", hash = "sha256:a573d2bbfe286240af4837647297ad3b1dad19117d69cf5027173f744fb5f65a"},
+]
 
 [package.dependencies]
-django-ninja = "^1.1.0"
-python-decouple = "^3.8"
-pytz = "^2024.1"
-sqooler = "^0.5.0"
-whitenoise = "^6.6.0"
-
-[package.source]
-type = "git"
-url = "https://github.com/Alqor-UG/django-qlued.git"
-reference = "HEAD"
-resolved_reference = "e59c7612bebe758653ed7a227146100c8ac4c8ea"
+django-ninja = ">=1.1.0,<2.0.0"
+python-decouple = ">=3.8,<4.0"
+pytz = ">=2024.1,<2025.0"
+sqooler = ">=0.5.0,<0.6.0"
+whitenoise = ">=6.6.0,<7.0.0"
 
 [[package]]
 name = "django-stubs"
@@ -3066,4 +3062,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "35827f5f7d4c2063b3d921cd98767044c94a6ad824f11c96fa835d63272589d8"
+content-hash = "c53b8ab72dd95573237f812ca1c8d6260fe160578843ec148dd8c01554cb45a4"
