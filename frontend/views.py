@@ -1,5 +1,6 @@
 """Module that defines the user api.
 """
+
 from datetime import datetime
 import uuid
 import json

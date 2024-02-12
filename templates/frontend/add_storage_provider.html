@@ -22,7 +22,7 @@
         {% if form.storage_type.errors %}
             <ul>
                 {% for error in form.storage_type.errors %}
-                    <li>{{ error }}</li>
+                    <li class="text-danger">{{ error }}</li>
                 {% endfor %}
             </ul>
         {% endif %}
@@ -31,7 +31,7 @@
         {% if form.name.errors %}
             <ul>
                 {% for error in form.name.errors %}
-                    <li>{{ error }}</li>
+                    <li class="text-danger">{{ error }}</li>
                 {% endfor %}
             </ul>
         {% endif %}
@@ -40,7 +40,7 @@
         {% if form.description.errors %}
             <ul>
                 {% for error in form.description.errors %}
-                    <li>{{ error }}</li>
+                    <li class="text-danger">{{ error }}</li>
                 {% endfor %}
             </ul>
         {% endif %}
@@ -50,7 +50,7 @@
         {% if form.login.errors %}
             <ul>
                 {% for error in form.login.errors %}
-                    <li>{{ error }}</li>
+                    <li class="text-danger">{{ error }}</li>
                 {% endfor %}
             </ul>
         {% endif %}

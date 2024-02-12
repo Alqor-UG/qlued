@@ -13,7 +13,7 @@ django-allauth = "^0.61.1"
 dj-database-url = "^2.1.0"
 python-decouple = "^3.8"
 django-csp = "^3.7"
-django-qlued = "^0.1.0"
+django-qlued = "^0.2.0"
 
 
 [tool.poetry.group.prod]
@@ -36,7 +36,7 @@ mike = "^2.0.0"
 django-stubs = {version = "^4.2.3", extras = ["compatible-mypy"]}
 pylint = "^3.0.3"
 pylint-django = "^2.5.5"
-black = "^23.7.0"
+black = "^24.1.0"
 pre-commit = "^3.6.0"
 
 [build-system]

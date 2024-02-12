@@ -1,6 +1,7 @@
 """
 Module that configues the app.
 """
+
 from django.apps import AppConfig
 
 
