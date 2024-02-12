@@ -1,6 +1,7 @@
 """
 Module that connects the view functions with a specific path url.
 """
+
 from django.urls import path
 from frontend import views
 
