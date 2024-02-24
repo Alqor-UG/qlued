@@ -40,6 +40,7 @@
     data-csrf-token="{% if add_csrf %}{{ csrf_token }}{% endif %}"
     data-api-csrf="{% if add_csrf %}true{% endif %}"
   >
+
     <nav class="navbar navbar-expand-lg bg-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">Qlued</a>
@@ -86,8 +87,13 @@
       </div>
     </nav>
 
-    {% block content %}{% endblock %}
-    <nav class="navbar fixed-bottom navbar-light bg-light navbar-expand-lg">
+<main class="flex-shrink-0">
+{% block content %}{% endblock %}
+</main>
+
+
+<footer class="footer mt-auto py-3 bg-light">
+      <nav class="navbar fixed-bottom navbar-light bg-light navbar-expand-lg">
       <div class="container-fluid">
         <button
           class="navbar-toggler"
@@ -108,6 +114,8 @@
           <a class="nav-link nav-item" href="{% url 'about'%}">About</a>
         </div>
       </div>
-    </nav>
+    </nav> 
+    </footer> 
+
   </body>
 </html>
