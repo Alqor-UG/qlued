@@ -1,38 +1,59 @@
-{% extends "base.html" %}
-
-{% load i18n %}
-
-{% block head_title %}{% trans "Signup" %}{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% load i18n %} {% block head_title %}{% trans
+"Signup" %}{% endblock %} {% block content %}
 <h1>{% trans "Sign Up" %}</h1>
 
-<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+<p>
+  {% blocktrans %}Already have an account? Then please
+  <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}
+</p>
 
-<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+<form
+  class="signup"
+  id="signup_form"
+  method="post"
+  action="{% url 'account_signup' %}"
+>
+  {% csrf_token %} {{ form.as_p }} {% if redirect_field_value %}
+  <input
+    type="hidden"
+    name="{{ redirect_field_name }}"
+    value="{{ redirect_field_value }}"
+  />
   {% endif %}
   <h2>Data privacy</h2>
-        By registering you agree to our rules on data privacy:
-        <ul>
-          <li>This is still a young project. Consider frequent changes the norm.</li>
-          <li>You remain the full owner of any of the data that you submit. Any host trying it differently should be ashamed.</li>
-          <li>The host of this site is not allowed to sell any of the data you created to third parties.</li>
-          <li>The host of this site is not allowed to use any of the algorithms that you submitted</li>
-          <li>We will try to improve privacy step-by-step. However, this is a long process and we greatly welcome your support.</li>
-          <li>We store cookies for login.</li>
-          <li>No tracking of site visits.</li>
-        </ul> 
-        The data are currently stored in the following fashion:
-        <ul>
-          <li>This runs as a heroku app on european servers.</li>
-          <li>The submitted jobs are saved on a Dropbox.</li>
-          <li>The jobs are processed on a third-party back-end engine, no personal information are stored there.</li>
-        </ul>
-        For comments and more information see the <a href="https://github.com/alqor-UG/qlued">source code</a>.<br>
+  By registering you agree to our rules on data privacy:
+  <ul>
+    <li>This is still a young project. Consider frequent changes the norm.</li>
+    <li>
+      You remain the full owner of any of the data that you submit. Any host
+      trying it differently should be ashamed.
+    </li>
+    <li>
+      The host of this site is not allowed to sell any of the data you created
+      to third parties.
+    </li>
+    <li>
+      The host of this site is not allowed to use any of the algorithms that you
+      submitted
+    </li>
+    <li>
+      We will try to improve privacy step-by-step. However, this is a long
+      process and we greatly welcome your support.
+    </li>
+    <li>We store cookies for login.</li>
+    <li>No tracking of site visits.</li>
+  </ul>
+  The data are currently stored in the following fashion:
+  <ul>
+    <li>This runs as a heroku app on european servers.</li>
+    <li>The submitted jobs are saved on a Dropbox.</li>
+    <li>
+      The jobs are processed on a third-party back-end engine, no personal
+      information are stored there.
+    </li>
+  </ul>
+  For comments and more information see the
+  <a href="https://github.com/alqor-UG/qlued">source code</a>.<br />
   <button type="submit">{% trans "Sign Up" %} &raquo;</button>
 </form>
 

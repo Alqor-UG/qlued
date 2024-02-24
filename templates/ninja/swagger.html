@@ -1,16 +1,16 @@
-{% extends "base.html" %}
-
-{% load static %}
-{% load csp %}
-{% block content %}
-<link type="text/css" rel="stylesheet" href="{% static 'ninja/swagger-ui.css' %}">
+{% extends "base.html" %} {% load static %} {% load csp %} {% block content %}
+<link
+  type="text/css"
+  rel="stylesheet"
+  href="{% static 'ninja/swagger-ui.css' %}"
+/>
 <script type="application/json" id="swagger-settings">
-        {{ swagger_settings | safe }}
-    </script>
-    
-    <div id="swagger-ui"></div>
+  {{ swagger_settings | safe }}
+</script>
 
-    <script src="{% static 'ninja/swagger-ui-bundle.js' %}"></script>
-    <script src="{% static 'ninja/swagger-ui-init.js' %}"></script>
+<div id="swagger-ui"></div>
+
+<script src="{% static 'ninja/swagger-ui-bundle.js' %}"></script>
+<script src="{% static 'ninja/swagger-ui-init.js' %}"></script>
 
 {% endblock %}
