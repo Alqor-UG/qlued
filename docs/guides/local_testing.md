@@ -10,18 +10,17 @@ In this part we explain how can test your code locally. This will require that y
 
     This guide is only relevant for developers that would to change the code base. Should you be an end-user that simply would like to better understand how to use the service please go directly to one of the tutorials.
 
+In a first step, we need to update the `.env` file in the root directory. It should now also include the required information for different storages.
 
-In a first step, we need to update the `.env` file in the root directory. It should now also include the required information for different storages. 
+An example content of the _updated_ file would be:
 
-An example content of the *updated* file would be:
-
-``` python
+```python
 # settings for the local Django server
-USERNAME_TEST=john_test 
+USERNAME_TEST=john_test
 PASSWORD_TEST=dogs_and_cats
 SECRET_KEY=A_RANDOM_SECRET_KEY_12345
 
-# URL from which you would like to serve 
+# URL from which you would like to serve
 BASE_URL=<YOUR-URL>
 
 # settings for MongoDB
