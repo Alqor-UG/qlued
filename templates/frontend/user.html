@@ -1,74 +1,130 @@
-{% extends "base.html" %}
-
-{% load static %}
-{% block content %}
+{% extends "base.html" %} {% load static %} {% block content %}
 
   <div class="container">
-
     <h1>Welcome {{user.username}}</h1>
     <div class="row justify-content-center">
-      <p>This is your user profile with the main information needed to get started.</p>
+      <p>
+        This is your user profile with the main information needed to get started.
+      </p>
     </div>
     <div class="row justify-content-center">
-        <h2>What is needed for API access </h2>
-        <p>In the current version, the access is token based. You will need to use the credentials: <code> username='{{user.username}}' token='{{token_key}}'</code></p>
+      <h2>What is needed for API access</h2>
+      <p>
+        In the current version, the access is token based. You will need to use
+        the credentials:
+        <code> username='{{user.username}}' token='{{token_key}}'</code>
+      </p>
     </div>
     <div class="row justify-content-center">
       <div class="col">
-        <h2>Storage providers </h2>
-        <p>In this section, you can see all the storage providers that you created and you can add new ones</p>
+        <h2>Storage providers</h2>
+        <p>
+          In this section, you can see all the storage providers that you created
+          and you can add new ones
+        </p>
         {% if storage_provider_entries %}
-            <table class="table">
+          <table class="table">
             <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
             </thead>
             <tbody>
-                {% for entry in storage_provider_entries %}
-                    <tr>
-                        <td>{{ entry.name }}</td>
-                        <td>{{ entry.storage_type }}</td>
-                        <td>{% if entry.is_active %} Active {% else %} Inactive {% endif %}</td>
-                        <td>
-                            <a href="{% url 'edit_storage_provider' entry.id %}" class="btn btn-primary btn-sm">Edit</a>
-                            <a href="{% url 'delete_storage_provider' entry.id %}" class="btn btn-danger btn-sm">Delete</a>
-                        </td>
+              {% for entry in storage_provider_entries %}
+                <tr>
+                  <td>{{ entry.name }}</td>
+                  <td>{{ entry.storage_type }}</td>
+                  <td>
+                    {% if entry.is_active %} Active {% else %} Inactive {% endif %}
+                  </td>
+                  <td>
+                    <a
+                      href="{% url 'edit_storage_provider' entry.id %}"
+                      class="btn btn-primary btn-sm"
+                    >Edit</a
+                      >
+                      <a
+                        href="{% url 'delete_storage_provider' entry.id %}"
+                        class="btn btn-danger btn-sm"
+                      >Delete</a
+                        >
+                      </td>
                     </tr>
-                {% endfor %}
+              {% endfor %}
             </tbody>
-            </table>
+          </table>
         {% endif %}
-        <a role="button" href="{% url 'add_storage_provider' %}" class="btn btn-primary btn-lg">Add a storage provider.</a>
+        <a
+          role="button"
+          href="{% url 'add_storage_provider' %}"
+          class="btn btn-primary btn-lg"
+        >Add a storage provider.</a
+          >
+        </div>
       </div>
-    </div>
-    <div class="row justify-content-center">
-      <div class="col">
-    <hr>
-      <h2>Further documention</h2>
-      <p>We provide different ways to consume the API. The most direct way is to simply access it directly, but you might also access it through
-        SDKs like QISKIT or Pennylane.</p>
-      <h3>Working with the API directly</h3>
-      <p>We have several ways to test the API and find its documentation</p>
-      <ul>
-        <li> The documentation of qlued also contains an <a href="https://alqor-ug.github.io/qlued/">extensive section</a> on the API.</li>
-        <li> We have an <a href="/api/v2/docs">OpenAPI</a> documentation of <code>v2</code>, which is the current production version.</li>
-      </ul>
-      <h3>Access through QISKIT</h3>
-      <p>Quite often you would like to access the backends through some kind of python SDK like qiskit. We have currently set up an integration with <code>qiskit-cold-atoms</code>. Please be aware that the SDK is currently only compatible with <code>v1</code> of the API. Below you can find two tutorials, which guide you directly through the first steps:</p>
-      <ul>
-        <li>      <a href="https://github.com/Qiskit-Extensions/qiskit-cold-atom/blob/main/docs/tutorials/07_squeezing_in_qudits.ipynb" target="_blank" rel="noopener noreferrer">Squeezing on a single qudit</a></li>
-        <li>      <a href="https://github.com/Qiskit-Extensions/qiskit-cold-atom/blob/main/docs/tutorials/03_fermionic_tweezer_hardware.ipynb" target="_blank" rel="noopener noreferrer">Interacting fermions in a tweezer</a></li>
-      </ul>
+      <div class="row justify-content-center">
+        <div class="col">
+          <hr />
+          <h2>Further documention</h2>
+          <p>
+            We provide different ways to consume the API. The most direct way is to
+            simply access it directly, but you might also access it through SDKs
+            like QISKIT or Pennylane.
+          </p>
+          <h3>Working with the API directly</h3>
+          <p>We have several ways to test the API and find its documentation</p>
+          <ul>
+            <li>
+              The documentation of qlued also contains an
+              <a href="https://alqor-ug.github.io/qlued/">extensive section</a> on
+              the API.
+            </li>
+            <li>
+              We have an <a href="/api/v2/docs">OpenAPI</a> documentation of
+              <code>v2</code>, which is the current production version.
+            </li>
+          </ul>
+          <h3>Access through QISKIT</h3>
+          <p>
+            Quite often you would like to access the backends through some kind of
+            python SDK like qiskit. We have currently set up an integration with
+            <code>qiskit-cold-atoms</code>. Please be aware that the SDK is
+            currently only compatible with <code>v1</code> of the API. Below you can
+            find two tutorials, which guide you directly through the first steps:
+          </p>
+          <ul>
+            <li>
+              <a
+                href="https://github.com/Qiskit-Extensions/qiskit-cold-atom/blob/main/docs/tutorials/07_squeezing_in_qudits.ipynb"
+                target="_blank"
+                rel="noopener noreferrer"
+              >Squeezing on a single qudit</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://github.com/Qiskit-Extensions/qiskit-cold-atom/blob/main/docs/tutorials/03_fermionic_tweezer_hardware.ipynb"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >Interacting fermions in a tweezer</a
+                  >
+                </li>
+              </ul>
 
-      <h3>Pennylane</h3>
-      <p>
-        At the beginning, we also performed some tries with Pennylane. However, the development <a href="https://github.com/synqs/pennylane-ls/" target=_blank">on the github</a> was stopped as far as we know. If you would like to have a look into the early tries, please see and have fun.
-      </p>
-      </div>
-    </div>
-  </div>
+              <h3>Pennylane</h3>
+              <p>
+                At the beginning, we also performed some tries with Pennylane. However,
+                the development
+                <a href="https://github.com/synqs/pennylane-ls/" target="_blank"
+                >on the github</a
+                  >
+                  was stopped as far as we know. If you would like to have a look into the
+                  early tries, please see and have fun.
+                </p>
+              </div>
+            </div>
+          </div>
 {% endblock %}

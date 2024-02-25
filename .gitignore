@@ -6,6 +6,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# html and js
+node_modules/
+
 # C extensions
 *.so
 *.DS_Store

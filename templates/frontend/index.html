@@ -1,70 +1,100 @@
-{% extends "base.html" %}{% load socialaccount %}
-{% load i18n %}
+{% extends "base.html" %}{% load socialaccount %} {% load i18n %}
+
 {% block content %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col">
+        <h1>Welcome to qlued</h1>
+        <p>
+          <a
+            href="https://github.com/alqor-ug/qlued"
+            target="_blank"
+            rel="noopener noreferrer">Qlued</a>
+          is an open source project to provide access to various quantum hardware
+          simulators. It enables simple access to simulators of various machines
+          that emulate for example
+          <a
+            href="https://alqor-ug.github.io/qlued/notebooks/rydberg_api_showcase_v2/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Rydberg atoms</a
+            >
+            or
+            <a
+              href="https://alqor-ug.github.io/qlued/notebooks/fermions_api_showcase_v2/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >hopping fermions</a
+              >.
+            </p>
 
+            {% if not user.is_authenticated %}
+              <p>
+                Just login through a third-party provider or sign up to get the
+                necessary user token.
+              </p>
+              <a
+                role="button"
+                href="{% url 'account_login' %}"
+                class="btn btn-primary btn-lg"
+              >Get started.</a
+                >
+            {% endif %}
+          </div>
+        </div>
+        {% if user.is_authenticated %}
 
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col">
-      <h1>Welcome to qlued</h1>
-      <p>
-        <a href="https://github.com/alqor-ug/qlued" target="_blank" rel="noopener noreferrer">Qlued</a> is an open
-        source project to provide access to various quantum hardware simulators. It enables simple access to simulators
-        of various
-        machines that emulate for example <a href="https://alqor-ug.github.io/qlued/notebooks/rydberg_api_showcase_v2/"
-          target="_blank" rel="noopener noreferrer">Rydberg atoms</a> or <a
-          href="https://alqor-ug.github.io/qlued/notebooks/fermions_api_showcase_v2/" target="_blank"
-          rel="noopener noreferrer">hopping fermions</a>.
-      </p>
+          <div class="row justify-content-center">
+            <h2>Using the API</h2>
+            <h3>What is needed ?</h3>
+            <p>
+              In the current version, the access is token based. You will need to use
+              the credentials:
+              <code> username='{{user.username}}' token='{{token_key}}'</code>
+            </p>
+          </div>
+          <h3>Working with the API directly</h3>
+          <p>We have several ways to test the API and find its documentation</p>
+          <ul>
+            <li>
+              The documentation of qlued also contains an
+              <a href="https://alqor-ug.github.io/qlued/">extensive section</a> on the
+              API.
+            </li>
+            <li>
+              We have an <a href="/api/v2/docs">OpenAPI</a> documentation of
+              <code>v2</code>, which is the current production version.
+            </li>
+          </ul>
 
-      {% if not user.is_authenticated %}
-      <p>Just login through a third-party provider or sign up to get the necessary user token. </p>
-      <a role="button" href="{% url 'account_login' %}" class="btn btn-primary btn-lg">Get started.</a>
-      {% endif %}
-    </div>
-  </div>
-  {% if user.is_authenticated %}
+        {% endif %}
+        <div class="row justify-content-center">
+          <h2>Tutorials</h2>
+          <p>
+            We have put together a number of tutorials that should help with your
+            first moves.
+          </p>
 
-  <div class="row justify-content-center">
-    <h2>Using the API</h2>
-    <h3>What is needed ? </h3>
-    <p>In the current version, the access is token based. You will need to use the credentials:
-      <code> username='{{user.username}}' token='{{token_key}}'</code>
-    </p>
-  </div>
-  <h3>Working with the API directly</h3>
-  <p>We have several ways to test the API and find its documentation</p>
-  <ul>
-    <li> The documentation of qlued also contains an <a href="https://alqor-ug.github.io/qlued/">extensive section</a>
-      on the API.</li>
-    <li> We have an <a href="/api/v2/docs">OpenAPI</a> documentation of <code>v2</code>, which is the current production
-      version.</li>
-  </ul>
+          <h3>QISKIT</h3>
+          <ul>
+            <li>
+              <a href="https://github.com/Qiskit-Extensions/qiskit-cold-atom/blob/main/docs/tutorials/07_squeezing_in_qudits.ipynb" target="_blank" rel="noopener noreferrer">Squeezing on a single qudit</a>
+            </li>
+            <li>
+              <a href="https://github.com/Qiskit-Extensions/qiskit-cold-atom/blob/main/docs/tutorials/03_fermionic_tweezer_hardware.ipynb"
+                 target="_blank"
+                 rel="noopener noreferrer">Interacting fermions in a tweezer</a>
+            </li>
+          </ul>
 
-  {% endif %}
-  <div class="row justify-content-center">
-
-    <h2>Tutorials</h2>
-    <p>
-      We have put together a number of tutorials that should help with your first moves.
-    </p>
-
-    <h3>QISKIT</h3>
-    <ul>
-      <li> <a
-          href="https://github.com/Qiskit-Extensions/qiskit-cold-atom/blob/main/docs/tutorials/07_squeezing_in_qudits.ipynb"
-          target="_blank" rel="noopener noreferrer">Squeezing on a single qudit</a></li>
-      <li> <a
-          href="https://github.com/Qiskit-Extensions/qiskit-cold-atom/blob/main/docs/tutorials/03_fermionic_tweezer_hardware.ipynb"
-          target="_blank" rel="noopener noreferrer">Interacting fermions in a tweezer</a></li>
-    </ul>
-
-    <h3>Pennylane</h3>
-    <p>
-      At the beginning, we also performed some tries with Pennylane. However, the development <a
-        href="https://github.com/synqs/pennylane-ls/">on the github</a> was stopped as far as we know. If
-      you would like to have a look into the early tries, please see and have fun.
-    </p>
-  </div>
-</div>
+          <h3>Pennylane</h3>
+          <p>
+            At the beginning, we also performed some tries with Pennylane. However,
+            the development
+            <a href="https://github.com/synqs/pennylane-ls/">on the github</a> was
+            stopped as far as we know. If you would like to have a look into the early
+            tries, please see and have fun.
+          </p>
+        </div>
+      </div>
 {% endblock %}

@@ -22,13 +22,14 @@ The whole system is set up on [django](https://www.djangoproject.com/) and hence
 
 First, create a local environment. You can then install the requirements via `pip install -r requirements-dev.txt`.
 
-Second, we need to enable the storage of the settings, which we manage with [python-decouple](https://pypi.org/project/python-decouple/). To do so, create a `.env` file in the root directory. 
+Second, we need to enable the storage of the settings, which we manage with [python-decouple](https://pypi.org/project/python-decouple/). To do so, create a `.env` file in the root directory.
+
 ```
 project
 │   README.md
 │   manage.py
 |   .env
-|   ...    
+|   ...
 │
 └───.github
 │   │   ...
@@ -39,20 +40,19 @@ project
 │   ...
 ```
 
-
 An example content of this file would be:
 
-``` python
+```python
 # settings for the local Django server
-USERNAME_TEST=john_test 
+USERNAME_TEST=john_test
 PASSWORD_TEST=dogs_and_cats
 SECRET_KEY=<YOUR-SECRET-KEY>
 
-# URL from which you would like to serve 
+# URL from which you would like to serve
 BASE_URL=<YOUR-URL>
 ```
 
-Make sure that you set an appropiate `SECRET_KEY`, `USERNAME_TEST` and `PASSWORD_TEST` of the django environment. 
+Make sure that you set an appropiate `SECRET_KEY`, `USERNAME_TEST` and `PASSWORD_TEST` of the django environment.
 Next, you have to set the `BASE_URL` to the URL from which you would like to serve the service.
 
 ## Getting the server started locally
@@ -62,7 +62,6 @@ Next, you have to set the `BASE_URL` to the URL from which you would like to ser
 - You should now be able to run `python manage.py runserver`.
 - Once you have done that you can access the admin interface via `http://localhost:8000/admin/` and login with the credentials you just created.
 
-
 !!! note
 
     You can decide on different storages for the jobs. We provide you with the following options:
@@ -70,11 +69,10 @@ Next, you have to set the `BASE_URL` to the URL from which you would like to ser
     - Dropbox
     Both can be set through the import in the `backends/app` file.
 
-
 ## Setting up a new storage
 
 Finally, you have to set up the appropiate storage. This might be a Dropbox or a MongoDB provider right now. The appropiate steps are described [here](storage_providers.md).
 
-
 ## Done
+
 This ends the set up of the server. You can now run the first tutorials as explained [here](notebooks/rydberg_api_showcase_v2)

@@ -20,7 +20,6 @@ The necessary steps are:
 
 Set up the environment variables via the heroku console. They have contain the `SECRET_KEY` and the `BASE_URL`, which is the URl from which you would like to serve the service.
 
-
 ### Setting up the storage
 
 Finally, you have to set up the appropiate storage. This might be a Dropbox or a MongoDB provider right now. The appropiate steps are described [here](storage_providers.md).
@@ -29,9 +28,9 @@ Finally, you have to set up the appropiate storage. This might be a Dropbox or a
 
 You should be done now. You can check the logs via `heroku logs --tail` and open the app via `heroku open`.
 
-## Setting up a github environment  
+## Setting up a github environment
 
-If you would like more control over the server, especially the frontend, you should fork the repo [qlued](https://github.com/Alqor-UG/qlued). 
+If you would like more control over the server, especially the frontend, you should fork the repo [qlued](https://github.com/Alqor-UG/qlued).
 
 ### Continuous integration
 
