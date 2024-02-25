@@ -1,160 +1,96 @@
-{% extends "base.html" %} {% load static %} {% block content %}
+{% extends "base.html" %}
+
+{% load static %}
+{% block content %}
 
   <div class="container">
+
     <h1>Edit storage provider</h1>
     <p>This is the place where you can edit your existing storage provider.</p>
-
+    
     <div class="row justify-content-center">
-      <form method="post">
+        <form method="post">
         {% csrf_token %}
-        <p>
-          <label
-            for="{{ form.storage_type.id_for_label }}"
-            title="What kind of storage you will use"
-          >Storage Type:</label
-            >
-            {{ form.storage_type }}
-          </p>
-          {% if form.storage_type.errors %}
+        <p><label for="{{ form.storage_type.id_for_label }}" title="What kind of storage you will use">Storage Type:</label>
+        {{ form.storage_type }}</p>
+        {% if form.storage_type.errors %}
             <ul>
-              {% for error in form.storage_type.errors %}
-                <li>{{ error }}</li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-          <p>
-            <label
-              for="{{ form.name.id_for_label }}"
-              title="The short name without spaces"
-            >Name:</label
-              >
-              {{ form.name }}
-            </p>
-            {% if form.name.errors %}
-              <ul>
-                {% for error in form.name.errors %}
-                  <li>{{ error }}</li>
-                {% endfor %}
-              </ul>
-            {% endif %}
-            <p>
-              <label
-                for="{{ form.is_active.id_for_label }}"
-                title="Is the storage active"
-              >Is active:</label
-                >
-                {{ form.is_active }}
-              </p>
-              {% if form.is_active.errors %}
-                <ul>
-                  {% for error in form.is_active.errors %}
+                {% for error in form.storage_type.errors %}
                     <li>{{ error }}</li>
-                  {% endfor %}
-                </ul>
-              {% endif %}
-              <p>
-                <label
-                  for="{{ form.description.id_for_label }}"
-                  title="The description of the storage"
-                >Description:</label
-                  >
-                  {{ form.description }}
-                </p>
-                {% if form.description.errors %}
-                  <ul>
-                    {% for error in form.description.errors %}
-                      <li>{{ error }}</li>
-                    {% endfor %}
-                  </ul>
-                {% endif %}
-                <p>
-                  <label
-                    for="{{ form.description.id_for_label }}"
-                    title="The required login information in form of a json dictionary"
-                  >Login information:</label
-                    >
-                    {{ form.login|safe }}
-                  </p>
-                  {% if form.login.errors %}
-                    <ul>
-                      {% for error in form.login.errors %}
-                        <li>{{ error }}</li>
-                      {% endfor %}
-                    </ul>
-                  {% endif %}
-                  <input type="submit" value="Update" class="btn btn-primary btn-lg" />
-                </form>
-              </div>
-              <h2>Some instructions</h2>
-              <p>
-                The documentation for the storage providers and their role can be found over
-                <a href="https://alqor-ug.github.io/qlued/v0.2/guides/storage_providers/"
-                >here</a
-                  >. At this stage we will only describe the most important steps to fill out
-                  the form.
-                </p>
-                <ul>
-                  <li>
-                    The <b>Storage type</b> defines if you are storing your data within a
-                    <em>Dropbox</em> or<em>MongoDB</em>.
-                  </li>
-                  <li>
-                    The <b>name</b> is the identifier of the storage. <b>The name</b> should
-                    be short, has to
-                    <b>be unique, without whitespace and without underscores</b>.
-                  </li>
-                  <li>
-                    The <b>description</b> explains the user what kind of storage provider he
-                    is using here.So make it simple and not too long.
-                  </li>
-                  <li>
-                    The <b>login information</b> is the crucial information that allows
-                    <em>qlued</em> to have access to the storage provider. It is a
-                    <em>json</em> dictionary with the required keys. More information on the
-                    required keys is
-                    <a href="https://alqor-ug.github.io/qlued/v0.2/guides/storage_providers/"
-                    >here</a
-                      >.
-                    </li>
-                  </ul>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <p><label for="{{ form.name.id_for_label }}" title="The short name without spaces">Name:</label>
+        {{ form.name }}</p>
+        {% if form.name.errors %}
+            <ul>
+                {% for error in form.name.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <p><label for="{{ form.is_active.id_for_label }}" title="Is the storage active">Is active:</label>
+        {{ form.is_active }}</p>
+        {% if form.is_active.errors %}
+            <ul>
+                {% for error in form.is_active.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <p><label for="{{ form.description.id_for_label }}" title="The description of the storage">Description:</label>
+        {{ form.description }}</p>
+        {% if form.description.errors %}
+            <ul>
+                {% for error in form.description.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <p><label for="{{ form.description.id_for_label }}" 
+          title="The required login information in form of a json dictionary">Login information:</label>
+        {{ form.login|safe }}</p>
+        {% if form.login.errors %}
+            <ul>
+                {% for error in form.login.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <input type="submit" value="Update"  class="btn btn-primary btn-lg">
+    </form>
+    </div>
+    <h2>Some instructions</h2>
+    <p>The documentation for the storage providers and their role can be found over <a href="https://alqor-ug.github.io/qlued/v0.2/guides/storage_providers/">here</a>. At this stage we will only describe
+    the most important steps to fill out the form. </p>
+    <ul>
+        <li>The <b>Storage type</b> defines if you are storing your data within a <em>Dropbox</em> or<em>MongoDB</em>.</li>
+        <li>The <b>name</b> is the identifier of the storage. <b>The name</b> should be short, has to <b>be unique, without whitespace and without underscores</b>.</li>
+        <li>The <b>description</b> explains the user what kind of storage provider he is using here.So make it simple and not too long.</li>
+        <li>The <b>login information</b> is the crucial information that allows <em>qlued</em> to have access to the storage provider. It is a <em>json</em> dictionary with the required keys. More information on the required keys is <a href="https://alqor-ug.github.io/qlued/v0.2/guides/storage_providers/">here</a>.</li>
+    </ul>
 
-                  <h3>Login dictionary for MongoDB</h3>
-                  If you would like to add a MongoDB as a storage provider, the login
-                  information should look like this:
-                  <code>
+    <h3>Login dictionary for MongoDB</h3>
+    If you would like to add a MongoDB as a storage provider, the login information should look like this:
+    <code>
     <pre class="bg-light p-3">
     {
         "mongodb_username": "YOUR-MONGODB-USERNAME",
         "mongodb_password": "YOUR-MONGODB-PASSWORD",
         "mongodb_database_url": "YOUR-MONGODB-DATABASE-URL"
-    }</pre
-    >
-  </code>
-  <p>
-    For more information see
-    <a
-      href="https://alqor-ug.github.io/qlued/v0.2/guides/storage_providers/#setting-up-a-new-mongodb-storage"
-      >here</a
-    >.
-  </p>
-  <h3>Login dictionary for Dropbox</h3>
-  If you would like to add a Dropbox as a storage provider, the login
-  information should look like this:
-  <code>
+    }</pre>
+    </code>
+    <p>For more information see <a href="https://alqor-ug.github.io/qlued/v0.2/guides/storage_providers/#setting-up-a-new-mongodb-storage">here</a>.</p>
+    <h3>Login dictionary for Dropbox</h3>
+    If you would like to add a Dropbox as a storage provider, the login information should look like this:
+    <code>
     <pre class="bg-light p-3">
     {
         "app_key": "YOUR-APP-KEY",
         "app_secret": "YOUR-APP-KEY",
         "refresh_token": "YOUR-APP-KEY"
-    }</pre
-    >
-  </code>
-  <p>
-    For more information see
-    <a
-      href="https://alqor-ug.github.io/qlued/v0.2/guides/storage_providers/#setting-up-a-new-dropbox-storage"
-      >here</a
-    >.
-  </p>
-</div>
+    }</pre>
+</code>
+    <p>For more information see <a href="https://alqor-ug.github.io/qlued/v0.2/guides/storage_providers/#setting-up-a-new-dropbox-storage">here</a>.</p>
+  </div>
 {% endblock %}
