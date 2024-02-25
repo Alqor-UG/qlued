@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.9">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.11">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.f2e4d321.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e359304.min.css">
       
       
 
@@ -819,11 +819,11 @@ Sites: Select your Site in 'Available sites' and click the arrow to move it into
 </code></pre>
 <p>Since you are currently logged in as a superuser, logout and login again using your Google account to test out the authentication.</p>
 <h2 id="github">Github</h2>
-<p>Google is already enabled as a provider. However, you have to add the proper credentials to enable it for your instance. The following is strongly inspired by the blog post  <a href="https://testdriven.io/blog/django-social-auth/">here</a>.</p>
+<p>Google is already enabled as a provider. However, you have to add the proper credentials to enable it for your instance. The following is strongly inspired by the blog post <a href="https://testdriven.io/blog/django-social-auth/">here</a>.</p>
 <p>Create a new OAuth application on github via <a href="https://github.com/settings/applications/new">this link</a>. Most fields are already super well explained. It is important to set:</p>
 <p>Under 'Authorized JavaScript origins', add the following URI:</p>
 <p>Homepage URL: <code>https://&lt;YOUR-DOMAIN&gt;</code>
-   Authorization Callback URL: <code>https://&lt;YOUR-DOMAIN&gt;/accounts/github/login/callback/</code></p>
+Authorization Callback URL: <code>https://&lt;YOUR-DOMAIN&gt;/accounts/github/login/callback/</code></p>
 <p>Click "Register application". You'll be redirected to your app. Take note of the Client ID and Client Secret. If a Client Secret wasn't generated, click "Generate a new client secret".</p>
 <h3 id="add-social-app-in-django-admin_1">Add social app in Django admin</h3>
 <p>This follows the same steps as above.</p>
@@ -838,8 +838,6 @@ Sites: Select your Site in 'Available sites' and click the arrow to move it into
 
   
   
-
-
 
 
 

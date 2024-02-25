@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.9">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.11">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.f2e4d321.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e359304.min.css">
       
       
 
@@ -843,7 +843,7 @@
 <p>The above issues can also exist for a simulator package. Hence the need for <a href="https://github.com/synqs/qlue" title="qlue">this project</a>. There are two sides : <a href="#the-client">client</a> and <a href="#the-server">server</a>.</p>
 <h2 id="the-client">The client</h2>
 <p>A client is a remote user who will write quantum circuits in the user's favorite quantum circuit framework (<a href="https://github.com/Qiskit" title="Qiskit">Qiskit</a>, <a href="https://github.com/PennyLaneAI" title="Pennylane">Pennylane</a>, ...). These circuits then have to be compiled into JSON files. The JSON files can be sent over the internet to a remote server which will queue it for parsing/execution on the backend. The backend can be a real cold atom machine or a simulator running on a computer. To get credentials, user has to create an account at a qlued instance like <a href="https://qlued.alqor.io/">qlued.alqor.io</a>.</p>
-<p>We have decided on a schema for the JSON files. See <a href="https://github.com/eggerdj/backends/" title="Qiskit_json">1</a>  for more details. The document mentions in detail how things should be formatted. We also provide extensive tutorials that work without the SDKs <a href="../../notebooks/rydberg_api_showcase_v2">here</a>.</p>
+<p>We have decided on a schema for the JSON files. See <a href="https://github.com/eggerdj/backends/" title="Qiskit_json">1</a> for more details. The document mentions in detail how things should be formatted. We also provide extensive tutorials that work without the SDKs <a href="../../notebooks/rydberg_api_showcase_v2">here</a>.</p>
 <p>The plugin for compiling Qiskit circuits to JSON files is available at <a href="https://github.com/Qiskit-Extensions/qiskit-cold-atom"><code>qiskit-cold-atom</code></a>. Similarly the plugin for compiling a pennylane circuit into JSON is available at <a href="https://github.com/synqs/pennylane-ls" title="penny_json"><code>pennylane-ls</code></a>. Note that the pennylane plugin at <a href="https://github.com/synqs/pennylane-ls" title="penny_json"><code>pennylane-ls</code></a> already offers several backends. Each backend is a device with its own operations.</p>
 <p>That's all that is required on the client side. Basically choose one of these frameworks. If the client wants to use a different quantum circuit framework, then the client must write appropriate code for compiling quantum circuits of that framework into JSON files which follow the schema of <a href="https://github.com/eggerdj/backends/" title="Qiskit_json">1</a>.</p>
 <h2 id="the-server">The server</h2>
@@ -865,19 +865,19 @@
 <p>Another point is that although we have a Django webapp running on our server, it is functionally equivalent to a REST API. REST API is a popular architecture of communicating with remote servers. <a href="https://github.com/encode/django-rest-framework" title="DRF">Django Rest Framework</a> is widely used for writing such REST APIs. However, here we choose to work with <a href="https://django-ninja.rest-framework.com/">django-ninja</a> for the sake of simplicity and speed.</p>
 <p>Before describing the server in detail, lets mention that for the client, communicating with the server essentially boils down to sending correct HTTP request to the correct URL. Then on the server side Django will execute the view function corresponding to that URL. The structure of a general URL looks like :</p>
 <p><code>server_domain/requested_backend/appropriate_view_name</code></p>
-<p>So for example if the <code>server_domain=https://qlued.alqor.io/api/v2</code>, and we want to use <code>post_job</code> view for the <code>fermions</code> backend i.e.  <code>requested_backend=fermions</code> and <code>appropriate_view_name=post_job</code>. The complete URL will look like :</p>
+<p>So for example if the <code>server_domain=https://qlued.alqor.io/api/v2</code>, and we want to use <code>post_job</code> view for the <code>fermions</code> backend i.e. <code>requested_backend=fermions</code> and <code>appropriate_view_name=post_job</code>. The complete URL will look like :</p>
 <p><code>https://qlued.alqor.io/api/v2/fermions/post_job/</code></p>
 <h3 id="the-api">The API</h3>
 <p>A automatically generated documentation of the API can be found <a href="https://qlued.alqor.io/api/v2/docs">here</a>. Here, we explain different view functions and their purpose in slightly more detail:</p>
 <ul>
 <li><strong>The <code>get_config</code> view</strong> : This function returns a JSON dictionary containing the backend capabilities and details. At the moment this is relevant only for the Qiskit plugin as the pennylane plugin does not make use of it.</li>
 <li><strong>The <code>post_job</code> view</strong> : This function extracts the JSON dictionary describing a potential experiment from a HTTP request. The extracted job_JSON is dumped onto <strong>Dropbox</strong> for further processing. It then responds with another JSON dictionary which has a <code>job_id</code> key. This job_id is important to query the server for results of the experiment later on. A typical JSON response from the server has the following schema:
-<code>{'job_id': 'something','status': 'something','detail': 'something'}</code></li>
+  <code>{'job_id': 'something','status': 'something','detail': 'something'}</code></li>
 <li><strong>The <code>get_job_status</code> view</strong> : This function extracts the job_id of a previously submitted job from a HTTP request. It responds with a JSON dictionary describing the status.</li>
 <li><strong>The <code>get_job_result</code> view</strong> : This function extracts the job_id of a previously submitted job from a HTTP request. If the job has not finished running and results are unavailable, it responds with a JSON dictionary describing the status. Otherwise it responds with a JSON dictionary describing the result. The formatting of the result dictionary is described in <a href="https://github.com/eggerdj/backends/" title="Qiskit_json">1</a>.</li>
 </ul>
 <p>We will frequently use the term status dictionary and result dictionary. These are just text files which host the appropriate JSON data. These files are stored on the Dropbox like job_JSON. When a view reads these text files, it coverts the data in them to a python dictionary and sends it to the client or modifies the dictionary further before saving it back to the text file.</p>
-<p>Since we use MongoDB or Dropbox to store JSONs, the view functions call functions written in a file called <code>storage_providers.py</code> which in turn calls  API functions for reading and writing. Note that we currently provide storage with MongoDB by default or Dropbox. However, it can be <strong>replaced</strong> with any other storage service (like Amazon S3, Microsoft azure storage, Google cloud storage etc.) which allows a user to read and write content using a python API. For this one would need to implement four basic functions for accessing the cloud storage provider. The details of these four functions are given in <code>storage_providers.py</code> with an example implementation for Dropbox. A new storage service can have its own class inheriting from the base class (just like the Dropbox class) and override the base functions.</p>
+<p>Since we use MongoDB or Dropbox to store JSONs, the view functions call functions written in a file called <code>storage_providers.py</code> which in turn calls API functions for reading and writing. Note that we currently provide storage with MongoDB by default or Dropbox. However, it can be <strong>replaced</strong> with any other storage service (like Amazon S3, Microsoft azure storage, Google cloud storage etc.) which allows a user to read and write content using a python API. For this one would need to implement four basic functions for accessing the cloud storage provider. The details of these four functions are given in <code>storage_providers.py</code> with an example implementation for Dropbox. A new storage service can have its own class inheriting from the base class (just like the Dropbox class) and override the base functions.</p>
 <h2 id="the-storage">The storage</h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -899,8 +899,6 @@
 
   
   
-
-
 
 
 

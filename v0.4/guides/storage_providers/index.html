@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.9">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.11">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.f2e4d321.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e359304.min.css">
       
       
 
@@ -810,39 +810,39 @@
 <p>To store the jobs with an external storage provider has several benefits:</p>
 <ul>
 <li>We immediately implement asynchronous job management. Basically the server dumps the job coming from the remote client onto the storage provider. Then whenever the spooler belonging to a backend is free, it will act on the next job which is appropriate for that particular backend.</li>
-<li>The storage_provider also serves as a database storage for various JSONs, like job_JSON, result_JSON, status_JSON etc. </li>
+<li>The storage_provider also serves as a database storage for various JSONs, like job_JSON, result_JSON, status_JSON etc.</li>
 <li>It allows us to unify the workflow for both simulator and real machine. Basically it does not matter what the backend is, the workflow is the identical. Different backends only differ in their Spoolers.</li>
 </ul>
-<p>Now lets give an example about the work flow. Lets say a remote client named <code>user_1</code> submits a job to the singlequdit backend. This means <code>user_1</code> sent a  post request to the following URL:</p>
+<p>Now lets give an example about the work flow. Lets say a remote client named <code>user_1</code> submits a job to the singlequdit backend. This means <code>user_1</code> sent a post request to the following URL:</p>
 <p><code>https://qlued.alqor.io/api/v2/singlequdit/post_job/</code></p>
 <p>The server will immediately save the JSON to the storage_provider via <code>upload_job</code>. At the same time the server will reply to the user with a job_id response which might look something like :</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;job_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;20210906_203730-singlequdit-user_1-1088f&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INITIALIZING&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Got your json.&quot;</span>
+<span class="w">  </span><span class="nt">&quot;job_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;20210906_203730-singlequdit-user_1-1088f&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INITIALIZING&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Got your json.&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>This dictionary is also saved as a status JSON via <code>upload_status</code>. </p>
+<p>This dictionary is also saved as a status JSON via <code>upload_status</code>.</p>
 <p>On the spooler side, it will query the server for the next job it should work on. Also let us suppose the spooler is querying about the next job for <code>singlequdit</code> backend. The server looks for the file list in the directory <code>Backend_files/Queued_Jobs/singlequdit/</code>. It will choose the first created file from that list. Lets say this is the file <code>job-20210906_203730-singlequdit-user_1-1088f.json</code>. Now the server will move this file from <code>Backend_files/Queued_Jobs/singlequdit/job-20210906_203730-singlequdit-user_1-1088f.json</code> to <code>Backend_files/Running_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json</code> and respond to the spooler with a <code>job_msg_dict</code> which looks like</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;job_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;20210906_203730-singlequdit-user_1-1088f&quot;</span><span class="p">,</span><span class="w"> </span>
-<span class="w">    </span><span class="nt">&quot;job_json&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Backend_files/Running_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json&quot;</span>
+<span class="w">  </span><span class="nt">&quot;job_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;20210906_203730-singlequdit-user_1-1088f&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;job_json&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Backend_files/Running_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>From this, the Spooler knows exactly where the job JSON file is stored on Dropbox. It fetches the job JSON and starts to process it.</p>
-<p>For processing the job, the spooler begins by sanity-checking the JSON for correct schema. If the job_JSON fails this check the file is moved to  <code>Backend_files/Deleted_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json</code>. The status JSON is also updated by the spooler to:</p>
+<p>For processing the job, the spooler begins by sanity-checking the JSON for correct schema. If the job_JSON fails this check the file is moved to <code>Backend_files/Deleted_Jobs/job-20210906_203730-singlequdit-user_1-1088f.json</code>. The status JSON is also updated by the spooler to:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;job_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;20210906_203730-singlequdit-user_1-1088f&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Got your json.; Failed json sanity check. File will be deleted. Error message : blah..blah&quot;</span>
+<span class="w">  </span><span class="nt">&quot;job_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;20210906_203730-singlequdit-user_1-1088f&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Got your json.; Failed json sanity check. File will be deleted. Error message : blah..blah&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>From the dictionary, the user is automatically informed about the details of why the error happened.</p>
 <p>If however, the job_JSON passes sanity checking, then it is executed. The spooler goes through the instruction list and creates the appropriate circuit and calculates the end result. Then it generates the given number of shots and formats everything into the result dictionary. The schema of the result dictionary is given at [1][eggerdj_github]. Then the Spooler will upload the result JSON to the appropiate place (see the <code>sqooler</code> instructions for more detail). It will also move the job JSON <code>running_jobs</code> to <code>finished_jobs</code>. Finally the spooler will update the status JSON to:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;job_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;20210906_203730-singlequdit-user_1-1088f&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DONE&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Got your json.; Passed json sanity check; Compilation done. Shots sent to solver.&quot;</span>
+<span class="w">  </span><span class="nt">&quot;job_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;20210906_203730-singlequdit-user_1-1088f&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DONE&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Got your json.; Passed json sanity check; Compilation done. Shots sent to solver.&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="setting-up-a-new-mongodb-storage">Setting up a new MongoDB storage</h2>
@@ -866,9 +866,11 @@
 <li>Provide a description.</li>
 </ul>
 <p>Finally, you have to add the login information. For the moment this is a json dict. So fill in the following dict:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;mongodb_username&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-USERNAME&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
-<span class="nt">&quot;mongodb_password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-PASSWORD&gt;&quot;</span><span class="p">,</span><span class="w"> </span>
-<span class="nt">&quot;mongodb_database_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-DATABASE-URL&gt;&quot;</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;mongodb_username&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-USERNAME&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;mongodb_password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-PASSWORD&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;mongodb_database_url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-DATABASE-URL&gt;&quot;</span>
+<span class="p">}</span>
 </code></pre></div>
 <ul>
 <li>Save the storage provider.</li>
@@ -877,7 +879,7 @@
 <p>Your are done and the backends that have been added to the storage should be visible under the devices section of the frontend.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If you did not set up the <code>sqooler</code> you are going to get several errors. This is due to the fact that <code>sqooler</code> will define the backend configurations. So try to install it as described <a href="https://alqor-ug.github.io/sqooler/">here</a> and run the tests again. </p>
+<p>If you did not set up the <code>sqooler</code> you are going to get several errors. This is due to the fact that <code>sqooler</code> will define the backend configurations. So try to install it as described <a href="https://alqor-ug.github.io/sqooler/">here</a> and run the tests again.</p>
 </div>
 <h2 id="setting-up-a-new-dropbox-storage">Setting up a new dropbox storage</h2>
 <p>Dropbox is the second option as a <code>StorageProvider</code>. This is more direct as a file system, however it has some severe performance handicaps compared to MongoDB. Now we describe how the Dropbox folder structure is organized. It is shown in following picture:
@@ -889,21 +891,23 @@
 <li>Give the app the permissions <code>files.content.write</code> as well as <code>files.content.read</code>.</li>
 </ul>
 <h3 id="obtain-the-refresh-token">Obtain the refresh token</h3>
-<p>Next we explain you how to  obtain the <code>REFRESH_TOKEN</code>. This is initially based on <a href="https://www.dropboxforum.com/t5/Dropbox-API-Support-Feedback/Get-refresh-token-from-access-token/td-p/596739">this guide</a>.</p>
+<p>Next we explain you how to obtain the <code>REFRESH_TOKEN</code>. This is initially based on <a href="https://www.dropboxforum.com/t5/Dropbox-API-Support-Feedback/Get-refresh-token-from-access-token/td-p/596739">this guide</a>.</p>
 <ol>
-<li>Make your OAuth app authorization URL like this: (plug in your app key in place of "APPKEYHERE"):
+<li>Make your OAuth app authorization URL like this: (plug in your app key in place of "APPKEYHERE"):</li>
+</ol>
 <div class="highlight"><pre><span></span><code>https://www.dropbox.com/oauth2/authorize?client_id=APPKEYHERE&amp;response_type=code&amp;token_access_type=offline
-</code></pre></div></li>
+</code></pre></div>
+<ol>
 <li>Browse to that page in your browser while signed in to your account and click "Allow" to authorize it.</li>
 <li>Copy the resulting authorization code.</li>
-<li>Exchange the authorization code for an access token and refresh token like this, e.g., using curl on the command line: (plug in the authorization code from step 3 in place of "AUTHORIZATIONCODEHERE", the app key in place of "APPKEYHERE", and the app secret in place of "APPSECRETHERE").
+<li>Exchange the authorization code for an access token and refresh token like this, e.g., using curl on the command line: (plug in the authorization code from step 3 in place of "AUTHORIZATIONCODEHERE", the app key in place of "APPKEYHERE", and the app secret in place of "APPSECRETHERE").</li>
+</ol>
 <div class="highlight"><pre><span></span><code>curl https://api.dropbox.com/oauth2/token \
     -d code=AUTHORIZATIONCODEHERE \
     -d grant_type=authorization_code \
     -u APPKEYHERE:APPSECRETHERE​
 </code></pre></div>
-The response will contain a short-lived access token and refresh token that you can then use as needed.</li>
-</ol>
+<p>The response will contain a short-lived access token and refresh token that you can then use as needed.</p>
 <h3 id="adding-the-dropbox-to-the-admin-interface">Adding the Dropbox to the admin interface</h3>
 <p>Now you are ready to add the storage to <code>qlued</code>. To do so, make sure that you have access to the admin interface of your instance. If you are not sure, we have a guide on how to deploy the service via heroku <a href="../heroku/">here</a> or create a local instance as described <a href="../local_installation/">here</a>. Follow the steps below:</p>
 <ul>
@@ -917,9 +921,9 @@ The response will contain a short-lived access token and refresh token that you 
 </ul>
 <p>Finally, you have to add the login information. For the moment this is a json dict. So fill in the following dict:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;app_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-APP-KEY&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;app_secret&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-APP-SECRET&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;refresh_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-REFRESH-SECRET&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;app_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-APP-KEY&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;app_secret&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-APP-SECRET&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;refresh_token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-REFRESH-SECRET&gt;&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 <ul>
@@ -928,16 +932,16 @@ The response will contain a short-lived access token and refresh token that you 
 <h2 id="setting-up-a-local-storage">Setting up a local storage</h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This local storage is not usable for production. It is only for testing purposes at the moment.</p>
 </div>
+<p>This local storage is not usable for production. It is only for testing purposes at the moment.</p>
 <p>Local storages are a third option as a <code>StorageProvider</code>. This is directly dumping the jobs onto your file system and is therefore super fast, direct and simple to maintain<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>. However, it comes with severe limitations:</p>
 <ul>
 <li>Currently, we have not connected it to <code>sqooler</code>. So it is really just for testing.</li>
-<li>Given that the files are stored on the hard drive that also runs the server it is directly exposed to the internet. This makes it substantially more easy for external attackers to wreck your hardware. </li>
+<li>Given that the files are stored on the hard drive that also runs the server it is directly exposed to the internet. This makes it substantially more easy for external attackers to wreck your hardware.</li>
 </ul>
 <p>Finally, you have to add the login information. For the moment this is a json dict. So fill in the following dict:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;base_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-BASEPATH&gt;&quot;</span>
+<span class="w">  </span><span class="nt">&quot;base_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;YOUR-BASEPATH&gt;&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="done">Done</h2>
@@ -962,8 +966,6 @@ The response will contain a short-lived access token and refresh token that you 
 
   
   
-
-
 
 
 
