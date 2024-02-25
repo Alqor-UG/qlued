@@ -1,20 +1,20 @@
 {% extends "base.html" %} {% load static %} {% block content %}
 
-<div class="container">
-  <h1>Confirm the deletion of the storage provider</h1>
-  <p>Are you sure that you would like to delete the storage provider below ?</p>
-  <ul>
-    <li>Name: {{storage_provider.name }}</li>
-    <li>Type: {{storage_provider.storage_type }}</li>
-    <li>Description: {{storage_provider.description }}</li>
-  </ul>
-  <div class="row justify-content-center">
-    <form method="post">
-      {% csrf_token %}
+  <div class="container">
+    <h1>Confirm the deletion of the storage provider</h1>
+    <p>Are you sure that you would like to delete the storage provider below ?</p>
+    <ul>
+      <li>Name: {{storage_provider.name }}</li>
+      <li>Type: {{storage_provider.storage_type }}</li>
+      <li>Description: {{storage_provider.description }}</li>
+    </ul>
+    <div class="row justify-content-center">
+      <form method="post">
+        {% csrf_token %}
 
-      <input type="submit" value="Delete" class="btn btn-danger btn-lg" />
-    </form>
+        <input type="submit" value="Delete" class="btn btn-danger btn-lg" />
+      </form>
+    </div>
   </div>
-</div>
 
 {% endblock %}

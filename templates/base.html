@@ -40,7 +40,6 @@
     data-csrf-token="{% if add_csrf %}{{ csrf_token }}{% endif %}"
     data-api-csrf="{% if add_csrf %}true{% endif %}"
   >
-
     <nav class="navbar navbar-expand-lg bg-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">Qlued</a>
@@ -61,20 +60,20 @@
               <a class="nav-item nav-link" href="{% url 'index'%}">Home</a>
             </li>
             {% if user.is_authenticated %}
-            <li class="nav-item">
-              <a class="nav-item nav-link" href="{% url 'profile'%}">Account</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-item nav-link" href="{% url 'account_logout'%}"
+              <li class="nav-item">
+                <a class="nav-item nav-link" href="{% url 'profile'%}">Account</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-item nav-link" href="{% url 'account_logout'%}"
                 >Logout</a
-              >
-            </li>
+                  >
+                </li>
             {% else %}
-            <li class="nav-item">
-              <a class="nav-item nav-link" href="{% url 'account_login'%}"
+              <li class="nav-item">
+                <a class="nav-item nav-link" href="{% url 'account_login'%}"
                 >Login</a
-              >
-            </li>
+                  >
+                </li>
             {% endif %}
             <li class="nav-item">
               <a class="nav-item nav-link" href="{% url 'devices'%}">Devices</a>
@@ -87,35 +86,33 @@
       </div>
     </nav>
 
-<main class="flex-shrink-0">
-{% block content %}{% endblock %}
-</main>
+    <main class="flex-shrink-0">{% block content %}{% endblock %}</main>
 
-
-<footer class="footer mt-auto py-3 bg-light">
+    <footer class="footer mt-auto py-3 bg-light">
       <nav class="navbar fixed-bottom navbar-light bg-light navbar-expand-lg">
-      <div class="container-fluid">
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarFooter"
-          aria-controls="navbarFooter"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="navbar-nav collapse navbar-collapse" id="navbarFooter">
-          <a class="nav-link nav-item" href="/api/v2/docs">API</a>
-          <a class="nav-link nav-item" href="https://alqor-ug.github.io/qlued/"
-            >Documentation</a
+        <div class="container-fluid">
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarFooter"
+            aria-controls="navbarFooter"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
           >
-          <a class="nav-link nav-item" href="{% url 'about'%}">About</a>
-        </div>
-      </div>
-    </nav> 
-    </footer> 
-
-  </body>
-</html>
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="navbar-nav collapse navbar-collapse" id="navbarFooter">
+            <a class="nav-link nav-item" href="/api/v2/docs">API</a>
+            <a
+              class="nav-link nav-item"
+              href="https://alqor-ug.github.io/qlued/"
+            >Documentation</a
+              >
+              <a class="nav-link nav-item" href="{% url 'about'%}">About</a>
+            </div>
+          </div>
+        </nav>
+      </footer>
+    </body>
+  </html>
