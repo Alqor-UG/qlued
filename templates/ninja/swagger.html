@@ -3,11 +3,11 @@
 {% load static %}
 {% load csp %}
 {% block content %}
-<link type="text/css" rel="stylesheet" href="{% static 'ninja/swagger-ui.css' %}">
-<script type="application/json" id="swagger-settings">
+    <link type="text/css" rel="stylesheet" href="{% static 'ninja/swagger-ui.css' %}">
+    <script type="application/json" id="swagger-settings">
         {{ swagger_settings | safe }}
     </script>
-    
+
     <div id="swagger-ui"></div>
 
     <script src="{% static 'ninja/swagger-ui-bundle.js' %}"></script>
