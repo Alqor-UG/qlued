@@ -12,7 +12,7 @@ django = "^5.0.2"
 django-allauth = "^0.61.1"
 dj-database-url = "^2.1.0"
 python-decouple = "^3.8"
-django-csp = "^3.7"
+django-csp = "^3.8"
 django-qlued = "^0.2.0"
 
 
