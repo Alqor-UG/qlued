@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.11">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.15">
     
     
       
@@ -824,11 +824,11 @@
 
 <h1 id="general-description">General description</h1>
 <h2 id="the-big-picture">The big picture</h2>
-<p>The idea for developing <a href="https://github.com/synqs/qlue" title="qlue">qlued</a> stems from the desire for unifying experiment execution on different platforms for quantum simulation/computation. These platforms can be based on different technologies (e.g. neutral atoms, ions, superconducting qubits, photonic systems etc.) and have different software for experiment control.</p>
+<p>The idea for developing <a href="https://github.com/alqor-ug/qlued" title="qlue">qlued</a> stems from the desire for unifying experiment execution on different platforms for quantum simulation/computation. These platforms can be based on different technologies (e.g. neutral atoms, ions, superconducting qubits, photonic systems etc.) and have different software for experiment control.</p>
 <p>In this diversity there is a unifying feature for different experiments, they essentially act as a backend for executing some instructions. On adopting this picture we quickly realise that we become totally agnostic to the details of how the instructions are executed on a hardware if we can provide a general higher level description of the experiments. A very suitable high-level description for experiments on different platforms is to think of these experiments as quantum circuits. In this picture any experiment essentially has three steps : state preparation, unitary evolution under a given Hamiltonian and measurement. Infact we are not just limited to experiments anymore and can even include theoretical simulator backends which execute the quantum circuits on a computer.</p>
 <p>For providing software support for a given backend to use the language of quantum circuits, two types of libraries are required : one which allows to write quantum circuits for the experiments using some kind of quantum circuit framework and a second one for parsing the quantum circuits into a format which can be run on the experiment. For the first one, there already exists quantum circuit frameworks like <a href="https://github.com/Qiskit" title="Qiskit">Qiskit</a>, <a href="https://github.com/PennyLaneAI" title="Pennylane">Pennylane</a> etc. which provide a comprehensive support for writing quantum circuits. For the second one, custom code has to be written which will depend on the details of the particular backend.</p>
 <p>Another important point is that we assume that the user who writes the quantum circuits does not necessarily have local access to experiments. So the user submits quantum circuits to the backend remotely over the internet. We use the word job for the submissions by the remote user. Therefore, we also need a service which can act as the central point for various remote users to submit their jobs or fetch the result/status of their previously submitted jobs. For security reasons this service should provide robust user management and authentication.</p>
-<p>To address the issue we have developed a web interface called <a href="https://github.com/synqs/qlue" title="qlue">qlued</a> which allows remote users to submit their jobs to remote cold atom backends. This architecture has several advantages :</p>
+<p>To address the issue we have developed a web interface called <a href="https://github.com/alqor-ug/qlued" title="qlue">qlued</a> which allows remote users to submit their jobs to remote cold atom backends. This architecture has several advantages :</p>
 <ul>
 <li>The same circuit can be executed on different backends.</li>
 <li>Makes collaboration between researchers easier.</li>
@@ -840,7 +840,7 @@
 <li>Labscript suite does not have native support for writing quantum circuits.</li>
 <li>We want to allow remote users to be able to submit jobs to our backends. So we need a server architecture and user management.</li>
 </ul>
-<p>The above issues can also exist for a simulator package. Hence the need for <a href="https://github.com/synqs/qlue" title="qlue">this project</a>. There are two sides : <a href="#the-client">client</a> and <a href="#the-server">server</a>.</p>
+<p>The above issues can also exist for a simulator package. Hence the need for <a href="https://github.com/alqor-ug/qlued" title="qlue">this project</a>. There are two sides : <a href="#the-client">client</a> and <a href="#the-server">server</a>.</p>
 <h2 id="the-client">The client</h2>
 <p>A client is a remote user who will write quantum circuits in the user's favorite quantum circuit framework (<a href="https://github.com/Qiskit" title="Qiskit">Qiskit</a>, <a href="https://github.com/PennyLaneAI" title="Pennylane">Pennylane</a>, ...). These circuits then have to be compiled into JSON files. The JSON files can be sent over the internet to a remote server which will queue it for parsing/execution on the backend. The backend can be a real cold atom machine or a simulator running on a computer. To get credentials, user has to create an account at a qlued instance like <a href="https://qlued.alqor.io/">qlued.alqor.io</a>.</p>
 <p>We have decided on a schema for the JSON files. See <a href="https://github.com/eggerdj/backends/" title="Qiskit_json">1</a> for more details. The document mentions in detail how things should be formatted. We also provide extensive tutorials that work without the SDKs <a href="../../notebooks/rydberg_api_showcase_v2">here</a>.</p>
@@ -889,7 +889,7 @@
 <h4 id="the-simulator-backend">The simulator backend</h4>
 <p>This is just a PC running spooler(s). It is typically based on any kind of implementation like the <code>sqooler</code>package. For more information see <a href="https://alqor-ug.github.io/sqooler/">here</a>.</p>
 <h4 id="the-experiment-backend">The experiment backend</h4>
-<p>A first draft for implementing the experiment backends is highlighted <a href="https://github.com/synqs/labscript-qc" title="labscript-qc">here</a>. The code was tested to perform MOT loading in a cold atom machine in Heidelberg by submitting circuits from Zurich. Although we still need to polish this part of the code, it already highlights important ideas on how to connect a real cold atom machine to <a href="https://github.com/synqs/qlue" title="qlue">qlue</a>.</p>
+<p>A first draft for implementing the experiment backends is highlighted <a href="https://github.com/synqs/labscript-qc" title="labscript-qc">here</a>. The code was tested to perform MOT loading in a cold atom machine in Heidelberg by submitting circuits from Zurich. Although we still need to polish this part of the code, it already highlights important ideas on how to connect a real cold atom machine to <a href="https://github.com/alqor-ug/qlued" title="qlue">qlued</a>.</p>
 
 
 
@@ -1032,7 +1032,7 @@
     <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.footer", "toc.follow"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.8fd75fb4.min.js"></script>
+      <script src="../../assets/javascripts/bundle.bd41221c.min.js"></script>
       
     
   </body>
