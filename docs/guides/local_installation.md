@@ -75,4 +75,4 @@ Finally, you have to set up the appropiate storage. This might be a Dropbox or a
 
 ## Done
 
-This ends the set up of the server. You can now run the first tutorials as explained [here](notebooks/rydberg_api_showcase_v2)
+This ends the set up of the server. You can now run the first tutorials as explained [here](../../notebooks/rydberg_api_showcase_v2)

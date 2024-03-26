@@ -13,7 +13,7 @@ For signup on a cloud hosted infrastructor please visit [qlued.alqor.io](https:/
 - [General description](guides/gen_guide.md) : Details of the infrastructure.
 - [User Guide](guides/user_guide.md) : For users who want to use the service.
 - [Own instance](guides/local_installation.md) : For people who want to implement this on their own.
-- [API](https://qlued.alqor.io/api/v1/docs) : The automatically generated API documentation of the infrastructure.
+- [API](https://qlued.alqor.io/api/v2/docs) : The automatically generated API documentation of the infrastructure.
 
 ## Our projects
 
