@@ -101,9 +101,9 @@ This is just a PC running spooler(s). It is typically based on any kind of imple
 
 #### The experiment backend
 
-A first draft for implementing the experiment backends is highlighted [here][labscript_qc]. The code was tested to perform MOT loading in a cold atom machine in Heidelberg by submitting circuits from Zurich. Although we still need to polish this part of the code, it already highlights important ideas on how to connect a real cold atom machine to [qlue][qlue_github].
+A first draft for implementing the experiment backends is highlighted [here][labscript_qc]. The code was tested to perform MOT loading in a cold atom machine in Heidelberg by submitting circuits from Zurich. Although we still need to polish this part of the code, it already highlights important ideas on how to connect a real cold atom machine to [qlued][qlue_github].
 
-[qlue_github]: https://github.com/synqs/qlue "qlue"
+[qlue_github]: https://github.com/alqor-ug/qlued "qlue"
 [Qiskit_github]: https://github.com/Qiskit "Qiskit"
 [Pennylane_github]: https://github.com/PennyLaneAI "Pennylane"
 [eggerdj_github]: https://github.com/eggerdj/backends/ "Qiskit_json"
