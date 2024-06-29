@@ -283,7 +283,10 @@ class DevicesTest(TestCase):
             self.assertIsNotNone(
                 device["url"], "Device dictionary does not contain valid url"
             )
-            ic(device["operational"])
+            ic(device)
 
             # assert that the operational status is part of the device dictionary
             self.assertIn("operational", device)
+
+            # assert that we have the required display name
+            self.assertIn("display_name", device)
