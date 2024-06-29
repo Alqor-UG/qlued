@@ -19,7 +19,7 @@ from pydantic import ValidationError
 from qlued.models import StorageProviderDb, Token
 from qlued.storage_providers import (
     get_storage_provider_from_entry,
-    get_short_backend_name
+    get_short_backend_name,
 )
 
 from .forms import SignUpForm, StorageProviderForm
