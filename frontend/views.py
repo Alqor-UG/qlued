@@ -1,28 +1,27 @@
 """Module that defines the user api.
 """
 
-from datetime import datetime
-import uuid
 import json
+import uuid
+from datetime import datetime
 
 import pytz
 from decouple import config
-
-from pydantic import ValidationError
-
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse
-from django.template import loader
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+from django.template import loader
+from django.urls import reverse
+from pydantic import ValidationError
 
-from qlued.models import Token, StorageProviderDb
+from qlued.models import StorageProviderDb, Token
 from qlued.storage_providers import (
-    get_storage_provider_from_entry,
     get_short_backend_name,
+    get_storage_provider_from_entry,
 )
+
 from .forms import SignUpForm, StorageProviderForm
 from .models import Impressum
 
@@ -73,25 +72,16 @@ def devices(request):
             for backend in backend_names:
                 # for testing we created dummy devices. We should ignore them in any other cases.
                 if not "dummy_" in backend:
-                    config_info = storage_provider.get_backend_dict(backend)
+                    device_status = storage_provider.get_backend_status(backend)
                     short_backend = get_short_backend_name(backend)
-                    if config_info.simulator:
-                        full_backend_name = (
-                            f"{storage_provider.name}_{short_backend}_simulator"
-                        )
-                    else:
-                        full_backend_name = (
-                            f"{storage_provider.name}_{short_backend}_hardware"
-                        )
 
                     # we have to add the URL to the backend configuration
                     base_url = config("BASE_URL")
 
-                    config_info.url = base_url + "/api/v2/" + full_backend_name + "/"
-                    config_dict = config_info.model_dump()
-                    # set the operational key to true if is not defined by the backend
-                    if "operational" not in config_dict:
-                        config_dict["operational"] = True
+                    config_dict = device_status.model_dump()
+                    config_dict["url"] = (
+                        base_url + "/api/v2/" + device_status.backend_name + "/"
+                    )
 
                     backend_list.append(config_dict)
         except ValidationError:

@@ -2,11 +2,12 @@
 Module that defines the forms that can be used in the Django templates.
 """
 
+from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import RegexValidator
-from django import forms
 from django.forms import ModelForm
+
 from qlued.models import StorageProviderDb
 
 
