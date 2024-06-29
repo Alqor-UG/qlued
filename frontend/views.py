@@ -73,7 +73,6 @@ def devices(request):
                 # for testing we created dummy devices. We should ignore them in any other cases.
                 if not "dummy_" in backend:
                     device_status = storage_provider.get_backend_status(backend)
-                    short_backend = get_short_backend_name(backend)
 
                     # we have to add the URL to the backend configuration
                     base_url = config("BASE_URL")
