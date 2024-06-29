@@ -19,6 +19,7 @@ from pydantic import ValidationError
 from qlued.models import StorageProviderDb, Token
 from qlued.storage_providers import (
     get_storage_provider_from_entry,
+    get_short_backend_name,
 )
 
 from .forms import SignUpForm, StorageProviderForm
@@ -72,11 +73,13 @@ def devices(request):
                 # for testing we created dummy devices. We should ignore them in any other cases.
                 if not "dummy_" in backend:
                     device_status = storage_provider.get_backend_status(backend)
-
                     # we have to add the URL to the backend configuration
                     base_url = config("BASE_URL")
 
                     config_dict = device_status.model_dump()
+                    config_dict["display_name"] = get_short_backend_name(
+                        device_status.backend_name
+                    )
                     config_dict["url"] = (
                         base_url + "/api/v2/" + device_status.backend_name + "/"
                     )
