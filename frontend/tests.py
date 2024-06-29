@@ -6,10 +6,12 @@ Module that contains all the tests for this app folder.
 import json
 import shutil
 
-from django.test import TestCase
 from django.contrib.auth import get_user_model
-from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
+from django.test import TestCase
+from django.urls import reverse
+from icecream import ic
+
 from qlued.models import StorageProviderDb
 from qlued.storage_providers import get_storage_provider_from_entry
 
@@ -281,3 +283,7 @@ class DevicesTest(TestCase):
             self.assertIsNotNone(
                 device["url"], "Device dictionary does not contain valid url"
             )
+            ic(device["operational"])
+
+            # assert that the operational status is part of the device dictionary
+            self.assertIn("operational", device)
