@@ -9,11 +9,11 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 django = "^5.0.2"
-django-allauth = "^0.63.3"
 dj-database-url = "^2.1.0"
 python-decouple = "^3.8"
 django-csp = "^3.7"
 django-qlued = {git = "https://github.com/Alqor-UG/django-qlued.git"}
+django-allauth = {extras = ["socialaccount"], version = "^0.63.3"}
 
 
 [tool.poetry.group.prod]
