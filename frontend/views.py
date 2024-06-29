@@ -99,7 +99,11 @@ def about(request):
     template = loader.get_template("frontend/about.html")
 
     impressums_text = Impressum.objects.first()
-    context = {"impressums_text": impressums_text.impressum}
+    if impressums_text is None:
+        context = {"impressums_text": "No impressum known."}
+
+    else:
+        context = {"impressums_text": impressums_text.impressum}
     return HttpResponse(template.render(context, request))
 
 

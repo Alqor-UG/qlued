@@ -15,6 +15,8 @@ from icecream import ic
 from qlued.models import StorageProviderDb
 from qlued.storage_providers import get_storage_provider_from_entry
 
+from .models import Impressum
+
 
 class IndexPageTests(TestCase):
     """
@@ -26,6 +28,32 @@ class IndexPageTests(TestCase):
         is it possible to reach the index page ?
         """
         url = reverse("index")
+        r = self.client.get(url)
+        self.assertEqual(r.status_code, 200)
+
+
+class ImpressumTest(TestCase):
+    """
+    Test basic properties of the job submission process.
+    """
+
+    def setUp(self):
+        self.username = "sandy"
+        self.password = "dog"
+        user = get_user_model().objects.create(username=self.username)
+        user.set_password(self.password)
+        user.save()
+
+    def test_call_about(self):
+        """
+        is it possible to reach the impressum page ?
+        """
+        url = reverse("about")
+        r = self.client.get(url)
+        self.assertEqual(r.status_code, 200)
+
+        # add an impressum to the database
+        Impressum.objects.create(impressum="This is the impressum")
         r = self.client.get(url)
         self.assertEqual(r.status_code, 200)
 
