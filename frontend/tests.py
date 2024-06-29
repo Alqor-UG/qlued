@@ -17,6 +17,7 @@ from qlued.storage_providers import get_storage_provider_from_entry
 
 from .models import Impressum
 
+
 class IndexPageTests(TestCase):
     """
     Test the title page
