@@ -28,7 +28,7 @@ optional = true
 
 [tool.poetry.group.docs.dependencies]
 mkdocs-material = "^9.1.5"
-mkdocs-jupyter = "^0.24.1"
+mkdocs-jupyter = "^0.24.8"
 mike = "^2.0.0"
 
 
